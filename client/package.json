@@ -1,6 +1,8 @@
 {
-  "name": "client",
-  "version": "0.1.0",
+  "name": "commerceutilitybox-client",
+  "version": "1.0.0",
+  "description": "The front end for the Commerce Utility Box. An application that helps businesses manage their day to day operations.",
+  "main": "./src/index.js",
   "private": true,
   "dependencies": {
     "react": "^16.7.0",
