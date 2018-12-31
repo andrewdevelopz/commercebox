@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import "./App.css";
 import Orders from "./components/orders/orders.js";
 import ViewOrder from "./components/orders/view_order.js";
-import { Header, Segment } from "semantic-ui-react";
+import { Header, Segment, Container } from "semantic-ui-react";
 import "semantic-ui-css/semantic.css";
 
 class App extends Component {
@@ -21,7 +21,7 @@ class App extends Component {
               <Link to="/view_order"> View single order </Link>{" "}
             </Header>
           </Segment>
-          <Route path="/orders" component={Orders} />
+          <Route exact path="/orders" component={Orders} />
           <Route path="/view_order" component={ViewOrder} />
         </div>
       </Router>
