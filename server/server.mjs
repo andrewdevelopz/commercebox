@@ -1,10 +1,13 @@
 'use strict'
 
 // Dependencies
-const express = require('express');
-const path = require('path');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+import express from 'express';
+import path from 'path';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+
+// Importing routes
+import index from './routes/index';
 
 const app = express();
 
@@ -22,9 +25,7 @@ server.unifiedServer = (app) => {
   app.use(cors());
   app.use(bodyParser.json());
 
-  // Setting and handling routes
-  const index = require('./routes/index');
-
+  // Handling routes
   app.use('/', index);
 }
 
@@ -45,4 +46,4 @@ server.init = () => {
 // Init script
 server.init();
 
-module.exports = server;
+export default server;

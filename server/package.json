@@ -2,7 +2,7 @@
   "name": "commerceutilitybox-api",
   "version": "1.0.0",
   "description": "The API for Commerce Utility Box. An application that helps businesses manage day to day operations.",
-  "main": "server.js",
+  "main": "server.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
