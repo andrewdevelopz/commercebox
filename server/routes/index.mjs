@@ -1,11 +1,12 @@
 'use strict'
 
 // Dependencies
-const express = require('express');
+import express from 'express';
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
   res.send({test: 'Route to index.js'});
 });
 
-module.exports = router;
+export default router;

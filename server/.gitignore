@@ -61,4 +61,5 @@ typings/
 .next
 
 # all other files
+package-lock.json
 /public
