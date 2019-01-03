@@ -17,33 +17,54 @@ export default class Header extends Component {
     isAuthenticated: false,
     navMenuItems: [
       {
-        id: 0,
         name: 'home',
         path: '/'
       },
       {
-        id: 1,
-        name: 'orders',
-        path: '/orders'
+        name: 'toolbox',
+        path: '/toolbox'
       }
     ],
     authMenuItems: [
       {
-        id: 0,
         name: 'login',
         path: '/login'
       },
       {
-        id: 1,
+        name: 'signup',
+        path: '/signup'
+      },
+      {
         name: 'logout',
         path: '/logout'
       },
       {
-        id: 2,
-        name: 'signup',
-        path: '/signup'
+        name: 'myaccount',
+        path: '/myaccount'
       }
     ]
+  }
+  
+  componentWillMount() {
+    // Call for each state that require an id before the component mounts. The id will be used as a key for rendering the component
+    this.setIdForMenuItems('navMenuItems')
+    this.setIdForMenuItems('authMenuItems')
+  }
+
+  // Set the id for each state property that requires an id
+  setIdForMenuItems(prop) {
+    this.setState(prevState => {
+      // Loop through the array from the property passed in
+      for(const item of prevState[prop]) {
+        // Get the index of the item that is inside the array
+        const index = prevState[prop].indexOf(item)
+        item.id = index
+      }
+
+      return {
+        prop: prevState[prop]
+      }
+    })
   }
 
   // Handle when a menu item has been clicked
@@ -77,7 +98,7 @@ export default class Header extends Component {
       if(this.state.isAuthenticated) {
         return item.name !== 'login' && item.name !== 'signup'
       } else {
-        return item.name !== 'logout'
+        return item.name !== 'logout' && item.name !== 'myaccount'
       }
     }).map(item => {
       return (
