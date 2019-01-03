@@ -8,7 +8,7 @@
  */
 
 import React, { Component } from 'react'
-import { Input, Menu, Button } from 'semantic-ui-react'
+import { Button, Container, Input, Menu } from 'semantic-ui-react'
 import logo from '../../../logo.svg'
 
 export default class Header extends Component {
@@ -23,6 +23,14 @@ export default class Header extends Component {
       {
         name: 'toolbox',
         path: '/toolbox'
+      },
+      {
+        name: 'about',
+        path: '/about'
+      },
+      {
+        name: 'contact',
+        path: '/contact'
       }
     ],
     authMenuItems: [
@@ -44,27 +52,22 @@ export default class Header extends Component {
       }
     ]
   }
-  
-  componentWillMount() {
+
+  constructor() {
+    super()
     // Call for each state that require an id before the component mounts. The id will be used as a key for rendering the component
-    this.setIdForMenuItems('navMenuItems')
-    this.setIdForMenuItems('authMenuItems')
+    this.setIdForItems('navMenuItems')
+    this.setIdForItems('authMenuItems')
   }
 
   // Set the id for each state property that requires an id
-  setIdForMenuItems(prop) {
-    this.setState(prevState => {
-      // Loop through the array from the property passed in
-      for(const item of prevState[prop]) {
-        // Get the index of the item that is inside the array
-        const index = prevState[prop].indexOf(item)
-        item.id = index
-      }
-
-      return {
-        prop: prevState[prop]
-      }
-    })
+  setIdForItems(prop) {
+    // Loop through the array from the property passed in
+    for(const item of this.state[prop]) {
+      // Get the index of the item that is inside the array
+      const index = this.state[prop].indexOf(item)
+      item.id = index
+    }
   }
 
   // Handle when a menu item has been clicked
@@ -111,20 +114,22 @@ export default class Header extends Component {
     return (
       <header>
         <Menu stackable inverted size="large">
-          <Menu.Item>
-            <img src={logo} alt="logo" />
-          </Menu.Item>
-
-          {/* Input the nav menu */}
-          {navMenu}
-
-          <Menu.Menu position="right">
+          <Container>
             <Menu.Item>
-              <Input icon='search' placeholder='Search...' />
+              <img src={logo} alt="logo" />
             </Menu.Item>
-            {/* Input the auth menu */}
-            {authMenu}
-          </Menu.Menu>
+
+            {/* Input the nav menu */}
+            {navMenu}
+
+            <Menu.Menu position="right">
+              <Menu.Item>
+                <Input icon='search' placeholder='Search...' />
+              </Menu.Item>
+              {/* Input the auth menu */}
+              {authMenu}
+            </Menu.Menu>
+          </Container>
         </Menu>
       </header>
     )
