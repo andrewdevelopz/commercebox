@@ -26,7 +26,7 @@ export default class Home extends Component {
               </Grid.Column>
               <Grid.Column verticalAlign='middle' width={11}>
                 <Container text>
-                  <Header as="h3">What can be acheived.</Header>
+                  <Header as='h3'>What can be acheived.</Header>
                   <p>Lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsumlorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsumlorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum</p>
                 </Container>
               </Grid.Column>

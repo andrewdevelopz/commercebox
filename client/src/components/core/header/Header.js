@@ -60,6 +60,12 @@ export default class Header extends Component {
     this.setIdForItems('authMenuItems')
   }
 
+  // Handle when a menu item has been clicked
+  handleItemClick = (e, { name }) => {
+    // Set the active item when a nav menu is clicked
+    this.setState({ activeItem: name })
+  }
+
   // Set the id for each state property that requires an id
   setIdForItems(prop) {
     // Loop through the array from the property passed in
@@ -68,12 +74,6 @@ export default class Header extends Component {
       const index = this.state[prop].indexOf(item)
       item.id = index
     }
-  }
-
-  // Handle when a menu item has been clicked
-  handleItemClick = (e, { name }) => {
-    // Set the active item when a nav menu is clicked
-    this.setState({ activeItem: name })
   }
 
   render() {
@@ -113,16 +113,16 @@ export default class Header extends Component {
 
     return (
       <header>
-        <Menu stackable inverted size="large">
+        <Menu stackable inverted size='large'>
           <Container>
             <Menu.Item>
-              <img src={logo} alt="logo" />
+              <img src={logo} alt='logo' />
             </Menu.Item>
 
             {/* Input the nav menu */}
             {navMenu}
 
-            <Menu.Menu position="right">
+            <Menu.Menu position='right'>
               <Menu.Item>
                 <Input icon='search' placeholder='Search...' />
               </Menu.Item>
