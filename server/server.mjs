@@ -8,11 +8,11 @@ import cors from 'cors'
 
 // Importing routes
 import index from './routes/index'
-import inventory from './routes/inventory'
-import orders from './routes/orders'
-import shipping from './routes/shipping'
-import todos from './routes/todos'
-import auth from './routes/auth'
+import inventory from './routes/toolbox/inventory'
+import orders from './routes/toolbox/orders'
+import shipping from './routes/toolbox/shipping'
+import todos from './routes/toolbox/todos'
+import auth from './routes/auth/auth'
 
 const app = express()
 
