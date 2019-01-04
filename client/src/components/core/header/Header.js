@@ -8,7 +8,7 @@
  */
 
 import React, { Component } from 'react'
-import { Input, Menu, Button } from 'semantic-ui-react'
+import { Button, Input, Menu } from 'semantic-ui-react'
 import logo from '../../../logo.svg'
 
 export default class Header extends Component {
@@ -17,39 +17,63 @@ export default class Header extends Component {
     isAuthenticated: false,
     navMenuItems: [
       {
-        id: 0,
         name: 'home',
         path: '/'
       },
       {
-        id: 1,
-        name: 'orders',
-        path: '/orders'
+        name: 'toolbox',
+        path: '/toolbox'
+      },
+      {
+        name: 'about',
+        path: '/about'
+      },
+      {
+        name: 'contact',
+        path: '/contact'
       }
     ],
     authMenuItems: [
       {
-        id: 0,
         name: 'login',
         path: '/login'
       },
       {
-        id: 1,
+        name: 'signup',
+        path: '/signup'
+      },
+      {
         name: 'logout',
         path: '/logout'
       },
       {
-        id: 2,
-        name: 'signup',
-        path: '/signup'
+        name: 'myaccount',
+        path: '/myaccount'
       }
     ]
+  }
+
+  constructor() {
+    super()
+    // Call for each state that require an id before the component mounts. The id will be used as a key for rendering the component
+    this.setIdForItems('navMenuItems')
+    this.setIdForItems('authMenuItems')
   }
 
   // Handle when a menu item has been clicked
   handleItemClick = (e, { name }) => {
     // Set the active item when a nav menu is clicked
     this.setState({ activeItem: name })
+  }
+
+  // Set the id for each state property that requires an id
+  setIdForItems(prop) {
+    // Loop through the array from the property passed in
+    for(const item of this.state[prop]) {
+      // Get the index of the item that is inside the array
+      const index = this.state[prop].indexOf(item)
+      item.id = index
+    }
   }
 
   render() {
@@ -77,7 +101,7 @@ export default class Header extends Component {
       if(this.state.isAuthenticated) {
         return item.name !== 'login' && item.name !== 'signup'
       } else {
-        return item.name !== 'logout'
+        return item.name !== 'logout' && item.name !== 'myaccount'
       }
     }).map(item => {
       return (
@@ -89,15 +113,15 @@ export default class Header extends Component {
 
     return (
       <header>
-        <Menu stackable inverted size="large">
+        <Menu stackable inverted size='large'>
           <Menu.Item>
-            <img src={logo} alt="logo" />
+            <img src={logo} alt='logo' />
           </Menu.Item>
 
           {/* Input the nav menu */}
           {navMenu}
 
-          <Menu.Menu position="right">
+          <Menu.Menu position='right'>
             <Menu.Item>
               <Input icon='search' placeholder='Search...' />
             </Menu.Item>
