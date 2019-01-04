@@ -69,6 +69,20 @@ npm start
 
 For this issue run `taskkill -F -IM node.exe` to kill all node tasks
 
+### Running the React native application
+
+Navigate into the mobile folder. 
+
+```
+expo start
+```
+
+The bundler will run and open a tab in your browser with the expo server. Your terminal will also show the running server. 
+
+Download and install the 'Expo' app on your iOS or android phone. Scan the QR code using the inbuilt expo scanner (android) or the camera app (iOS). 
+
+The app will compile and open. 
+
 ### Updating the README.md
 
 View this link here for info: https://help.github.com/articles/basic-writing-and-formatting-syntax/
