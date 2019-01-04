@@ -8,6 +8,11 @@ import cors from 'cors'
 
 // Importing routes
 import index from './routes/index'
+import inventory from './routes/toolbox/inventory'
+import orders from './routes/toolbox/orders'
+import shipping from './routes/toolbox/shipping'
+import todos from './routes/toolbox/todos'
+import auth from './routes/auth/auth'
 
 const app = express()
 
@@ -27,6 +32,11 @@ server.unifiedServer = (app) => {
 
   // Handling routes
   app.use('/', index)
+  app.use('/inventory', inventory)
+  app.use('/orders', orders)
+  app.use('/shipping', shipping)
+  app.use('/todos', todos)
+  app.use('/auth', auth)
 }
 
 // Instantate the HTTP server
