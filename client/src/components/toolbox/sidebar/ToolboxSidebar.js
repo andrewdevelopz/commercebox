@@ -5,11 +5,19 @@
  */
 
 import React, { Component } from 'react'
-import { Icon, Menu } from 'semantic-ui-react'
+import { 
+  Icon, 
+  Menu, 
+  Sidebar,
+  Header
+} from 'semantic-ui-react'
 
-export default class Sidebar extends Component {
+export default class ToolboxSidebar extends Component {
   state = {
     activeItem: 'dashboard',
+    animation: 'push',
+    direction: 'left',
+    visible: true,
     toolboxMenuItems: [
       {
         name: 'dashboard',
@@ -57,7 +65,7 @@ export default class Sidebar extends Component {
   
   render() {
     // To determine which menu is active
-    const { activeItem } = this.state
+    const { activeItem, animation, direction, visible } = this.state
 
     // Map toolbox menu items to sidebar
     const sidebar = this.state.toolboxMenuItems.map(item => {
@@ -75,13 +83,22 @@ export default class Sidebar extends Component {
     })
 
     return (
-      <Menu icon='labeled' inverted vertical>
-        <Menu.Item style={{ background: '#333' }}>
-          sidebar
+      <Sidebar 
+        as={Menu}
+        animation={animation}
+        direction={direction}
+        icon='labeled'
+        inverted
+        vertical
+        visible={visible}
+      >
+        <Menu.Item style={{ background: '#000' }}>
+          <Header as="h5" inverted>toolbox</Header>
         </Menu.Item>
+
         {/* Input the sidebar menu */}
         {sidebar}
-      </Menu>
+      </Sidebar>
     )
   }
 }

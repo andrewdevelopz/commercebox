@@ -13,7 +13,7 @@ export default class App extends Component {
       <div>
         <Header />
         {/* Until the router is implemented comment out the components when working on a certain section */}
-        {/* <Home /> */}
+        <Home />
         <Toolbox />
         <Footer />
       </div>

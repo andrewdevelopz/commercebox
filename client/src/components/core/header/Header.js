@@ -8,7 +8,7 @@
  */
 
 import React, { Component } from 'react'
-import { Button, Container, Input, Menu } from 'semantic-ui-react'
+import { Button, Input, Menu } from 'semantic-ui-react'
 import logo from '../../../logo.svg'
 
 export default class Header extends Component {
@@ -114,22 +114,20 @@ export default class Header extends Component {
     return (
       <header>
         <Menu stackable inverted size='large'>
-          <Container>
+          <Menu.Item>
+            <img src={logo} alt='logo' />
+          </Menu.Item>
+
+          {/* Input the nav menu */}
+          {navMenu}
+
+          <Menu.Menu position='right'>
             <Menu.Item>
-              <img src={logo} alt='logo' />
+              <Input icon='search' placeholder='Search...' />
             </Menu.Item>
-
-            {/* Input the nav menu */}
-            {navMenu}
-
-            <Menu.Menu position='right'>
-              <Menu.Item>
-                <Input icon='search' placeholder='Search...' />
-              </Menu.Item>
-              {/* Input the auth menu */}
-              {authMenu}
-            </Menu.Menu>
-          </Container>
+            {/* Input the auth menu */}
+            {authMenu}
+          </Menu.Menu>
         </Menu>
       </header>
     )
