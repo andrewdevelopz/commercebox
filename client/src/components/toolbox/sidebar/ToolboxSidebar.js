@@ -5,6 +5,7 @@
  */
 
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { 
   Icon, 
   Menu, 
@@ -21,23 +22,28 @@ export default class ToolboxSidebar extends Component {
     toolboxMenuItems: [
       {
         name: 'dashboard',
-        icon: 'dashboard'
+        icon: 'dashboard',
+        path: '/toolbox/dashboard'
       },
       {
         name: 'inventory',
-        icon: 'sitemap'
+        icon: 'sitemap',
+        path: '/toolbox/inventory'
       },
       {
         name: 'orders',
-        icon: 'shipping'
+        icon: 'shipping',
+        path: '/toolbox/orders'
       },
       {
         name: 'todos',
-        icon: 'ordered list'
+        icon: 'ordered list',
+        path: '/toolbox/todos'
       },
       {
         name: 'analytics',
-        icon: 'line graph'
+        icon: 'line graph',
+        path: '/toolbox/analytics'
       }
     ]
   }
@@ -72,6 +78,8 @@ export default class ToolboxSidebar extends Component {
       return (
         <Menu.Item
           key={item.id}
+          as={Link}
+          to={item.path}
           name={item.name}
           active={activeItem === item.name}
           onClick={this.handleItemClick}

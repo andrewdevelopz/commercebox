@@ -1,1 +1,5 @@
 /* Main App CSS file */
+
+.capitalize {
+  text-transform: capitalize;
+}

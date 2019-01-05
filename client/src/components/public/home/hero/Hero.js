@@ -4,6 +4,7 @@
  */
 
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { Button, Container, Divider } from 'semantic-ui-react'
 
 export default class Hero extends Component {
@@ -16,8 +17,8 @@ export default class Hero extends Component {
           <h1>Commerce Utility Box</h1>
           <p>A toolbox which help sellers maintain inventory and complete day to day tasks.</p>
           <Divider />
-          <Button primary>Signup</Button>
-          <Button>Login</Button>
+          <Button as={Link} to='/signup' primary>Signup</Button>
+          <Button as={Link} to='/login'>Login</Button>
         </Container>
       </main>
     )

@@ -2,12 +2,10 @@
  * @overview: This componenet controls the header of the application. It contains items such as but not limited to navigation menu, logo 
  * and authentication buttons.
  * 
- * @todo: We need to capatilize the first letter of each menu item. Not sure if we should make a sepearte library for misc functions or if
- * there is a better more elegant solution to this issue.
- * 
  */
 
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { Button, Input, Menu } from 'semantic-ui-react'
 import logo from '../../../logo.svg'
 
@@ -85,12 +83,15 @@ export default class Header extends Component {
       return (
         <Menu.Item
           key={item.id}
+          as={Link}
+          to={item.path}
           name={item.name}
-          href={item.path}
           active={activeItem === item.name}
           onClick={this.handleItemClick}
         >
-          {item.name}
+          <span className='capitalize'>
+            {item.name}  
+          </span>
         </Menu.Item>
       )
     })
@@ -105,8 +106,12 @@ export default class Header extends Component {
       }
     }).map(item => {
       return (
-        <Menu.Item key={item.id}>
-          <Button>{item.name}</Button>
+        <Menu.Item 
+          key={item.id}
+          as={Link}
+          to={item.path}
+        >
+          <Button><span className='capitalize'>{item.name}</span></Button>
         </Menu.Item>
       )
     })
