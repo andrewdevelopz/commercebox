@@ -7,7 +7,8 @@
  */
 
 import React, { Component } from 'react'
-import { Container, Sidebar, Segment, Header, Image } from 'semantic-ui-react'
+import { Switch, Route } from 'react-router-dom'
+import { Container, Sidebar, Segment } from 'semantic-ui-react'
 
 // Import custom components
 import ToolboxSidebar from './sidebar/ToolboxSidebar'
@@ -22,7 +23,13 @@ export default class Toolbox extends Component {
           <ToolboxSidebar />
           <Sidebar.Pusher style={{ transform: 'translate3d(7rem,0,0)' }}>
             <Segment basic inverted style={{ minHeight: '100vh' }}>
-              Each components content that is referred to as a tool will go in here
+              <Switch>
+                <Route path='/toolbox/dashboard' render={() => 'Hello from dashboard route'} />
+                <Route path='/toolbox/inventory' render={() => 'Hello from inventory route'} />
+                <Route path='/toolbox/orders' render={() => 'Hello from orders route'} />
+                <Route path='/toolbox/todos' render={() => 'Hello from todos route'} />
+                <Route path='/toolbox/analytics' render={() => 'Hello from analytics route'} />
+              </Switch>
             </Segment>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
