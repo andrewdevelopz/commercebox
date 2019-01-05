@@ -14,7 +14,7 @@ export default class Home extends Component {
   
   render() {
     return (
-      <main>
+      <div>
         <Container fluid style={{ background: '#111' }}>
           <Hero />
         </Container>
@@ -33,7 +33,7 @@ export default class Home extends Component {
             </Grid.Row>
           </Grid>
         </Container>
-      </main>
+      </div>
     )
   }
 }
