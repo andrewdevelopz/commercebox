@@ -2,19 +2,21 @@
 
 // Dependencies
 import express from 'express'
-import path from 'path'
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import mongoose from 'mongoose'
+import Database from './config/database/Database'
 
-// Importing routes
-import index from './routes/index'
-import inventory from './routes/toolbox/inventory'
-import orders from './routes/toolbox/orders'
-import shipping from './routes/toolbox/shipping'
-import todos from './routes/toolbox/todos'
-import auth from './routes/auth/auth'
+// Importing routes class
+import Auth from './config/routes/auth/Auth'
+import Inventory from './config/routes/toolbox/Inventory'
 
 const app = express()
+const db = new Database()
+
+// Connect to db with mongoose
+/** @todo: Make sure to update mongodb to v4+. After remove the 2nd parameter of useNewUrlParser */
+mongoose.connect(db.getConnectionString().database, { useNewUrlParser: true }).then(() => console.log('Connected to MongoDB')).catch(err => console.log(err))
 
 // Instantiate the container
 const server = {}
@@ -30,13 +32,13 @@ server.unifiedServer = (app) => {
   app.use(cors())
   app.use(bodyParser.json())
 
-  // Handling routes
-  app.use('/', index)
-  app.use('/inventory', inventory)
-  app.use('/orders', orders)
-  app.use('/shipping', shipping)
-  app.use('/todos', todos)
-  app.use('/auth', auth)
+  // Instantiate routes class
+  new Auth('/api/auth', app)
+  new Inventory('/api/inventory', app)
+
+  app.get('/', (req, res) => {
+    res.send('Invalid Endpoint')
+  })
 }
 
 // Instantate the HTTP server
