@@ -6,8 +6,10 @@
 
 // Dependencies
 import express from 'express'
-const router = express.Router()
 import Route from '../Route'
+import User from '../../../models/User'
+
+const router = express.Router()
 
 export default class Auth extends Route {
   constructor(path, app) {
@@ -21,19 +23,46 @@ export default class Auth extends Route {
   }
 
   run() {
-    this.root()
-    this.login()
+    this.root(false)
+    this.register(false)
+    this.login(false)
   }
 
-  root() {
+  /**
+   * All methods take:
+   * @param passport - which is a boolean value to include passport auth or not
+   */
+
+  root(passport) {
     this.createRoute('get', '/', (req, res) => {
       res.send('Hello from <b>ROOT</b> path of auth')
-    })
+    }, passport)
   }
 
-  login() {
+  register(passport) {
+
+    this.createRoute('post', '/register', async (req, res) => {
+      let user = {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password
+      }
+
+      try {
+        const newUser = await User(user).save()
+        res.send(newUser)
+      } catch(e) {
+        console.log(e)
+      }
+
+    }, passport)
+  }
+
+  login(passport) {
     this.createRoute('get', '/login', (req, res) => {
       res.send('Hello from <b>LOGIN</b> path of auth')
-    })
+    }, passport)
   }
 }

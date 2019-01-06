@@ -6,9 +6,7 @@
 
 import '../Env'
 
-class Database {
-  constructor() {}
-  
+class Database {  
   getConnectionString() {
     return {
       database: process.env.DB_ROUTE,

@@ -6,8 +6,9 @@
 
 // Dependencies
 import express from 'express'
-const router = express.Router()
 import Route from '../Route'
+
+const router = express.Router()
 
 export default class Inventory extends Route {
   constructor(path, app) {

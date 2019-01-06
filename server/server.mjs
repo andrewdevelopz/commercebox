@@ -11,51 +11,51 @@ import Database from './config/database/Database'
 import Auth from './config/routes/auth/Auth'
 import Inventory from './config/routes/toolbox/Inventory'
 
-const app = express()
-const db = new Database()
+class Server {
+  constructor() {
+    this.db = new Database()
+    this.app = express()
+    // Connect to db with mongoose
+    mongoose.connect(this.db.getConnectionString().database, { useNewUrlParser: true })
+      .then(() => console.log('Connected to MongoDB...'))
+    .catch(err => console.log(err))
+    // Initiate the server
+    this.init(this.app)
+  }
 
-// Connect to db with mongoose
-/** @todo: Make sure to update mongodb to v4+. After remove the 2nd parameter of useNewUrlParser */
-mongoose.connect(db.getConnectionString().database, { useNewUrlParser: true }).then(() => console.log('Connected to MongoDB')).catch(err => console.log(err))
+  // All server logic for the http and https server
+  unifiedServer(app) {
+    // Execute npm libraries
 
-// Instantiate the container
-const server = {}
+    /**
+     * @todo Currently we have cors enabled for all routes. Make sure to configure this properly in the future.
+     * @link https://expressjs.com/en/resources/middleware/cors.html
+     */
+    app.use(cors())
+    app.use(bodyParser.json())
 
-// All server logic for the http and https server
-server.unifiedServer = (app) => {
-  // Execute npm libraries
+    // Instantiate routes class
+    new Auth('/api/auth', app)
+    new Inventory('/api/inventory', app)
 
-  /**
-   * @todo Currently we have cors enabled for all routes. Make sure to configure this properly in the future.
-   * @link https://expressjs.com/en/resources/middleware/cors.html
-   */
-  app.use(cors())
-  app.use(bodyParser.json())
+    app.get('/', (req, res) => {
+      res.send('Invalid Endpoint')
+    })
+  }
 
-  // Instantiate routes class
-  new Auth('/api/auth', app)
-  new Inventory('/api/inventory', app)
+  // Instantate the HTTP server
+  httpServer(app) {
+    this.unifiedServer(app)
 
-  app.get('/', (req, res) => {
-    res.send('Invalid Endpoint')
-  })
+    // Listen on PORT
+    const port = process.env.PORT || 3000
+    app.listen(port, err => err ? console.log(err) : console.log(`Server started on port: ${port}`))
+  }
+
+  // Init script method
+  init(app) {
+    this.httpServer(app)
+  }
 }
 
-// Instantate the HTTP server
-server.httpServer = (app) => {
-  server.unifiedServer(app)
-  
-  // Listen on PORT
-  const port = process.env.PORT || 3000
-  app.listen(port, err => err ? console.log(err) : console.log(`Server started on port: ${port}`))
-}
-
-// Instantiate init script
-server.init = () => {
-  server.httpServer(app)
-}
-
-// Init script
-server.init()
-
-export default server
+export default new Server()
