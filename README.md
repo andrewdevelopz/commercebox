@@ -40,13 +40,13 @@ cd /server
 If you are using nodemon (which is suggested) simply run nodemon with the experimental flag
 
 ```
-nodemon --experimental-modules
+npm run servermon
 ```
 
 Otherwise use the node command with the experimental flag
 
 ```
-node --experimental-modules server.mjs
+npm run server
 ```
 
 You should now see the server running.
