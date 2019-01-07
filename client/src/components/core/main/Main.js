@@ -9,6 +9,8 @@ import { Switch, Route } from 'react-router-dom'
 // Import custom components
 import Home from '../../public/home/Home'
 import Toolbox from '../../toolbox/Toolbox'
+import LoginForm from '../../auth/LoginForm'
+import RegisterForm from '../../auth/RegisterForm'
 
 export default class Main extends Component {
   render() {
@@ -17,6 +19,8 @@ export default class Main extends Component {
         <Switch>
           <Route exact path='/' component={Home} />
           <Route path='/toolbox' component={Toolbox} />
+          <Route path='/login' component={LoginForm} />
+          <Route path='/register' component={RegisterForm} />
         </Switch>
       </main>
     )

@@ -6,7 +6,7 @@
 
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Input, Menu } from 'semantic-ui-react'
+import { Input, Menu } from 'semantic-ui-react'
 import logo from '../../../logo.svg'
 
 export default class Header extends Component {
@@ -37,8 +37,8 @@ export default class Header extends Component {
         path: '/login'
       },
       {
-        name: 'signup',
-        path: '/signup'
+        name: 'register',
+        path: '/register'
       },
       {
         name: 'logout',
@@ -65,7 +65,7 @@ export default class Header extends Component {
   }
 
   // Set the id for each state property that requires an id
-  setIdForItems(prop) {
+  setIdForItems = (prop) => {
     // Loop through the array from the property passed in
     for(const item of this.state[prop]) {
       // Get the index of the item that is inside the array
@@ -110,15 +110,20 @@ export default class Header extends Component {
           key={item.id}
           as={Link}
           to={item.path}
+          name={item.name}
+          active={activeItem === item.name}
+          onClick={this.handleItemClick}
         >
-          <Button><span className='capitalize'>{item.name}</span></Button>
+          <span className='capitalize'>
+            {item.name}  
+          </span>
         </Menu.Item>
       )
     })
 
     return (
       <header>
-        <Menu stackable inverted size='large'>
+        <Menu stackable inverted size='large' style={{ background: '#111' }}>
           <Menu.Item>
             <img src={logo} alt='logo' />
           </Menu.Item>

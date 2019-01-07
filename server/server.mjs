@@ -41,6 +41,10 @@ class Server {
     app.get('/', (req, res) => {
       res.send('Invalid Endpoint')
     })
+
+    app.get('/api', (req, res) => {
+      res.send('Commercebox API end point')
+    })
   }
 
   // Instantate the HTTP server

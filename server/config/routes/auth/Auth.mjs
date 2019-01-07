@@ -42,17 +42,17 @@ export default class Auth extends Route {
   register(passport) {
 
     this.createRoute('post', '/register', async (req, res) => {
-      let user = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password
-      }
-
       try {
+        const user = {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          username: req.body.username,
+          email: req.body.email,
+          password: req.body.password
+        }
+
         const newUser = await User(user).save()
-        res.send(newUser)
+        res.json(newUser)
       } catch(e) {
         console.log(e)
       }

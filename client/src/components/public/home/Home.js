@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react'
-import { Container, Grid, Header, Image } from 'semantic-ui-react'
+import { Container, Grid, Header, Image, Segment } from 'semantic-ui-react'
 import Hero from './hero/Hero'
 import placeholderImg from '../../../assets/visuals/image.png'
 
@@ -15,8 +15,10 @@ export default class Home extends Component {
   render() {
     return (
       <div>
-        <Container fluid style={{ background: '#111' }}>
-          <Hero />
+        <Container fluid>
+          <Segment inverted>
+            <Hero />
+          </Segment>
         </Container>
         <Container style={{ margin: '2em 0 2em 0' }}>
           <Grid>
