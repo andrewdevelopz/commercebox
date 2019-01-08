@@ -5,7 +5,7 @@
 
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { register } from './services/AuthService'
+import { fetchAuth } from '../shared/services/httpService'
 
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 
@@ -25,14 +25,18 @@ export default class LoginForm extends Component {
   }
 
   // On form submit
-  onSubmit = () => {
-    const user = this.state
-    // Register the user with the form data
-    register(user)
-      .then(res => {
-        console.log(res)
+  onSubmit = async () => {
+    try {
+      const user = this.state
+      // Register the user with the form data
+      const res = await fetchAuth('register', 'post', user, {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       })
-    .catch(err => console.log(err))
+      console.log(res)
+    } catch(e) {
+      console.log(e)
+    }
   }
   
   render() {

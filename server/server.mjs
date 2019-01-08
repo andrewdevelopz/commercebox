@@ -6,6 +6,9 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import Database from './config/database/Database'
+import passport from 'passport'
+import { jwtStrat } from './config/auth/passport'
+import './config/Env'
 
 // Importing routes class
 import Auth from './config/routes/auth/Auth'
@@ -33,6 +36,12 @@ class Server {
      */
     app.use(cors())
     app.use(bodyParser.json())
+
+    // Passport middleware
+    app.use(passport.initialize())
+    app.use(passport.session())
+
+    jwtStrat(passport)
 
     // Instantiate routes class
     new Auth('/api/auth', app)

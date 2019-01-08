@@ -6,7 +6,10 @@
 
 // Dependencies
 import express from 'express'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import Route from '../Route'
+import Database from '../../database/Database'
 import User from '../../../models/User'
 
 const router = express.Router()
@@ -23,7 +26,7 @@ export default class Auth extends Route {
   }
 
   run() {
-    this.root(false)
+    this.root(true)
     this.register(false)
     this.login(false)
   }
@@ -33,36 +36,82 @@ export default class Auth extends Route {
    * @param passport - which is a boolean value to include passport auth or not
    */
 
+  // Root for auth route, Use this format for all routes
   root(passport) {
     this.createRoute('get', '/', (req, res) => {
       res.send('Hello from <b>ROOT</b> path of auth')
     }, passport)
   }
 
+  // Register a user to the database
   register(passport) {
-
     this.createRoute('post', '/register', async (req, res) => {
       try {
+        // Generate salt and hashed password
+        const saltRounds = await bcrypt.genSalt(10)
+        const hash = await bcrypt.hash(req.body.password, saltRounds)
         const user = {
           firstName: req.body.firstName,
           lastName: req.body.lastName,
           username: req.body.username,
           email: req.body.email,
-          password: req.body.password
+          password: hash
         }
 
         const newUser = await User(user).save()
         res.json(newUser)
       } catch(e) {
+        res.sendStatus(500)
         console.log(e)
       }
-
     }, passport)
   }
 
+  // Authenticate a user
   login(passport) {
-    this.createRoute('get', '/login', (req, res) => {
-      res.send('Hello from <b>LOGIN</b> path of auth')
+    this.createRoute('post', '/login', async (req, res) => {
+      try {
+        const username = req.body.username
+        const password = req.body.password
+  
+        // Find the user by username from the database
+        const foundUser = await User.findOne({ username })
+  
+        if(!foundUser) {
+          // Send wrong username error
+          res.json({ error: 'The username you have entered does not exist' })
+          return
+        }
+
+        const isMatch = await bcrypt.compare(password, foundUser.password)
+
+        if(isMatch) {
+          const db = new Database()
+          // Create a token that expires in 1 week
+          const token = await jwt.sign({ data: foundUser }, db.getConnectionString().secret, {
+            expiresIn: 604800 // 1 week
+          })
+
+          // Send the token when user data to the client
+          res.json({
+            success: true,
+            token: 'Bearer ' + token,
+            user: {
+              id: foundUser._id,
+              name: foundUser.name,
+              username: foundUser.username,
+              email: foundUser.email
+            }
+          })
+        } else {
+          // Send wrong password error
+          res.json({ error: 'The password you have entered does not match' })
+          return
+        }
+      } catch(e) {
+        res.sendStatus(500)
+        console.log(e)
+      }
     }, passport)
   }
 }

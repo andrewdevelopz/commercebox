@@ -5,6 +5,7 @@
 
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { fetchAuth } from '../shared/services/httpService'
 
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 
@@ -21,8 +22,18 @@ export default class LoginForm extends Component {
   }
 
   // On form submit
-  onSubmit = (e) => {
-    console.log(this.state)
+  onSubmit = async () => {
+    try {
+      const user = this.state
+      // Login the user with the form data
+      const res = await fetchAuth('login', 'post', user, {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      })
+      console.log(res)
+    } catch(e) {
+      console.log(e)
+    }
   }
   
   render() {
