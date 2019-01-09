@@ -33,7 +33,12 @@ export default class LoginForm extends Component {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       })
-      console.log(res)
+      
+      if(res.success) {
+        this.props.history.push('/login')
+      } else {
+        throw new Error('Something went wrong with registering the user')
+      }
     } catch(e) {
       console.log(e)
     }

@@ -59,7 +59,10 @@ export default class Auth extends Route {
         }
 
         const newUser = await User(user).save()
-        res.json(newUser)
+        res.json({
+          success: true,
+          newUser
+        })
       } catch(e) {
         res.sendStatus(500)
         console.log(e)
@@ -75,20 +78,21 @@ export default class Auth extends Route {
         const password = req.body.password
   
         // Find the user by username from the database
-        const foundUser = await User.findOne({ username })
+        const user = await User.findOne({ username })
   
-        if(!foundUser) {
+        if(!user) {
           // Send wrong username error
           res.json({ error: 'The username you have entered does not exist' })
           return
         }
 
-        const isMatch = await bcrypt.compare(password, foundUser.password)
+        // Compare found user password with inputed password from client
+        const isMatch = await bcrypt.compare(password, user.password)
 
         if(isMatch) {
           const db = new Database()
           // Create a token that expires in 1 week
-          const token = await jwt.sign({ data: foundUser }, db.getConnectionString().secret, {
+          const token = await jwt.sign({ data: user }, db.getConnectionString().secret, {
             expiresIn: 604800 // 1 week
           })
 
@@ -97,10 +101,10 @@ export default class Auth extends Route {
             success: true,
             token: 'Bearer ' + token,
             user: {
-              id: foundUser._id,
-              name: foundUser.name,
-              username: foundUser.username,
-              email: foundUser.email
+              id: user._id,
+              name: user.name,
+              username: user.username,
+              email: user.email
             }
           })
         } else {

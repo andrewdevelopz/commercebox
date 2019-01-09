@@ -1,13 +1,15 @@
 /**
  * @overview: This componenet controls the header of the application. It contains items such as but not limited to navigation menu, logo 
  * and authentication buttons.
- * 
  */
 
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Input, Menu } from 'semantic-ui-react'
 import logo from '../../../logo.svg'
+
+// Import custom components
+import { AuthConsumer } from '../../auth/AuthContext'
 
 export default class Header extends Component {
   state = {
@@ -41,12 +43,12 @@ export default class Header extends Component {
         path: '/register'
       },
       {
-        name: 'logout',
-        path: '/logout'
-      },
-      {
         name: 'myaccount',
         path: '/myaccount'
+      },
+      {
+        name: 'logout',
+        path: '/logout'
       }
     ]
   }
@@ -79,66 +81,74 @@ export default class Header extends Component {
     const { activeItem } = this.state
 
     // Map the nav menu items
-    const navMenu = this.state.navMenuItems.map(item => {
-      return (
-        <Menu.Item
-          key={item.id}
-          as={Link}
-          to={item.path}
-          name={item.name}
-          active={activeItem === item.name}
-          onClick={this.handleItemClick}
-        >
-          <span className='capitalize'>
-            {item.name}  
-          </span>
-        </Menu.Item>
-      )
-    })
+    const navMenu = (isAuth) => {
+      return this.state.navMenuItems.map(item => {
+        return (
+          <Menu.Item
+            key={item.id}
+            as={Link}
+            to={item.path}
+            name={item.name}
+            active={activeItem === item.name}
+            onClick={this.handleItemClick}
+          >
+            <span className='capitalize'>
+              {item.name}  
+            </span>
+          </Menu.Item>
+        )
+      })
+    }
 
     // Filter and map the authentication menu items
-    const authMenu = this.state.authMenuItems.filter(item => {
-      // If the user is authenticated we need to remove login/signup
-      if(this.state.isAuthenticated) {
-        return item.name !== 'login' && item.name !== 'signup'
-      } else {
-        return item.name !== 'logout' && item.name !== 'myaccount'
-      }
-    }).map(item => {
-      return (
-        <Menu.Item 
-          key={item.id}
-          as={Link}
-          to={item.path}
-          name={item.name}
-          active={activeItem === item.name}
-          onClick={this.handleItemClick}
-        >
-          <span className='capitalize'>
-            {item.name}  
-          </span>
-        </Menu.Item>
-      )
-    })
+    const authMenu = (isAuth) => {
+      return this.state.authMenuItems.filter(item => {
+        // If the user is authenticated we need to remove login && register
+        if(isAuth) {
+          return item.name !== 'login' && item.name !== 'register'
+        } else {
+          return item.name !== 'logout' && item.name !== 'myaccount'
+        }
+      }).map(item => {
+        return (
+          <Menu.Item 
+            key={item.id}
+            as={Link}
+            to={item.path}
+            name={item.name}
+            active={activeItem === item.name}
+            onClick={this.handleItemClick}
+          >
+            <span className='capitalize'>
+              {item.name}  
+            </span>
+          </Menu.Item>
+        )
+      })
+    } 
 
     return (
       <header>
-        <Menu stackable inverted size='large' style={{ background: '#111' }}>
-          <Menu.Item>
-            <img src={logo} alt='logo' />
-          </Menu.Item>
+        <AuthConsumer>
+          {({ isAuth }) => (
+            <Menu stackable inverted size='large' style={{ background: '#111' }}>
+              <Menu.Item>
+                <img src={logo} alt='logo' />
+              </Menu.Item>
 
-          {/* Input the nav menu */}
-          {navMenu}
+              {/* Input the nav menu */}
+              {navMenu(isAuth)}
 
-          <Menu.Menu position='right'>
-            <Menu.Item>
-              <Input icon='search' placeholder='Search...' />
-            </Menu.Item>
-            {/* Input the auth menu */}
-            {authMenu}
-          </Menu.Menu>
-        </Menu>
+              <Menu.Menu position='right'>
+                <Menu.Item>
+                  <Input icon='search' placeholder='Search...' />
+                </Menu.Item>
+                {/* Input the auth menu */}
+                {authMenu(isAuth)}
+              </Menu.Menu>
+            </Menu>
+          )}
+        </AuthConsumer>
       </header>
     )
   }

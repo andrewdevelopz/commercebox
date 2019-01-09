@@ -17,7 +17,7 @@ export default class Hero extends Component {
           <h1>Commerce Utility Box</h1>
           <p>A toolbox which help sellers maintain inventory and complete day to day tasks.</p>
           <Divider />
-          <Button as={Link} to='/signup' primary>Signup</Button>
+          <Button as={Link} to='/register' primary>Register</Button>
           <Button as={Link} to='/login'>Login</Button>
         </Container>
       </main>
