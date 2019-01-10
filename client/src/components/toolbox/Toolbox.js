@@ -3,7 +3,6 @@
  * within the toolbox. For example the orders, todos, inventory, etc. components are all childrens of toolbox.
  * 
  * @todo: Make it so the sidebar can be hidden and revealed when a button is pressed
- * 
  */
 
 import React, { Component } from 'react'

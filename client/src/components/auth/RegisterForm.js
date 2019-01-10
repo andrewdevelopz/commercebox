@@ -1,6 +1,5 @@
 /**
- * @overview: This componenet is for the login section of the application.
- * 
+ * @overview: This componenet is for the register section of the application.
  */
 
 import React, { Component } from 'react'
@@ -9,7 +8,7 @@ import { fetchAuth } from '../shared/services/httpService'
 
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 
-export default class LoginForm extends Component {
+export default class RegisterForm extends Component {
   state = {
     firstName: '',
     lastName: '',

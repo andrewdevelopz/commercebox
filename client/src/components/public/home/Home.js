@@ -1,7 +1,6 @@
 /**
  * @overview: This componenet controls the home page of the application. This homepage is accessible 
  * to the public and does not require you have a membership or account to view it.
- * 
  */
 
 import React, { Component } from 'react'

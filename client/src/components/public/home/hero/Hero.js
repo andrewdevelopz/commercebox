@@ -1,6 +1,5 @@
 /**
  * @overview: This componenet is for the hero banner/slider for the public homepage of the application.
- * 
  */
 
 import React, { Component } from 'react'

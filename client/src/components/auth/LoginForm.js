@@ -1,6 +1,5 @@
 /**
  * @overview: This componenet is for the login section of the application.
- * 
  */
 
 import React, { Component } from 'react'

@@ -1,7 +1,6 @@
 /**
  * @overview: This componenet is for the sidebar of the toolbox. It is a navigation menu that contains routes
  * to the different sections of the toolbox.
- * 
  */
 
 import React, { Component } from 'react'
