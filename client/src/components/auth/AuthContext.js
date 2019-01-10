@@ -49,7 +49,8 @@ export default class AuthProvider extends Component {
       <AuthContext.Provider
         value={{
           isAuth: isAuth,
-          login: this.login
+          login: this.login,
+          logout: this.logout
         }}
       >
         {this.props.children}

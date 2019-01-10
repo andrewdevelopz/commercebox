@@ -5,11 +5,12 @@
 
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Input, Menu } from 'semantic-ui-react'
 import logo from '../../../logo.svg'
 
 // Import custom components
 import { AuthConsumer } from '../../auth/AuthContext'
+
+import { Input, Menu } from 'semantic-ui-react'
 
 export default class Header extends Component {
   state = {
@@ -48,7 +49,7 @@ export default class Header extends Component {
       },
       {
         name: 'logout',
-        path: '/logout'
+        path: '/'
       }
     ]
   }
@@ -82,7 +83,15 @@ export default class Header extends Component {
 
     // Map the nav menu items
     const navMenu = (isAuth) => {
-      return this.state.navMenuItems.map(item => {
+      const { navMenuItems } = this.state
+      return navMenuItems.filter(item => {
+        // If the user is authenticated show the proper menu items
+        if(isAuth) {
+          return item.name
+        } else {
+          return item.name !== 'toolbox'
+        }
+      }).map(item => {
         return (
           <Menu.Item
             key={item.id}
@@ -93,7 +102,7 @@ export default class Header extends Component {
             onClick={this.handleItemClick}
           >
             <span className='capitalize'>
-              {item.name}  
+              {item.name}
             </span>
           </Menu.Item>
         )
@@ -101,8 +110,9 @@ export default class Header extends Component {
     }
 
     // Filter and map the authentication menu items
-    const authMenu = (isAuth) => {
-      return this.state.authMenuItems.filter(item => {
+    const authMenu = (isAuth, logout) => {
+      const { authMenuItems } = this.state
+      return authMenuItems.filter(item => {
         // If the user is authenticated we need to remove login && register
         if(isAuth) {
           return item.name !== 'login' && item.name !== 'register'
@@ -110,27 +120,44 @@ export default class Header extends Component {
           return item.name !== 'logout' && item.name !== 'myaccount'
         }
       }).map(item => {
-        return (
-          <Menu.Item 
-            key={item.id}
-            as={Link}
-            to={item.path}
-            name={item.name}
-            active={activeItem === item.name}
-            onClick={this.handleItemClick}
-          >
-            <span className='capitalize'>
-              {item.name}  
-            </span>
-          </Menu.Item>
-        )
+        // If the menu item is logout return it as a button with logout method from the auth consumer
+        if(item.name === 'logout') {
+          return (
+            <Menu.Item 
+              key={item.id}
+              as={Link}
+              to={item.path}
+              name={item.name}
+              onClick={logout}
+            >
+              <span className='capitalize'>
+                {item.name}
+              </span>
+            </Menu.Item>
+          )
+        } else {
+          return (
+            <Menu.Item 
+              key={item.id}
+              as={Link}
+              to={item.path}
+              name={item.name}
+              active={activeItem === item.name}
+              onClick={this.handleItemClick}
+            >
+              <span className='capitalize'>
+                {item.name}  
+              </span>
+            </Menu.Item>
+          )
+        }
       })
     } 
 
     return (
       <header>
         <AuthConsumer>
-          {({ isAuth }) => (
+          {({ isAuth, logout }) => (
             <Menu stackable inverted size='large' style={{ background: '#111' }}>
               <Menu.Item>
                 <img src={logo} alt='logo' />
@@ -143,8 +170,9 @@ export default class Header extends Component {
                 <Menu.Item>
                   <Input icon='search' placeholder='Search...' />
                 </Menu.Item>
+
                 {/* Input the auth menu */}
-                {authMenu(isAuth)}
+                {authMenu(isAuth, logout)}
               </Menu.Menu>
             </Menu>
           )}
