@@ -13,7 +13,7 @@ export default class Footer extends Component {
     return (
       <footer className="footer">
         <Container fluid>
-          <Segment inverted>
+          <Segment inverted style={{ background: '#111' }}>
             <Container>
               <Grid verticalAlign="middle">
                 <Grid.Row>

@@ -33,8 +33,8 @@ export default class Route {
   // - type which is the type of http request (e.g. 'get', 'post')
   // - path which is the path the request is related to (e.g. '/<route>/login')
   // - callback which is the callback function a router receives (e.g. (req, res) => {})
-  // - passport which is the Passport authentication for the route
+  // - passport which is a boolean to include Passport authentication for the route
   createRoute(type, path, callback, passport = false) {
-    passport ? this.router[type](path, passport, callback) : this.router[type](path, callback)
+    passport ? this.router[type](path, this.passport.authenticate('jwt', { session: false }), callback) : this.router[type](path, callback)
   }
 }

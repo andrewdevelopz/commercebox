@@ -1,7 +1,6 @@
 /**
  * @overview: This componenet is for the sidebar of the toolbox. It is a navigation menu that contains routes
  * to the different sections of the toolbox.
- * 
  */
 
 import React, { Component } from 'react'
@@ -60,7 +59,7 @@ export default class ToolboxSidebar extends Component {
   }
 
   // Set the id for each state property that requires an id
-  setIdForItems(prop) {
+  setIdForItems = (prop) => {
     // Loop through the array from the property passed in
     for(const item of this.state[prop]) {
       // Get the index of the item that is inside the array
@@ -70,7 +69,7 @@ export default class ToolboxSidebar extends Component {
   }
   
   render() {
-    // To determine which menu is active
+    // Destructure the state
     const { activeItem, animation, direction, visible } = this.state
 
     // Map toolbox menu items to sidebar

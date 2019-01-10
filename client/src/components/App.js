@@ -1,17 +1,20 @@
 import React, { Component } from 'react'
 import './App.css'
 
-// Import Components
+// Import custom components
 import Header from './core/header/Header'
 import Main from './core/main/Main'
 import Footer from './core/footer/Footer'
+import { AuthProvider } from './auth/AuthContext'
 
 export default class App extends Component {
   render() {
     return (
       <div>
-        <Header />
-        <Main />
+        <AuthProvider>
+          <Header />
+          <Main />
+        </AuthProvider>
         <Footer />
       </div>
     )

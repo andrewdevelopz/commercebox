@@ -6,56 +6,75 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import Database from './config/database/Database'
+import passport from 'passport'
+import { jwtStrat } from './config/auth/passport'
+import './config/Env'
 
 // Importing routes class
 import Auth from './config/routes/auth/Auth'
 import Inventory from './config/routes/toolbox/Inventory'
+import Orders from './config/routes/toolbox/Orders'
+import Shipping from './config/routes/toolbox/Shipping'
+import Todos from './config/routes/toolbox/Todos'
 
-const app = express()
-const db = new Database()
+class Server {
+  constructor() {
+    this.db = new Database()
+    this.app = express()
+    // Connect to db with mongoose
+    mongoose.connect(this.db.getConnectionString().database, { useNewUrlParser: true })
+      .then(() => console.log('Connected to MongoDB...'))
+    .catch(err => console.log(err))
+    // Initiate the server
+    this.init(this.app)
+  }
 
-// Connect to db with mongoose
-/** @todo: Make sure to update mongodb to v4+. After remove the 2nd parameter of useNewUrlParser */
-mongoose.connect(db.getConnectionString().database, { useNewUrlParser: true }).then(() => console.log('Connected to MongoDB')).catch(err => console.log(err))
+  // All server logic for the http and https server
+  unifiedServer(app) {
+    // Execute npm libraries
 
-// Instantiate the container
-const server = {}
+    /**
+     * @todo Currently we have cors enabled for all routes. Make sure to configure this properly in the future.
+     * @link https://expressjs.com/en/resources/middleware/cors.html
+     */
+    app.use(cors())
+    app.use(bodyParser.json())
 
-// All server logic for the http and https server
-server.unifiedServer = (app) => {
-  // Execute npm libraries
+    // Passport middleware
+    app.use(passport.initialize())
+    app.use(passport.session())
 
-  /**
-   * @todo Currently we have cors enabled for all routes. Make sure to configure this properly in the future.
-   * @link https://expressjs.com/en/resources/middleware/cors.html
-   */
-  app.use(cors())
-  app.use(bodyParser.json())
+    jwtStrat(passport)
 
-  // Instantiate routes class
-  new Auth('/api/auth', app)
-  new Inventory('/api/inventory', app)
+    // Instantiate routes class
+    new Auth('/api/auth', app)
+    new Inventory('/api/inventory', app)
+    new Orders('/api/orders', app)
+    new Shipping('/api/shipping', app)
+    new Todos('/api/todos', app)
 
-  app.get('/', (req, res) => {
-    res.send('Invalid Endpoint')
-  })
+    app.get('/', (req, res) => {
+      res.send('Invalid Endpoint')
+    })
+
+    app.get('/api', (req, res) => {
+      res.send('Commercebox API end point')
+    })
+  }
+
+  // Instantate the HTTP server
+  httpServer(app) {
+    this.unifiedServer(app)
+
+    // Listen on PORT
+    const port = process.env.PORT || 3000
+    app.listen(port, err => err ? console.log(err) : console.log(`Server started on port: ${port}`))
+  }
+
+  // Init script method
+  init(app) {
+    this.httpServer(app)
+  }
 }
 
-// Instantate the HTTP server
-server.httpServer = (app) => {
-  server.unifiedServer(app)
-  
-  // Listen on PORT
-  const port = process.env.PORT || 3000
-  app.listen(port, err => err ? console.log(err) : console.log(`Server started on port: ${port}`))
-}
-
-// Instantiate init script
-server.init = () => {
-  server.httpServer(app)
-}
-
-// Init script
-server.init()
-
-export default server
+export default new Server()
