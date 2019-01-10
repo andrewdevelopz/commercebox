@@ -13,6 +13,9 @@ import './config/Env'
 // Importing routes class
 import Auth from './config/routes/auth/Auth'
 import Inventory from './config/routes/toolbox/Inventory'
+import Orders from './config/routes/toolbox/Orders'
+import Shipping from './config/routes/toolbox/Shipping'
+import Todos from './config/routes/toolbox/Todos'
 
 class Server {
   constructor() {
@@ -46,6 +49,9 @@ class Server {
     // Instantiate routes class
     new Auth('/api/auth', app)
     new Inventory('/api/inventory', app)
+    new Orders('/api/orders', app)
+    new Shipping('/api/shipping', app)
+    new Todos('/api/todos', app)
 
     app.get('/', (req, res) => {
       res.send('Invalid Endpoint')

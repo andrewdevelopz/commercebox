@@ -27,13 +27,13 @@ export default class Shipping extends Route {
 
   root() {
     this.createRoute('get', '/', (req, res) => {
-      res.send('Hello from <b>ROOT</b> path of inventory')
+      res.send('Hello from <b>ROOT</b> path of shipping')
     })
   }
 
   test() {
     this.createRoute('get', '/test', (req, res) => {
-      res.send('Hello from <b>TEST</b> path of inventory')
+      res.send('Hello from <b>TEST</b> path of shipping')
     })
   }
 }
