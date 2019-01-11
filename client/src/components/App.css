@@ -3,3 +3,7 @@
 .capitalize {
   text-transform: capitalize;
 }
+
+.formLabel label {
+  color: #fff!important;
+}

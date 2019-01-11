@@ -38,9 +38,9 @@ export default class LoginForm extends Component {
     return (
       <Segment inverted>
         <Grid textAlign='center' style={{ minHeight: '100vh', padding: '2rem' }} verticalAlign='middle'>
-          <Grid.Column style={{ maxWidth: 500, border: '1px solid #fff', borderRadius: '2rem' }}>
+          <Grid.Column style={{ maxWidth: 500 }}>
             <Header inverted as='h2' textAlign='center'>
-              Log-in to your account
+              Log-in to Your Account
             </Header>
             <Form size='large'>
               <Segment stacked>

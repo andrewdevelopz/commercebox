@@ -44,7 +44,7 @@ export default class Header extends Component {
         path: '/register'
       },
       {
-        name: 'myaccount',
+        name: 'my account',
         path: '/myaccount'
       },
       {
@@ -54,27 +54,10 @@ export default class Header extends Component {
     ]
   }
 
-  constructor() {
-    super()
-    // Call for each state that require an id before the component mounts. The id will be used as a key for rendering the component
-    this.setIdForItems('navMenuItems')
-    this.setIdForItems('authMenuItems')
-  }
-
   // Handle when a menu item has been clicked
   handleItemClick = (e, { name }) => {
     // Set the active item when a nav menu is clicked
     this.setState({ activeItem: name })
-  }
-
-  // Set the id for each state property that requires an id
-  setIdForItems = (prop) => {
-    // Loop through the array from the property passed in
-    for(const item of this.state[prop]) {
-      // Get the index of the item that is inside the array
-      const index = this.state[prop].indexOf(item)
-      item.id = index
-    }
   }
 
   render() {
@@ -91,10 +74,10 @@ export default class Header extends Component {
         } else {
           return item.name !== 'toolbox'
         }
-      }).map(item => {
+      }).map((item, index) => {
         return (
           <Menu.Item
-            key={item.id}
+            key={index}
             as={Link}
             to={item.path}
             name={item.name}
@@ -117,14 +100,14 @@ export default class Header extends Component {
         if(isAuth) {
           return item.name !== 'login' && item.name !== 'register'
         } else {
-          return item.name !== 'logout' && item.name !== 'myaccount'
+          return item.name !== 'logout' && item.name !== 'my account'
         }
-      }).map(item => {
+      }).map((item, index) => {
         // If the menu item is logout return it as a button with logout method from the auth consumer
         if(item.name === 'logout') {
           return (
             <Menu.Item 
-              key={item.id}
+              key={index}
               as={Link}
               to={item.path}
               name={item.name}
@@ -138,7 +121,7 @@ export default class Header extends Component {
         } else {
           return (
             <Menu.Item 
-              key={item.id}
+              key={index}
               as={Link}
               to={item.path}
               name={item.name}

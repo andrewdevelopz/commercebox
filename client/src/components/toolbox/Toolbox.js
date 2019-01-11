@@ -7,32 +7,59 @@
 
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
-import { Container, Sidebar, Segment } from 'semantic-ui-react'
 
 // Import custom components
-import ToolboxSidebar from './sidebar/ToolboxSidebar'
+import SidebarFrame from '../shared/sidebar/SidebarFrame'
+
+import { Sidebar, Segment } from 'semantic-ui-react'
 
 export default class Toolbox extends Component {
-  state = {}
+  state = {
+    sidebarItems: [
+      {
+        name: 'dashboard',
+        icon: 'dashboard',
+        path: '/toolbox/dashboard'
+      },
+      {
+        name: 'inventory',
+        icon: 'sitemap',
+        path: '/toolbox/inventory'
+      },
+      {
+        name: 'orders',
+        icon: 'shipping',
+        path: '/toolbox/orders'
+      },
+      {
+        name: 'todos',
+        icon: 'ordered list',
+        path: '/toolbox/todos'
+      },
+      {
+        name: 'analytics',
+        icon: 'line graph',
+        path: '/toolbox/analytics'
+      }
+    ]
+  }
   
   render() {
     return (
-      <Container fluid>
-        <Sidebar.Pushable basic as={Segment} style={{ minHeight: '100vh' }}>
-          <ToolboxSidebar />
-          <Sidebar.Pusher style={{ transform: 'translate3d(7rem,0,0)' }}>
-            <Segment basic inverted style={{ minHeight: '100vh' }}>
-              <Switch>
-                <Route path='/toolbox/dashboard' render={() => 'Hello from dashboard route'} />
-                <Route path='/toolbox/inventory' render={() => 'Hello from inventory route'} />
-                <Route path='/toolbox/orders' render={() => 'Hello from orders route'} />
-                <Route path='/toolbox/todos' render={() => 'Hello from todos route'} />
-                <Route path='/toolbox/analytics' render={() => 'Hello from analytics route'} />
-              </Switch>
-            </Segment>
-          </Sidebar.Pusher>
-        </Sidebar.Pushable>
-      </Container>
+      <Sidebar.Pushable basic as={Segment} style={{ minHeight: '100vh' }}>
+        <SidebarFrame name='toolbox' sidebarItems={this.state.sidebarItems} />
+        <Sidebar.Pusher style={{ background: '#252525', minHeight: '100vh', transform: 'none', marginLeft: '7rem' }}>
+          <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
+            <Switch>
+              <Route path='/toolbox/dashboard' render={() => 'Hello from dashboard route'} />
+              <Route path='/toolbox/inventory' render={() => 'Hello from inventory route'} />
+              <Route path='/toolbox/orders' render={() => 'Hello from orders route'} />
+              <Route path='/toolbox/todos' render={() => 'Hello from todos route'} />
+              <Route path='/toolbox/analytics' render={() => 'Hello from analytics route'} />
+            </Switch>
+          </Segment>
+        </Sidebar.Pusher>
+      </Sidebar.Pushable>
     )
   }
 }
