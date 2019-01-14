@@ -10,6 +10,7 @@ import Home from '../../public/home/Home'
 import Toolbox from '../../toolbox/Toolbox'
 import LoginForm from '../../auth/LoginForm'
 import RegisterForm from '../../auth/RegisterForm'
+import MyAccount from '../../auth/user/MyAccount'
 import ProtectedRoute from '../../auth/ProtectedRoute'
 
 export default class Main extends Component {
@@ -21,6 +22,7 @@ export default class Main extends Component {
           <ProtectedRoute path='/toolbox' component={Toolbox} />
           <Route path='/login' component={LoginForm} />
           <Route path='/register' component={RegisterForm} />
+          <ProtectedRoute path='/myaccount' component={MyAccount} />
         </Switch>
       </main>
     )

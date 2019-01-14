@@ -39,7 +39,7 @@ export default class RegisterForm extends Component {
         throw new Error('Something went wrong with registering the user')
       }
     } catch(e) {
-      console.log(e)
+      console.error(e)
     }
   }
   
@@ -49,9 +49,9 @@ export default class RegisterForm extends Component {
     return (
       <Segment inverted>
         <Grid textAlign='center' style={{ minHeight: '100vh', padding: '2rem' }} verticalAlign='middle'>
-          <Grid.Column style={{ maxWidth: 500, border: '1px solid #fff', borderRadius: '2rem' }}>
+          <Grid.Column style={{ maxWidth: 500 }}>
             <Header inverted as='h2' textAlign='center'>
-              Register an account
+              Register an Account
             </Header>
             <Form size='large'>
               <Segment stacked>
@@ -85,7 +85,7 @@ export default class RegisterForm extends Component {
                 <Form.Input 
                   fluid icon='mail' 
                   iconPosition='left' 
-                  placeholder='E-mail address'
+                  placeholder='Email'
                   type='text'
                   name='email' 
                   value={email} 

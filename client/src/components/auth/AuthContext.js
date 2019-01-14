@@ -6,13 +6,20 @@ import React, { Component } from 'react'
 
 // Import custom components
 import { fetchAuth } from '../shared/services/httpService'
-import { storeUserLocalStorage, clearUserLocalStorage } from '../auth/services/authService'
+import { loadToken, storeUserLocalStorage, clearUserLocalStorage } from '../auth/services/authService'
 
 const AuthContext = React.createContext()
 
 export default class AuthProvider extends Component {
   state = {
     isAuth: false
+  }
+
+  constructor() {
+    super()
+    let token = loadToken()
+    token && ( this.state.isAuth = true )
+    token = null
   }
 
   // Method to login a user
