@@ -70,7 +70,7 @@ export default class Header extends Component {
       return navMenuItems.filter(item => {
         // If the user is authenticated show the proper menu items
         if(isAuth) {
-          return item.name
+          return item.name === 'toolbox'
         } else {
           return item.name !== 'toolbox'
         }

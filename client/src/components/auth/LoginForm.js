@@ -27,7 +27,7 @@ export default class LoginForm extends Component {
     if(res.success) {
       this.props.history.push('/toolbox/dashboard')
     } else {
-      console.log(res)
+      console.error(res)
     }
   }
   

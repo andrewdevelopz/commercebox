@@ -39,7 +39,7 @@ export default class RegisterForm extends Component {
         throw new Error('Something went wrong with registering the user')
       }
     } catch(e) {
-      console.log(e)
+      console.error(e)
     }
   }
   

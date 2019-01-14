@@ -22,7 +22,10 @@ export default class Hero extends Component {
           <AuthConsumer>
             {({ isAuth }) => (
               isAuth ? (
-                <Button as={Link} to='/myaccount'>My Account</Button>
+                <div>
+                  <Button as={Link} to='/toolbox' primary>Toolbox</Button>
+                  <Button as={Link} to='/myaccount'>My Account</Button>
+                </div>
               ) : (
                 <div>
                   <Button as={Link} to='/register' primary>Register</Button>
