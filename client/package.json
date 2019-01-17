@@ -1,29 +1,29 @@
 {
-  "name": "commerceutilitybox-client",
-  "version": "1.0.0",
-  "description": "The front end for the Commerce Utility Box. An application that helps businesses manage their day to day operations.",
-  "main": "./src/index.js",
-  "private": true,
-  "dependencies": {
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.2",
-    "semantic-ui-react": "^0.84.0"
-  },
-  "scripts": {
-    "start": "set PORT=3005 && react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+    "name": "commerceutilitybox-client",
+    "version": "1.0.0",
+    "description": "The front end for the Commerce Utility Box. An application that helps businesses manage their day to day operations.",
+    "main": "./src/index.js",
+    "private": true,
+    "dependencies": {
+        "react": "^16.7.0",
+        "react-dom": "^16.7.0",
+        "react-router-dom": "^4.3.1",
+        "react-scripts": "2.1.2",
+        "semantic-ui-react": "^0.84.0"
+    },
+    "scripts": {
+        "start": "set PORT=3005 && react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
+    ]
 }

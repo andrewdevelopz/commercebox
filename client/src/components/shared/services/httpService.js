@@ -6,11 +6,11 @@ const root = 'http://localhost:3000/api'
 
 // All http calls to the auth route
 export const fetchAuth = async (path, method, data, headers) => {
-  const res = await fetch(`${root}/auth/${path}`, {
-    method: method.toUpperCase(),
-    body: JSON.stringify(data),
-    headers: headers
-  })
-  
-  return res.json()
+    const res = await fetch(`${root}/auth/${path}`, {
+        method: method.toUpperCase(),
+        body: JSON.stringify(data),
+        headers: headers
+    })
+
+    return res.json()
 }

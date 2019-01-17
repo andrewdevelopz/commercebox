@@ -8,15 +8,15 @@ import Footer from './core/footer/Footer'
 import { AuthProvider } from './auth/AuthContext'
 
 export default class App extends Component {
-  render() {
-    return (
-      <div>
-        <AuthProvider>
-          <Header />
-          <Main />
-        </AuthProvider>
-        <Footer />
-      </div>
-    )
-  }
+    render() {
+        return (
+            <div>
+                <AuthProvider>
+                    <Header />
+                    <Main />
+                </AuthProvider>
+                <Footer />
+            </div>
+        )
+    }
 }

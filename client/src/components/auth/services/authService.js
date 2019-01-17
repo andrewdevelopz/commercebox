@@ -3,16 +3,16 @@
  */
 
 export const loadToken = () => {
-  const token = localStorage.getItem('id_token')
-  return token
+    const token = localStorage.getItem('id_token')
+    return token
 }
 
 export const storeUserLocalStorage = (token) => {
-  // Store the json web token into local storage
-  localStorage.setItem('id_token', token)
+    // Store the json web token into local storage
+    localStorage.setItem('id_token', token)
 }
 
 export const clearUserLocalStorage = () => {
-  // Clear local storage
-  localStorage.clear()
+    // Clear local storage
+    localStorage.clear()
 }

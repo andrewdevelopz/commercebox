@@ -6,13 +6,13 @@
 
 import '../Env'
 
-class Database {  
-  getConnectionString() {
-    return {
-      database: process.env.DB_ROUTE,
-      secret: process.env.DB_SECRET
+class Database {
+    getConnectionString() {
+        return {
+            database: process.env.DB_ROUTE,
+            secret: process.env.DB_SECRET
+        }
     }
-  }
 }
 
 export default Database

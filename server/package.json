@@ -1,23 +1,23 @@
 {
-  "name": "commerceutilitybox-api",
-  "version": "1.0.0",
-  "description": "The API for Commerce Utility Box. An application that helps businesses manage day to day operations.",
-  "main": "server.mjs",
-  "scripts": {
-    "server": "node --experimental-modules server.mjs",
-    "servermon": "nodemon --experimental-modules"
-  },
-  "author": "Andrew Lee",
-  "license": "MIT",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.18.3",
-    "cors": "^2.8.5",
-    "dotenv": "^6.2.0",
-    "express": "^4.16.4",
-    "jsonwebtoken": "^8.4.0",
-    "mongoose": "^5.4.2",
-    "passport": "^0.4.0",
-    "passport-jwt": "^4.0.0"
-  }
+    "name": "commerceutilitybox-api",
+    "version": "1.0.0",
+    "description": "The API for Commerce Utility Box. An application that helps businesses manage day to day operations.",
+    "main": "server.mjs",
+    "scripts": {
+        "server": "node --experimental-modules server.mjs",
+        "servermon": "nodemon --experimental-modules"
+    },
+    "author": "Andrew Lee",
+    "license": "MIT",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "body-parser": "^1.18.3",
+        "cors": "^2.8.5",
+        "dotenv": "^6.2.0",
+        "express": "^4.16.4",
+        "jsonwebtoken": "^8.4.0",
+        "mongoose": "^5.4.2",
+        "passport": "^0.4.0",
+        "passport-jwt": "^4.0.0"
+    }
 }

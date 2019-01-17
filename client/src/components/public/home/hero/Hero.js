@@ -10,32 +10,32 @@ import { Button, Container, Divider } from 'semantic-ui-react'
 import { AuthConsumer } from '../../../auth/AuthContext'
 
 export default class Hero extends Component {
-  state = {}
-  
-  render() {
-    return (
-      <main>
-        <Container textAlign="center" text style={{ padding: '7rem 0 7rem 0', color: 'white' }}>
-          <h1>Commerce Utility Box</h1>
-          <p>A toolbox which help sellers maintain inventory and complete day to day tasks.</p>
-          <Divider />
-          <AuthConsumer>
-            {({ isAuth }) => (
-              isAuth ? (
-                <div>
-                  <Button as={Link} to='/toolbox' primary>Toolbox</Button>
-                  <Button as={Link} to='/myaccount'>My Account</Button>
-                </div>
-              ) : (
-                <div>
-                  <Button as={Link} to='/register' primary>Register</Button>
-                  <Button as={Link} to='/login'>Login</Button>
-                </div>
-              )
-            )}
-          </AuthConsumer>
-        </Container>
-      </main>
-    )
-  }
+    state = {}
+
+    render() {
+        return (
+            <main>
+                <Container textAlign="center" text style={{ padding: '7rem 0 7rem 0', color: 'white' }}>
+                    <h1>Commerce Utility Box</h1>
+                    <p>A toolbox which help sellers maintain inventory and complete day to day tasks.</p>
+                    <Divider />
+                    <AuthConsumer>
+                        {({ isAuth }) => (
+                            isAuth ? (
+                                <div>
+                                    <Button as={Link} to='/toolbox' primary>Toolbox</Button>
+                                    <Button as={Link} to='/myaccount'>My Account</Button>
+                                </div>
+                            ) : (
+                                    <div>
+                                        <Button as={Link} to='/register' primary>Register</Button>
+                                        <Button as={Link} to='/login'>Login</Button>
+                                    </div>
+                                )
+                        )}
+                    </AuthConsumer>
+                </Container>
+            </main>
+        )
+    }
 }

@@ -14,17 +14,17 @@ import MyAccount from '../../auth/user/MyAccount'
 import ProtectedRoute from '../../auth/ProtectedRoute'
 
 export default class Main extends Component {
-  render() {
-    return (
-      <main>
-        <Switch>
-          <Route exact path='/' component={Home} />
-          <ProtectedRoute path='/toolbox' component={Toolbox} />
-          <Route path='/login' component={LoginForm} />
-          <Route path='/register' component={RegisterForm} />
-          <ProtectedRoute path='/myaccount' component={MyAccount} />
-        </Switch>
-      </main>
-    )
-  }
+    render() {
+        return (
+            <main>
+                <Switch>
+                    <Route exact path='/' component={Home} />
+                    <ProtectedRoute path='/toolbox' component={Toolbox} />
+                    <Route path='/login' component={LoginForm} />
+                    <Route path='/register' component={RegisterForm} />
+                    <ProtectedRoute path='/myaccount' component={MyAccount} />
+                </Switch>
+            </main>
+        )
+    }
 }
