@@ -4,22 +4,22 @@
 
 import React, { Component } from 'react'
 
-import { 
-  Header,
-  Segment,
-  Divider
+import {
+    Header,
+    Segment,
+    Divider
 } from 'semantic-ui-react'
 
 export default class CardFrame extends Component {
-  state = {}
+    state = {}
 
-  render() {
-    return (
-      <Segment inverted>
-        <Header as='h3'>{this.props.header}</Header>
-        <Divider />
-        {this.props.children}
-      </Segment>
-    )
-  }
+    render() {
+        return (
+            <Segment inverted>
+                <Header as='h3'>{this.props.header}</Header>
+                <Divider />
+                {this.props.children}
+            </Segment>
+        )
+    }
 }

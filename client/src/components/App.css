@@ -1,9 +1,9 @@
 /* Main App CSS file */
 
 .capitalize {
-  text-transform: capitalize;
+  	text-transform: capitalize;
 }
 
 .formLabel label {
-  color: #fff!important;
+  	color: #fff!important;
 }

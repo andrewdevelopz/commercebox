@@ -9,32 +9,32 @@ import Hero from './hero/Hero'
 import placeholderImg from '../../../assets/visuals/image.png'
 
 export default class Home extends Component {
-  state = {}
-  
-  render() {
-    return (
-      <div>
-        <Container fluid>
-          <Segment inverted>
-            <Hero />
-          </Segment>
-        </Container>
-        <Container style={{ margin: '2em 0 2em 0' }}>
-          <Grid>
-            <Grid.Row>
-              <Grid.Column width={5}>
-                <Image src={placeholderImg} />
-              </Grid.Column>
-              <Grid.Column verticalAlign='middle' width={11}>
-                <Container text>
-                  <Header as='h3'>What can be acheived.</Header>
-                  <p>Lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsumlorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsumlorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum</p>
+    state = {}
+
+    render() {
+        return (
+            <div>
+                <Container fluid>
+                    <Segment inverted>
+                        <Hero />
+                    </Segment>
                 </Container>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Container>
-      </div>
-    )
-  }
+                <Container style={{ margin: '2em 0 2em 0' }}>
+                    <Grid>
+                        <Grid.Row>
+                            <Grid.Column width={5}>
+                                <Image src={placeholderImg} />
+                            </Grid.Column>
+                            <Grid.Column verticalAlign='middle' width={11}>
+                                <Container text>
+                                    <Header as='h3'>What can be acheived.</Header>
+                                    <p>Lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsumlorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsumlorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum</p>
+                                </Container>
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+                </Container>
+            </div>
+        )
+    }
 }

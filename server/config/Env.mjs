@@ -2,9 +2,9 @@
 import dotenv from 'dotenv'
 
 class DotEnv {
-  constructor() {
-    dotenv.config()
-  }
+    constructor() {
+        dotenv.config()
+    }
 }
 
 export default new DotEnv()
