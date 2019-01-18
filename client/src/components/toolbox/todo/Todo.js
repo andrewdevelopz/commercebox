@@ -9,7 +9,7 @@ import React, { Component } from 'react'
 import TodoListFrame from './list/TodoListFrame'
 
 // Semantic UI
-import { Segment } from 'semantic-ui-react'
+import { Segment, Grid } from 'semantic-ui-react'
 
 export default class Toolbox extends Component {
 	state = {}
@@ -17,7 +17,9 @@ export default class Toolbox extends Component {
 	render() {
 		return (
 			<Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
-				<TodoListFrame />
+				<Grid>
+					<TodoListFrame amount='5' />
+				</Grid>
 			</Segment>
 		)
 	}
