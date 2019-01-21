@@ -108,8 +108,8 @@ export default class Profile extends Component {
         const { name, value } = e.target
         const dataType = e.target.parentNode.parentNode.parentNode.getAttribute('datatype')
         this.setState(prevState => {
-                if(dataType === 'info') {
-                    prevState.userInfo[name] = value
+            if (dataType === 'info') {
+                prevState.userInfo[name] = value
                 return {
                     userInfo: prevState.userInfo
                 }
