@@ -29,6 +29,7 @@ export default class Auth extends Route {
         this.root(true)
         this.register(false)
         this.login(false)
+        this.retreiveUserData(true)
     }
 
     /**
@@ -116,6 +117,22 @@ export default class Auth extends Route {
                 res.sendStatus(500)
                 console.log(e)
             }
+        }, passport)
+    }
+
+    retreiveUserData(passport) {
+        this.createRoute('post', '/retreiveUserData', async (req, res) => {
+        const userID = req.user._id;
+        const user = await User.findById(userID);
+
+        const sendUser = {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            username: user.username,
+            email: user.email
+        }
+
+        res.json(sendUser);
         }, passport)
     }
 }

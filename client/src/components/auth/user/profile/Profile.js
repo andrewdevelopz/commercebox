@@ -6,6 +6,8 @@ import React, { Component } from 'react'
 
 // Import custom components
 import CardFrame from '../../../shared/card/CardFrame'
+import { fetchAuth } from '../../../shared/services/httpService'
+import { loadToken } from '../../services/authService'
 
 import {
     Button,
@@ -85,23 +87,41 @@ export default class Profile extends Component {
         ]
     }
 
-    handleChange = (e) => {
-        const { name, value } = e.target
-        const dataType = e.target.parentNode.parentNode.parentNode.getAttribute('datatype')
-        this.setState(prevState => {
-            if (dataType === 'info') {
-                prevState.userInfo[name] = value
-                return {
-                    userInfo: prevState.userInfo
-                }
-            } else {
-                prevState.userPassword[name] = value
-                return {
-                    userPassword: prevState.userPassword
-                }
-            }
-        })
-    }
+  async componentDidMount() {
+
+    const res = await fetchAuth('retreiveUserData', 'post', {}, {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': loadToken()
+    })
+    
+    this.setState((prevState) => {
+      for (let card of prevState.infoCard) {
+        card.label = res[card.name]
+      }
+      return {
+        infoCard: prevState.infoCard
+      }
+    })
+  }
+
+  handleChange = (e) => {
+    const { name, value } = e.target
+    const dataType = e.target.parentNode.parentNode.parentNode.getAttribute('datatype')
+    this.setState(prevState => {
+      if(dataType === 'info') {
+        prevState.userInfo[name] = value
+        return {
+          userInfo: prevState.userInfo
+        }
+      } else {
+        prevState.userPassword[name] = value
+        return {
+          userPassword: prevState.userPassword
+        }
+      }
+    })
+  }
 
     onSubmit = (event) => {
         try {
