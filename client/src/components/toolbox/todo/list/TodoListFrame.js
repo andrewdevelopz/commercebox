@@ -22,7 +22,7 @@ export default class TodoListFrame extends Component {
 
 	render() {
 		return (
-			<Grid.Column style={{ margin: '0.5rem' }} width='3'>
+			<Grid.Column className='listGridColumn' style={{ margin: '0.5rem' }} width='3'>
 				<Card className='todoList' style={{ position: 'absolute' }}>
 					<Segment inverted>
 						<div className='todoListlistHeader' style={{ cursor: 'move' }}>
