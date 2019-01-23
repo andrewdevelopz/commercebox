@@ -5,20 +5,25 @@
 import React, { Component } from 'react'
 
 // Import custom components
+import CardFrame from '../card/CardFrame'
 
 // Semantic UI
 import { 
 	Card, 
+	Dropdown,
 	Segment, 
 	Header, 
 	Divider, 
-	Icon,
 	List,
 	Grid
 } from 'semantic-ui-react'
 
 export default class TodoListFrame extends Component {
 	state = {}
+
+	onClickSetting = () => {
+		console.log('working')
+	}
 
 	render() {
 		return (
@@ -31,11 +36,18 @@ export default class TodoListFrame extends Component {
 									<Header as='h5'>{this.props.title}</Header>
 								</List.Item>
 								<List.Item as='a'>
-									<Icon name='cog' />
+									<Dropdown icon='cog' className='iconColor' floating>
+										<Dropdown.Menu>
+											<Dropdown.Header content='Actions' style={{ color: '#000' }} />
+											<Dropdown.Divider />
+											<Dropdown.Item style={{ fontSize: '0.9rem' }} onClick={this.onClickSetting}>Edit Title</Dropdown.Item>
+										</Dropdown.Menu>
+									</Dropdown>
 								</List.Item>
 							</List>
 						</div>
 						<Divider inverted />
+						<CardFrame cards={this.props.cards} />
 					</Segment>
 				</Card>
 			</Grid.Column>

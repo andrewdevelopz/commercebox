@@ -17,30 +17,57 @@ export default class Toolbox extends Component {
 		lists: [
 			{
 				order: 0,
-				title: 'Ideas'
+				title: 'Ideas',
+				cards: [
+					{
+						description: 'description1'
+					},
+					{
+						description: 'description2'
+					}
+				]
 			},
 			{
 				order: 1,
-				title: 'To Do'
+				title: 'To Do',
+				cards: [
+					{
+						description: 'description1'
+					}
+				]
 			},
 			{
 				order: 2,
-				title: 'Working'
+				title: 'Working',
+				cards: [
+					{
+						description: 'description1'
+					}
+				]
 			},
 			{
 				order: 3,
-				title: 'Completed'
+				title: 'Completed',
+				cards: [
+					{
+						description: 'description1'
+					}
+				]
 			},
 			{
 				order: 4,
-				title: 'Other'
+				title: 'Other',
+				cards: [
+					{
+						description: 'description1'
+					}
+				]
 			}
 		]
 	}
 
 	componentDidMount() {
 		const lists = document.querySelectorAll('.todoList')
-
 		this.moveTodoList(lists)
     }
 
@@ -118,17 +145,6 @@ export default class Toolbox extends Component {
 			document.onmousemove = null
 			// set css styles on mouseup
 			list.style.zIndex = 98
-			highlightElement(list)
-
-			/** @todo - looks ugly now but make it look fancier (maybe not use borders?) */
-			// highlist the element that has been switched
-			function highlightElement(el) {
-				el.style.border = '1px #ff0000 solid'
-				el.style.transition = 'border-color 1s ease-in-out'
-				setTimeout(() => {
-					el.style.border = 'none'
-				}, 1000)
-			}
 
 			// get index for the current loop of list
 			const currIndex = [].indexOf.call(lists, list)
@@ -179,13 +195,13 @@ export default class Toolbox extends Component {
 
 			return lists.map((list, index) => {
 				return (
-					<TodoListFrame key={index} title={list.title} />
+					<TodoListFrame key={index} title={list.title} cards={list.cards} />
 				)
 			})
 		}
 
 		return (
-			<Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
+			<Segment inverted style={{ background: '#252525', minHeight: '100vh', width: '106rem' }}>
 				<TodoListGrid>
 					{ generateLists() }
 				</TodoListGrid>
