@@ -6,6 +6,8 @@ import React, { Component } from 'react'
 
 // Import custom components
 import CardFrame from '../../../shared/card/CardFrame'
+import { fetchAuth } from '../../../shared/services/httpService'
+import { loadToken } from '../../services/authService'
 
 import {
     Button,
@@ -83,6 +85,23 @@ export default class Profile extends Component {
                 name: 'confirmPassword'
             }
         ]
+    }
+
+    async componentDidMount() {
+        const res = await fetchAuth('retreiveUserData', 'post', {}, {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': loadToken()
+        })
+        
+        this.setState((prevState) => {
+            for (let card of prevState.infoCard) {
+                card.label = res[card.name]
+            }
+            return {
+                infoCard: prevState.infoCard
+            }
+        })
     }
 
     handleChange = (e) => {
