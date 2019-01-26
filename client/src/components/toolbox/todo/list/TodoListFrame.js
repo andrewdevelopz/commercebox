@@ -13,8 +13,7 @@ import {
 	Dropdown,
 	Segment, 
 	Header, 
-	Divider, 
-	List,
+	Divider,
 	Grid
 } from 'semantic-ui-react'
 
@@ -31,20 +30,20 @@ export default class TodoListFrame extends Component {
 				<Card className='todoList' style={{ position: 'absolute' }}>
 					<Segment inverted>
 						<div className='todoListlistHeader' style={{ cursor: 'move' }}>
-							<List horizontal inverted>
-								<List.Item>
-									<Header as='h5'>{this.props.title}</Header>
-								</List.Item>
-								<List.Item as='a'>
-									<Dropdown icon='cog' className='iconColor' floating>
-										<Dropdown.Menu>
+							<Grid columns='2'>
+								<Grid.Column>
+									<Header as='h5' inverted>{this.props.title}</Header>
+								</Grid.Column>
+								<Grid.Column textAlign='right'>
+									<Dropdown as='a' icon='cog' className='iconColor' floating>
+										<Dropdown.Menu style={{ zIndex: '149' }}>
 											<Dropdown.Header content='Actions' style={{ color: '#000' }} />
 											<Dropdown.Divider />
 											<Dropdown.Item style={{ fontSize: '0.9rem' }} onClick={this.onClickSetting}>Edit Title</Dropdown.Item>
 										</Dropdown.Menu>
 									</Dropdown>
-								</List.Item>
-							</List>
+								</Grid.Column>
+							</Grid>
 						</div>
 						<Divider inverted />
 						<CardFrame cards={this.props.cards} />

@@ -9,19 +9,28 @@ import React, { Component } from 'react'
 // Semantic UI
 import { 
     Card,
-    Segment
+    Segment,
+    Icon,
+    Grid
 } from 'semantic-ui-react'
 
 export default class CardFrame extends Component {
-	state = {}
+    state = {}
 
 	render() {
 		// map each card from this.props.cards
 		const cards = this.props.cards.map((card, index) => {
 			return (
-                <Card className='todoCard' key={index}>
+                <Card key={index} className='todoCard'>
                     <Segment inverted>
-                        {card.description}
+                        <Grid columns='2'>
+                            <Grid.Column>
+                                <p>{card.description}</p>
+                            </Grid.Column>
+                            <Grid.Column textAlign='right'>
+                                <Icon name='ellipsis horizontal' style={{ cursor: 'pointer' }}/>
+                            </Grid.Column>
+                        </Grid>
                     </Segment>
                 </Card>
 			)

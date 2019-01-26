@@ -121,18 +121,18 @@ export default class Auth extends Route {
     }
 
     retreiveUserData(passport) {
-        this.createRoute('post', '/retreiveUserData', async (req, res) => {
-        const userID = req.user._id;
-        const user = await User.findById(userID);
+            this.createRoute('post', '/retreiveUserData', async (req, res) => {
+            const userID = req.user._id
+            const user = await User.findById(userID)
 
-        const sendUser = {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            username: user.username,
-            email: user.email
-        }
+            const sendUser = {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                username: user.username,
+                email: user.email
+            }
 
-        res.json(sendUser);
+            res.json(sendUser)
         }, passport)
     }
 }
