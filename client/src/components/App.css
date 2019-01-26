@@ -7,3 +7,7 @@
 .formLabel label {
   	color: #fff!important;
 }
+
+.iconColor i.icon {
+	color: #8c8c8c!important;
+}

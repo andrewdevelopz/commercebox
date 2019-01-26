@@ -9,8 +9,8 @@ import express from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import Route from '../Route'
-import Database from '../../database/Database'
-import User from '../../../models/User'
+import Database from '../../config/database/Database'
+import User from '../../models/User'
 
 const router = express.Router()
 
@@ -121,18 +121,18 @@ export default class Auth extends Route {
     }
 
     retreiveUserData(passport) {
-        this.createRoute('post', '/retreiveUserData', async (req, res) => {
-        const userID = req.user._id;
-        const user = await User.findById(userID);
+            this.createRoute('post', '/retreiveUserData', async (req, res) => {
+            const userID = req.user._id
+            const user = await User.findById(userID)
 
-        const sendUser = {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            username: user.username,
-            email: user.email
-        }
+            const sendUser = {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                username: user.username,
+                email: user.email
+            }
 
-        res.json(sendUser);
+            res.json(sendUser)
         }, passport)
     }
 }

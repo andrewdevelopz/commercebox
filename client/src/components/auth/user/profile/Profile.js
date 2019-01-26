@@ -93,13 +93,15 @@ export default class Profile extends Component {
             'Content-Type': 'application/json',
             'Authorization': loadToken()
         })
-        
-        this.setState((prevState) => {
-            for (let card of prevState.infoCard) {
-                card.label = res[card.name]
-            }
+
+        this.setState(prevState => {
+            prevState.userInfo.firstName = res.firstName
+            prevState.userInfo.lastName = res.lastName
+            prevState.userInfo.username = res.username
+            prevState.userInfo.email = res.email
+
             return {
-                infoCard: prevState.infoCard
+                userInfo: prevState.userInfo
             }
         })
     }
