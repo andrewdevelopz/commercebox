@@ -9,8 +9,8 @@ import express from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import Route from '../Route'
-import Database from '../../database/Database'
-import User from '../../../models/User'
+import Database from '../../config/database/Database'
+import User from '../../models/User'
 
 const router = express.Router()
 

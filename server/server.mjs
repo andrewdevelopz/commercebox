@@ -11,11 +11,11 @@ import { jwtStrat } from './config/auth/passport'
 import './config/Env'
 
 // Importing routes class
-import Auth from './config/routes/auth/Auth'
-import Inventory from './config/routes/toolbox/Inventory'
-import Orders from './config/routes/toolbox/Orders'
-import Shipping from './config/routes/toolbox/Shipping'
-import Todos from './config/routes/toolbox/Todos'
+import Auth from './routes/auth/Auth'
+import Inventory from './routes/toolbox/Inventory'
+import Orders from './routes/toolbox/Orders'
+import Shipping from './routes/toolbox/Shipping'
+import Todos from './routes/toolbox/Todos'
 
 class Server {
     constructor() {
