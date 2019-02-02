@@ -1,5 +1,5 @@
 /**
- * @overview: This componenet is for the toolbox section of the application. It is the parent of all tools contained
+ * @overview: This component is for the toolbox section of the application. It is the parent of all tools contained
  * within the toolbox. For example the orders, todos, inventory, etc. components are all childrens of toolbox.
  * 
  * @todo: Make it so the sidebar can be hidden and revealed when a button is pressed
@@ -10,7 +10,11 @@ import { Switch, Route } from 'react-router-dom'
 
 // Import custom components
 import SidebarFrame from '../shared/sidebar/SidebarFrame'
+import Dashboard from './dashboard/Dashboard'
+import Inventory from './inventory/Inventory'
+import Orders from './orders/Orders'
 import Todo from './todo/Todo'
+import Analytics from './analytics/Analytics'
 
 import { Sidebar, Segment } from 'semantic-ui-react'
 
@@ -51,11 +55,11 @@ export default class Toolbox extends Component {
                 <SidebarFrame name='toolbox' sidebarItems={this.state.sidebarItems} />
                 <Sidebar.Pusher style={{ background: '#252525', minHeight: '100vh', transform: 'none', marginLeft: '7rem' }}>
                     <Switch>
-                        <Route path='/toolbox/dashboard' render={() => 'Hello from dashboard route'} />
-                        <Route path='/toolbox/inventory' render={() => 'Hello from inventory route'} />
-                        <Route path='/toolbox/orders' render={() => 'Hello from orders route'} />
+                        <Route path='/toolbox/dashboard' component={Dashboard} />
+                        <Route path='/toolbox/inventory' component={Inventory} />
+                        <Route path='/toolbox/orders' component={Orders} />
                         <Route path='/toolbox/todos' component={Todo} />
-                        <Route path='/toolbox/analytics' render={() => 'Hello from analytics route'} />
+                        <Route path='/toolbox/analytics' component={Analytics} />
                     </Switch>
                 </Sidebar.Pusher>
             </Sidebar.Pushable>

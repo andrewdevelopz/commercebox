@@ -1,5 +1,5 @@
 /**
- * @overview: This componenet is for the todo section of the toolbox. It is the main component for the todo section and all child components
+ * @overview: This component is for the todo section of the toolbox. It is the main component for the todo section and all child components
  * for the todo ends here.
  */
 
@@ -12,7 +12,7 @@ import TodoListFrame from './list/TodoListFrame'
 // Semantic UI
 import { Segment } from 'semantic-ui-react'
 
-export default class Toolbox extends Component {
+export default class Todo extends Component {
 	state = {
 		lists: [
 			{
