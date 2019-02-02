@@ -69,26 +69,26 @@ export default class Toolbox extends Component {
 	componentDidMount() {
 		const lists = document.querySelectorAll('.todoList')
 		this.moveTodoList(lists)
-    }
+	}
 
 	// Move the list around the screen
 	moveTodoList = (lists) => {
-        // array of offset and positions for each list
+		// array of offset and positions for each list
 		const offsetList = []
 		const positions = []
 
 		let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0
 
-        for(const list of lists) {
+		for (const list of lists) {
 			// get index for the current loop of list
 			const i = [].indexOf.call(lists, list)
 
-            // push and save the original list offset into offsetList[]
-			offsetList.push({left: list.offsetLeft, top: list.offsetTop})
-			positions.push({pos: list.getBoundingClientRect(), index: i})
-            
-            const header = list.querySelector(`.${list.className.match('todoList')[0]}listHeader`)
-			if(header) {
+			// push and save the original list offset into offsetList[]
+			offsetList.push({ left: list.offsetLeft, top: list.offsetTop })
+			positions.push({ pos: list.getBoundingClientRect(), index: i })
+
+			const header = list.querySelector(`.${list.className.match('todoList')[0]}listHeader`)
+			if (header) {
 				// if present, the header is where you move the element from
 				header.onmousedown = e => moveOnMouseDown(e, list)
 			} else {
@@ -100,7 +100,10 @@ export default class Toolbox extends Component {
 		const moveOnMouseDown = (e, list) => {
 			e = e || window.event
 			e.preventDefault()
-			list.style.zIndex = 99
+			
+			/** @todo - setting zIndex causes bugs with overlapping, delete if not needed */
+			// list.style.zIndex = 99
+
 			// get the mouse cursor position at startup
 			pos3 = e.clientX
 			pos4 = e.clientY
@@ -127,9 +130,9 @@ export default class Toolbox extends Component {
 
 			// track each loop of positions for the index
 			let track = 0
-			for(const position of positions) {
+			for (const position of positions) {
 				// if, list is dragged properly switch its positions
-				if(currIndex !== position.index && currPos.left > position.pos.left && currPos.left < position.pos.left + position.pos.width) {
+				if (currIndex !== position.index && currPos.left > position.pos.left && currPos.left < position.pos.left + position.pos.width) {
 					// lower opacity of back list when hovering for switch
 					lists[track].style.opacity = 0.5
 				} else {
@@ -144,7 +147,6 @@ export default class Toolbox extends Component {
 			document.onmouseup = null
 			document.onmousemove = null
 			// set css styles on mouseup
-			list.style.zIndex = 98
 
 			// get index for the current loop of list
 			const currIndex = [].indexOf.call(lists, list)
@@ -154,9 +156,9 @@ export default class Toolbox extends Component {
 			// track each loop of positions for the index
 			let track = 0
 			const setStateInfo = { currIndex: 0, track: 0 }
-			for(const position of positions) {
+			for (const position of positions) {
 				// if, list is dragged properly switch its positions
-				if(currIndex !== position.index && currPos.left > position.pos.left && currPos.left < position.pos.left + position.pos.width) {
+				if (currIndex !== position.index && currPos.left > position.pos.left && currPos.left < position.pos.left + position.pos.width) {
 					// set setStateInfo to setState outside of loop
 					setStateInfo.currIndex = currIndex
 					setStateInfo.track = track
@@ -176,7 +178,7 @@ export default class Toolbox extends Component {
 			})
 
 			// set the lists position if not in allowed position
-			if(list.style.top !== offsetList[currIndex].top && list.style.left !== offsetList[currIndex].left) {
+			if (list.style.top !== offsetList[currIndex].top && list.style.left !== offsetList[currIndex].left) {
 				list.style.top = offsetList[currIndex].top + 'px'
 				list.style.left = offsetList[currIndex].left + 'px'
 			}
@@ -195,7 +197,7 @@ export default class Toolbox extends Component {
 
 			return lists.map((list, index) => {
 				return (
-					<TodoListFrame key={index} title={list.title} cards={list.cards} />
+					<TodoListFrame key={index} lists={lists} title={list.title} cards={list.cards} />
 				)
 			})
 		}
@@ -203,7 +205,7 @@ export default class Toolbox extends Component {
 		return (
 			<Segment inverted style={{ background: '#252525', minHeight: '100vh', width: '106rem' }}>
 				<TodoListGrid>
-					{ generateLists() }
+					{generateLists()}
 				</TodoListGrid>
 			</Segment>
 		)
