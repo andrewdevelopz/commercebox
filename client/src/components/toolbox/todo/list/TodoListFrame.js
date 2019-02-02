@@ -8,23 +8,27 @@ import React, { Component } from 'react'
 import CardFrame from '../card/CardFrame'
 
 // Semantic UI
-import { 
-	Card, 
+import {
+	Card,
 	Dropdown,
-	Segment, 
-	Header, 
+	Segment,
+	Header,
 	Divider,
 	Grid
 } from 'semantic-ui-react'
 
 export default class TodoListFrame extends Component {
-	state = {}
+	state = {
+		titles: []
+	}
 
-	onClickSetting = () => {
-		console.log('working')
+	onClickSetting = (e) => {
+		console.log(e.target)
 	}
 
 	render() {
+		const { lists } = this.props
+
 		return (
 			<Grid.Column className='listGridColumn' style={{ margin: '0.5rem' }} width='3'>
 				<Card className='todoList' style={{ position: 'absolute' }}>
@@ -35,8 +39,8 @@ export default class TodoListFrame extends Component {
 									<Header as='h5' inverted>{this.props.title}</Header>
 								</Grid.Column>
 								<Grid.Column textAlign='right'>
-									<Dropdown as='a' icon='cog' className='iconColor' floating>
-										<Dropdown.Menu style={{ zIndex: '149' }}>
+									<Dropdown icon='cog'>
+										<Dropdown.Menu>
 											<Dropdown.Header content='Actions' style={{ color: '#000' }} />
 											<Dropdown.Divider />
 											<Dropdown.Item style={{ fontSize: '0.9rem' }} onClick={this.onClickSetting}>Edit Title</Dropdown.Item>
@@ -46,7 +50,7 @@ export default class TodoListFrame extends Component {
 							</Grid>
 						</div>
 						<Divider inverted />
-						<CardFrame cards={this.props.cards} />
+						<CardFrame lists={lists} cards={this.props.cards} />
 					</Segment>
 				</Card>
 			</Grid.Column>
