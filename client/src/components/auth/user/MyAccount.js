@@ -6,7 +6,7 @@ import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 
 // Import custom components
-import SidebarFrame from '../../shared/sidebar/SidebarFrame'
+import SidebarFrame from '../../shared/sidebars/SidebarFrame'
 import Profile from './profile/Profile'
 
 import {

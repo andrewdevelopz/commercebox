@@ -4,6 +4,7 @@
 
 import React, { Component } from 'react'
 
+// Semantic UI
 import {
     Header,
     Segment,

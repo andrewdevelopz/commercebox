@@ -9,7 +9,7 @@ import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 
 // Import custom components
-import SidebarFrame from '../shared/sidebar/SidebarFrame'
+import SidebarFrame from '../shared/sidebars/SidebarFrame'
 import Dashboard from './dashboard/Dashboard'
 import Inventory from './inventory/Inventory'
 import Orders from './orders/Orders'

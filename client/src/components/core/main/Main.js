@@ -8,8 +8,8 @@ import { Switch, Route } from 'react-router-dom'
 // Import custom components
 import Home from '../../public/home/Home'
 import Toolbox from '../../toolbox/Toolbox'
-import LoginForm from '../../auth/LoginForm'
-import RegisterForm from '../../auth/RegisterForm'
+import LoginForm from '../../auth/user/login/LoginForm'
+import RegisterForm from '../../auth/user/register/RegisterForm'
 import MyAccount from '../../auth/user/MyAccount'
 import ProtectedRoute from '../../auth/ProtectedRoute'
 
