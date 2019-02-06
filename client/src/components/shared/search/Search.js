@@ -58,7 +58,7 @@ export default class SearchBar extends Component {
 /**
  *  @overview: This gives us a full example of how the search works
  *  @import `Grid, Header, Segment` import these to semantic-ui-react for this to work
- * 
+ *
     <Grid>
         <Grid.Column width={6}>
             <Search
@@ -79,6 +79,6 @@ export default class SearchBar extends Component {
                 <pre style={{ overflowX: 'auto' }}>{JSON.stringify(source, null, 2)}</pre>
             </Segment>
         </Grid.Column>
-    </Grid> 
+    </Grid>
  *
  */

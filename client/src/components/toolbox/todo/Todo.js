@@ -100,7 +100,7 @@ export default class Todo extends Component {
 		const moveOnMouseDown = (e, list) => {
 			e = e || window.event
 			e.preventDefault()
-			
+
 			/** @todo - setting zIndex causes bugs with overlapping, delete if not needed */
 			// list.style.zIndex = 99
 

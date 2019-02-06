@@ -5,7 +5,7 @@
 import React, { Component } from 'react'
 
 // Import custom components
-import CardFrame from '../cards/CardFrame'
+import CardFrame from '../card/CardFrame'
 
 // Semantic UI
 import {
