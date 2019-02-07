@@ -16,7 +16,7 @@ export default class Hero extends Component {
         return (
             <main>
                 <Container textAlign="center" text style={{ padding: '7rem 0 7rem 0', color: 'white' }}>
-                    <h1>Commerce Utility Box</h1>
+                    <h1>Commerce Box</h1>
                     <p>A toolbox which help sellers maintain inventory and complete day to day tasks.</p>
                     <Divider />
                     <AuthConsumer>

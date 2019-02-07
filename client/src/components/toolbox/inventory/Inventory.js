@@ -1,13 +1,15 @@
 /**
  * @overview: This component is for the inventory section of the toolbox. It is the main component for the inventory section and all child components
  * for the inventory ends here.
+ * 
+ * @todo - Make it so you can add headers (columns like `title`)
  */
 
 import React, { Component } from 'react'
 
 // Import custom components
 import SearchBar from '../../shared/search/Search'
-import SingleLineTable from '../../shared/tables/SingleLineTable'
+import TableFrame from '../../shared/tables/TableFrame'
 
 // Semantic UI
 import { Segment, Grid, Button, Divider } from 'semantic-ui-react'
@@ -16,50 +18,99 @@ export default class Inventory extends Component {
     state = {
         table: {
             headers: [ // [<name>, <width>]
-                ['Image', 1],
-                ['SKU', 1],
-                ['Title', 5],
-                ['Quantity', 1],
-                ['Available', 1],
-                ['Alert', 1],
-                ['Orders', 1],
-                ['Description', 4],
-                ['Price', 1]
+                ['', null],
+                ['Image', null],
+                ['SKU', null],
+                ['Title', null],
+                ['Quantity', null],
+                ['Available', null],
+                ['Alert', null],
+                ['Orders', null],
+                ['Description', null],
+                ['Price', null],
+                ['Value', null],
+                ['Category', null],
+                ['Group', null],
+                ['UPC', null],
+                ['Condition', null],
+                ['Location', null],
+                ['Weight', null],
+                ['Height', null],
+                ['Width', null],
+                ['Depth', null],
+                ['Bin', null],
+                ['Monitor', null]
             ],
             inventory: [
                 {
-                    title: 'Schaden - Turcotte',
-                    description: 'Operative hybrid matrix',
                     image: 'https://s3.amazonaws.com/uifaces/faces/twitter/marcomano_/128.jpg',
-                    price: '$47.12',
                     sku: 'sku1',
+                    title: 'Schaden - Turcotte',
                     quantity: 3,
                     available: 3,
                     alert: 2,
-                    orders: 1
+                    orders: 1,
+                    description: 'Operative hybrid matrix',
+                    price: '$47.12',
+                    value: '$13.12',
+                    category: 'Cases',
+                    group: 'Schaden',
+                    upc: 125125125,
+                    condition: 'new',
+                    location: '348 Paseo Sonrisa, Walnut CA 91789',
+                    weight: '12oz',
+                    height: '9in',
+                    width: '6in',
+                    depth: '1in',
+                    bin: 'R1-56',
+                    monitor: 'true'
                 },
                 {
-                    title: 'Larkin - Koelpin',
-                    description: 'Expanded bandwidth-monitored moratorium',
                     image: 'https://s3.amazonaws.com/uifaces/faces/twitter/oktayelipek/128.jpg',
-                    price: '$64.20',
                     sku: 'sku2',
+                    title: 'Larkin - Koelpin',
                     quantity: 3,
                     available: 3,
                     alert: 2,
-                    orders: 1
+                    orders: 1,
+                    description: 'Expanded bandwidth-monitored moratorium Expanded bandwidth-monitored moratorium Expanded bandwidth-monitored moratorium Expanded bandwidth-monitored moratorium Expanded bandwidth-monitored moratoriumExpanded bandwidth-monitored moratorium Expanded bandwidth-monitored moratoriumExpanded bandwidth-monitored moratorium',
+                    price: '$64.20',
+                    value: '$17.12',
+                    category: 'Chargers',
+                    group: 'Schaden',
+                    upc: 63262336,
+                    condition: 'new',
+                    location: '348 Paseo Sonrisa, Walnut CA 91789',
+                    weight: '6oz',
+                    height: '9in',
+                    width: '6in',
+                    depth: '1in',
+                    bin: 'R2-12',
+                    monitor: 'true'
                 }
             ]
-        }
+        },
+        editItems: false
     }
 
     componentDidMount() {
         // make an api call to the database
-        // get the inveotry and set `this.state.inventory` to the items
+        // get the inventory and set `this.state.inventory` to the items
+
+        // when Edit button is clicked
+        const editItems = document.querySelector('#editItems')
+        editItems.addEventListener('click', e => this.onEditItems(e))
+    }
+
+    onEditItems = e => {
+        // update state of editItems to pass to SingleLineTable component
+        this.setState({
+            editItems: !this.state.editItems
+        })
     }
 
     render() {
-        const { table } = this.state
+        const { table, editItems } = this.state
 
         return (
             <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
@@ -73,13 +124,13 @@ export default class Inventory extends Component {
                             <Button color='green' floated='right'>Sync</Button>
                             <Button floated='right'>Link</Button>
                             <Button color='orange' floated='right'>Create</Button>
-                            <Button color='blue' floated='right'>Edit</Button>
+                            <Button id='editItems' color={editItems ? 'red' : 'blue'} floated='right'>{editItems ? 'Done' : 'Edit'}</Button>
                         </Grid.Column>
                     </Grid.Row>
                     <Divider />
                 </Grid>
                 {/* Start table */}
-                <SingleLineTable table={table} />
+                <TableFrame table={table} editItems={editItems} />
             </Segment>
         )
     }
