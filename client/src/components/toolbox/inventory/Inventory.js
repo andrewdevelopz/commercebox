@@ -6,6 +6,7 @@
  */
 
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 // Import custom components
 import SearchBar from '../../shared/search/Search'
@@ -123,7 +124,7 @@ export default class Inventory extends Component {
                         <Grid.Column>
                             <Button color='green' floated='right'>Sync</Button>
                             <Button floated='right'>Link</Button>
-                            <Button color='orange' floated='right'>Create</Button>
+                            <Button as={Link} to='/toolbox/inventory/createProducts' color='orange' floated='right'>Create</Button>
                             <Button id='editItems' color={editItems ? 'red' : 'blue'} floated='right'>{editItems ? 'Done' : 'Edit'}</Button>
                         </Grid.Column>
                     </Grid.Row>

@@ -15,6 +15,7 @@ import Inventory from './inventory/Inventory'
 import Orders from './orders/Orders'
 import Todo from './todo/Todo'
 import Analytics from './analytics/Analytics'
+import CreateProducts from './inventory/create/CreateProducts'
 
 import { Sidebar, Segment } from 'semantic-ui-react'
 
@@ -57,6 +58,7 @@ export default class Toolbox extends Component {
                     <Switch>
                         <Route path='/toolbox/dashboard' component={Dashboard} />
                         <Route path='/toolbox/inventory' component={Inventory} />
+                        <Route path='/toolbox/inventory/createProducts' component={CreateProducts} />
                         <Route path='/toolbox/orders' component={Orders} />
                         <Route path='/toolbox/todos' component={Todo} />
                         <Route path='/toolbox/analytics' component={Analytics} />
