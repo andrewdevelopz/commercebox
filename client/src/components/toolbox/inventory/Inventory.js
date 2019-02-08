@@ -100,16 +100,13 @@ export default class Inventory extends Component {
         this.state.path = match.path
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         // make an api call to the database
         // get the inventory and set `this.state.inventory` to the items
-
-        // when Edit button is clicked
-        const editItems = document.querySelector('#editItems')
-        editItems.addEventListener('click', e => this.onEditItems(e))
     }
 
-    onEditItems = e => {
+    // When edit item button is pressed
+    onEditItems = () => {
         // update state of editItems to pass to SingleLineTable component
         this.setState({
             editItems: !this.state.editItems
@@ -131,13 +128,17 @@ export default class Inventory extends Component {
                             <Button color='green' floated='right'>Sync</Button>
                             <Button floated='right'>Link</Button>
                             <Button as={Link} to={`${path}/createProducts`} color='orange' floated='right'>Create</Button>
-                            <Button id='editItems' color={editItems ? 'red' : 'blue'} floated='right'>{editItems ? 'Done' : 'Edit'}</Button>
+                            {
+                                editItems
+                                    ? <Button onClick={this.onEditItems} color='red' floated='right'>Cancel</Button>
+                                    : <Button onClick={this.onEditItems} color='blue' floated='right'>Edit</Button>
+                            }
                         </Grid.Column>
                     </Grid.Row>
                     <Divider />
                 </Grid>
                 {/* Table frame */}
-                <TableFrame table={table} editItems={editItems} />
+                <TableFrame table={table} editItems={editItems} handleSubmit={this.onEditItems} />
             </Segment>
         )
     }

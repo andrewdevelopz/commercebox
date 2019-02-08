@@ -62,7 +62,12 @@ export default class CreateProducts extends Component {
                     monitor: ''
                 },
             ]
-        },
+        }
+    }
+
+    createProducts = () => {
+        console.log('products created, redirecting to inventory...')
+        this.props.history.push('/toolbox/inventory')
     }
 
     render() {
@@ -70,7 +75,7 @@ export default class CreateProducts extends Component {
 
         return (
             <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
-                <TableFrame table={table} editItems={true} />
+                <TableFrame table={table} editItems={true} handleSubmit={this.createProducts} />
             </Segment>
         )
     }

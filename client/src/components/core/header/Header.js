@@ -15,7 +15,6 @@ import { Input, Menu } from 'semantic-ui-react'
 export default class Header extends Component {
     state = {
         activeItem: '',
-        isAuthenticated: false,
         navMenuItems: [
             {
                 name: 'home',
