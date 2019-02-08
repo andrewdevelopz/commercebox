@@ -91,7 +91,13 @@ export default class Inventory extends Component {
                 }
             ]
         },
-        editItems: false
+        editItems: false,
+        path: ''
+    }
+
+    constructor({ match }) {
+        super()
+        this.state.path = match.path
     }
 
     componentDidMount() {
@@ -111,7 +117,7 @@ export default class Inventory extends Component {
     }
 
     render() {
-        const { table, editItems } = this.state
+        const { table, editItems, path } = this.state
 
         return (
             <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
@@ -124,13 +130,13 @@ export default class Inventory extends Component {
                         <Grid.Column>
                             <Button color='green' floated='right'>Sync</Button>
                             <Button floated='right'>Link</Button>
-                            <Button as={Link} to='/toolbox/inventory/createProducts' color='orange' floated='right'>Create</Button>
+                            <Button as={Link} to={`${path}/createProducts`} color='orange' floated='right'>Create</Button>
                             <Button id='editItems' color={editItems ? 'red' : 'blue'} floated='right'>{editItems ? 'Done' : 'Edit'}</Button>
                         </Grid.Column>
                     </Grid.Row>
                     <Divider />
                 </Grid>
-                {/* Start table */}
+                {/* Table frame */}
                 <TableFrame table={table} editItems={editItems} />
             </Segment>
         )

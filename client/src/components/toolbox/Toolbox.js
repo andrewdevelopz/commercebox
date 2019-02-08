@@ -15,12 +15,13 @@ import Inventory from './inventory/Inventory'
 import Orders from './orders/Orders'
 import Todo from './todo/Todo'
 import Analytics from './analytics/Analytics'
-import CreateProducts from './inventory/create/CreateProducts'
+import CreateProducts from './inventory/products/create/CreateProducts'
 
 import { Sidebar, Segment } from 'semantic-ui-react'
 
 export default class Toolbox extends Component {
     state = {
+        path: '',
         sidebarItems: [
             {
                 name: 'dashboard',
@@ -50,18 +51,25 @@ export default class Toolbox extends Component {
         ]
     }
 
+    constructor({ match }) {
+        super()
+        this.state.path = match.path
+    }
+
     render() {
+        const { path } = this.state
+
         return (
             <Sidebar.Pushable basic as={Segment} style={{ minHeight: '100vh' }}>
                 <SidebarFrame name='toolbox' sidebarItems={this.state.sidebarItems} />
                 <Sidebar.Pusher style={{ background: '#252525', minHeight: '100vh', transform: 'none', marginLeft: '7rem' }}>
                     <Switch>
-                        <Route path='/toolbox/dashboard' component={Dashboard} />
-                        <Route path='/toolbox/inventory' component={Inventory} />
-                        <Route path='/toolbox/inventory/createProducts' component={CreateProducts} />
-                        <Route path='/toolbox/orders' component={Orders} />
-                        <Route path='/toolbox/todos' component={Todo} />
-                        <Route path='/toolbox/analytics' component={Analytics} />
+                        <Route path={`${path}/dashboard`} component={Dashboard} />
+                        <Route exact path={`${path}/inventory`} component={Inventory} />
+                        <Route path={`${path}/inventory/createProducts`} component={CreateProducts} />
+                        <Route path={`${path}/orders`} component={Orders} />
+                        <Route path={`${path}/todos`} component={Todo} />
+                        <Route path={`${path}/analytics`} component={Analytics} />
                     </Switch>
                 </Sidebar.Pusher>
             </Sidebar.Pushable>
