@@ -14,12 +14,13 @@ export default class AuthProvider extends Component {
     state = {
         isAuth: false
     }
+    token
 
     constructor() {
         super()
-        let token = loadToken()
-        token && (this.state.isAuth = true)
-        token = null
+        this.token = loadToken()
+        this.token && (this.state.isAuth = true)
+        this.token = null
     }
 
     // Method to login a user

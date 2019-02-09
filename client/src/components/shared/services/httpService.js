@@ -14,3 +14,14 @@ export const fetchAuth = async (path, method, data, headers) => {
 
     return res.json()
 }
+
+// All http calls to the inventory route
+export const fetchInventory = async (path, method, data, headers) => {
+    const res = await fetch(`${root}/inventory/${path}`, {
+        method: method.toUpperCase(),
+        body: JSON.stringify(data),
+        headers: headers
+    })
+
+    return res.json()
+}

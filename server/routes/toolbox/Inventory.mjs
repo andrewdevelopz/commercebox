@@ -22,19 +22,39 @@ export default class Inventory extends Route {
     }
 
     run() {
-        this.root()
-        this.test()
+        this.root(true)
+        this.createProducts(true)
     }
 
-    root() {
+    /**
+     * All methods take:
+     * @param passport - which is a boolean value to include passport auth or not
+     */
+
+    root(passport) {
         this.createRoute('get', '/', (req, res) => {
             res.send('Hello from <b>ROOT</b> path of inventory')
-        })
+        }, passport)
     }
 
-    test() {
-        this.createRoute('get', '/test', (req, res) => {
-            res.send('Hello from <b>TEST</b> path of inventory')
-        })
+    // Create products
+    createProducts(passport) {
+        this.createRoute('post', '/createProducts', (req, res) => {
+            // set products && user from req.body
+            const products = req.body.products
+            const user = req.user
+
+            // set user id in product object
+            if (products.length > 1) {
+                for (const product of products) {
+                    product['userId'] = user._id
+                }
+            } else {
+                products[0]['userId'] = user._id
+            }
+
+            // send back results
+            res.json(products)
+        }, passport)
     }
 }

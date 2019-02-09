@@ -7,6 +7,10 @@
 
 import React, { Component } from 'react'
 
+// Import custom components
+import { fetchInventory } from '../../shared/services/httpService'
+import { loadToken } from '../../auth/services/authService'
+
 // Semantic UI
 import { Table, Image, Input, Form, Button } from 'semantic-ui-react'
 
@@ -14,6 +18,7 @@ export default class TableFrame extends Component {
     state = {
         table: this.props.table
     }
+    token
 
     // Update the state on form changes
     handleChange = (e, i) => {
@@ -27,11 +32,25 @@ export default class TableFrame extends Component {
     }
 
     // Handle form submit
-    handleFormSubmit = e => {
+    handleFormSubmit = async e => {
         e.preventDefault()
-        console.log('submitted from TableFrame')
+        this.token = loadToken()
 
-        this.props.handleSubmit()
+        // make http call to createProducts
+        const products = this.state.table.inventory
+        const res = await fetchInventory('createProducts', 'post', { products }, {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.token
+        })
+
+        console.log(res)
+
+        // set token to null when done
+        this.token = null
+
+        // redirect to inventory section
+        // this.props.handleSubmit()
     }
 
     // Truncate string 
@@ -59,6 +78,7 @@ export default class TableFrame extends Component {
                                             value={inventory[propKey][childKey]}
                                             name={childKey}
                                             onChange={e => this.handleChange(e, propKey)}
+                                            size='mini'
                                         />
                                     </Form.Field>
                                 </Table.Cell>

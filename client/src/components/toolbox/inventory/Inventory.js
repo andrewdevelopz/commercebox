@@ -3,6 +3,7 @@
  * for the inventory ends here.
  * 
  * @todo - Make it so you can add headers (columns like `title`)
+ * @todo - When edit is cancelled the data still saves updated state, make it so when cancel is hit it reverts to inital state
  */
 
 import React, { Component } from 'react'
