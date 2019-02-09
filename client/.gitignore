@@ -40,4 +40,3 @@ yarn-debug.log*
 yarn-error.log*
 
 # all other files
-package-lock.json
