@@ -1,4 +1,4 @@
-# Commerce Utility Box
+# Commerce Box
 A handy seller toolbox which helps businesses maintain inventory, daily to dos, get analytic reports and more. The application consists of 3 main directories. `server` for the backend api, `client` for the front end and `mobile` for the mobile version.
 
 ## Getting Started
@@ -10,13 +10,13 @@ These instructions will get you up and running for development on your local mac
 First clone the repo in your chosen directory.
 
 ```
-git clone https://github.com/akeon-lee/commerceUtilityBox.git
+git clone https://github.com/akeon-lee/commercebox
 ```
 
 Then cd into the directory
 
 ```
-cd commerceUtilityBox/client && cd commerceUtilityBox/server
+cd commercebox/client && cd commercebox/server
 ```
 
 Install all the dependencies in both directories
