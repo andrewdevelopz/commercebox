@@ -7,6 +7,7 @@
 // Dependencies
 import express from 'express'
 import Route from '../Route'
+import Product from '../../models/Product'
 
 const router = express.Router()
 
@@ -24,6 +25,7 @@ export default class Inventory extends Route {
     run() {
         this.root(true)
         this.createProducts(true)
+        this.getInventory(true)
     }
 
     /**
@@ -39,21 +41,50 @@ export default class Inventory extends Route {
 
     // Create products
     createProducts(passport) {
-        this.createRoute('post', '/createProducts', (req, res) => {
-            // set products && user from req.body
-            const products = req.body.products
-            const user = req.user
+        this.createRoute('post', '/createProducts', async (req, res) => {
+            try {
+                // set products && user from req
+                const products = req.body.products
+                const user = req.user
 
-            // set user id in product object
-            if (products.length > 1) {
-                for (const product of products) {
-                    product['userId'] = user._id
+                // if there is only one product to query
+                if (products.length === 1) {
+                    // set user id in product object
+                    products[0]['userId'] = user._id
+
+                    const query = new Product(products[0])
+                    await query.save()
+                } else {
+                    // loop through all products to set userId
+                    for (const product of products) {
+                        // set user id in product object
+                        product['userId'] = user._id
+                    }
+
+                    // Insert products into database
+                    await Product.insertMany(products)
                 }
-            } else {
-                products[0]['userId'] = user._id
-            }
 
-            // send back results
+                // send back results
+                res.json({
+                    success: true,
+                    products: products
+                })
+            } catch (e) {
+                // send error results
+                res.json({
+                    success: false,
+                    error: e
+                })
+            }
+        }, passport)
+    }
+
+    // Get inventory
+    getInventory(passport) {
+        this.createRoute('get', '/getInventory', async (req, res) => {
+            // get all products from database
+            const products = await Product.find()
             res.json(products)
         }, passport)
     }

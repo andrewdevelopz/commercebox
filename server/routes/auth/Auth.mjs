@@ -121,7 +121,7 @@ export default class Auth extends Route {
     }
 
     retreiveUserData(passport) {
-            this.createRoute('post', '/retreiveUserData', async (req, res) => {
+        this.createRoute('get', '/retreiveUserData', async (req, res) => {
             const userID = req.user._id
             const user = await User.findById(userID)
 

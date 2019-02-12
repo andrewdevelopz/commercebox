@@ -11,7 +11,9 @@ import { Link } from 'react-router-dom'
 
 // Import custom components
 import SearchBar from '../../shared/search/Search'
-import TableFrame from '../../shared/tables/TableFrame'
+import TableFrame from './table/TableFrame'
+// import { loadToken } from '../../auth/services/authService'
+// import { fetchInventory } from '../../shared/services/httpService'
 
 // Semantic UI
 import { Segment, Grid, Button, Divider } from 'semantic-ui-react'
@@ -66,45 +68,41 @@ export default class Inventory extends Component {
                     depth: '1in',
                     bin: 'R1-56',
                     monitor: 'true'
-                },
-                {
-                    image: 'https://s3.amazonaws.com/uifaces/faces/twitter/oktayelipek/128.jpg',
-                    sku: 'sku2',
-                    title: 'Larkin - Koelpin',
-                    quantity: 3,
-                    available: 3,
-                    alert: 2,
-                    orders: 1,
-                    description: 'Expanded bandwidth-monitored moratorium Expanded bandwidth-monitored moratorium Expanded bandwidth-monitored moratorium Expanded bandwidth-monitored moratorium Expanded bandwidth-monitored moratoriumExpanded bandwidth-monitored moratorium Expanded bandwidth-monitored moratoriumExpanded bandwidth-monitored moratorium',
-                    price: '$64.20',
-                    value: '$17.12',
-                    category: 'Chargers',
-                    group: 'Schaden',
-                    upc: 63262336,
-                    condition: 'new',
-                    location: '348 Paseo Sonrisa, Walnut CA 91789',
-                    weight: '6oz',
-                    height: '9in',
-                    width: '6in',
-                    depth: '1in',
-                    bin: 'R2-12',
-                    monitor: 'true'
                 }
             ]
         },
         editItems: false,
         path: ''
     }
+    token
 
     constructor({ match }) {
         super()
         this.state.path = match.path
     }
 
-    componentDidMount = () => {
-        // make an api call to the database
-        // get the inventory and set `this.state.inventory` to the items
-    }
+    // componentDidMount = async () => {
+    //     /**
+    //      * @todo - the error is coming from the Products being saved in the back-end do not match up with front-end mapping
+    //      */
+    //     // make an api call to the database
+    //     this.token = loadToken()
+    //     const res = await fetchInventory('getInventory', 'get', {
+    //         'Accept': 'application/json',
+    //         'Content-Type': 'application/json',
+    //         'Authorization': this.token
+    //     })
+
+    //     // set table state to res from http call
+    //     this.setState(prevState => {
+    //         prevState.table.inventory = res
+    //         return {
+    //             table: prevState.table
+    //         }
+    //     })
+
+    //     this.token = null
+    // }
 
     // When edit item button is pressed
     onEditItems = () => {

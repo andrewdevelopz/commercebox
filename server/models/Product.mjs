@@ -6,6 +6,7 @@ import mongoose from 'mongoose'
 // Product schema
 const Schema = mongoose.Schema
 const productSchema = new Schema({
+    image: String,
     sku: { type: String, required: true },
     title: { type: String, required: true },
     quantity: {
@@ -15,11 +16,7 @@ const productSchema = new Schema({
         pendingOrders: Number,
         needed: Number // The needed quantity to meet the requirement to not trigger the alert quantity.
     },
-    orders: [], // Orders that are pending from the item that is linked.
     description: String,
-    upc: String,
-    images: String,
-    condition: String,
     price: {
         sell: Number,
         purchase: Number,
@@ -27,6 +24,8 @@ const productSchema = new Schema({
     },
     category: String,
     variationGroup: String,
+    upc: String,
+    condition: String,
     location: {
         fullAddress: String,
         company: String,
@@ -48,6 +47,7 @@ const productSchema = new Schema({
     },
     bin: String, // Bin location of item
     monitor: Boolean,
+    orders: [], // Orders that are pending from the item that is linked.
     linked: {
         ebay: [],
         amazon: [],
@@ -57,8 +57,8 @@ const productSchema = new Schema({
     created: Date,
     modified: Date,
     userId: String
-})
+}, { collection: 'inventory' })
 
-const product = mongoose.model('Users', productSchema)
+const product = mongoose.model('Inventory', productSchema)
 
 export default product

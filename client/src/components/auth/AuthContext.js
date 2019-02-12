@@ -27,10 +27,10 @@ export default class AuthProvider extends Component {
     login = async (user) => {
         try {
             // Make a post request to api/auth/login
-            const res = await fetchAuth('login', 'post', user, {
+            const res = await fetchAuth('login', 'post', {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            })
+            }, user)
 
             if (res.success) {
                 storeUserLocalStorage(res.token)

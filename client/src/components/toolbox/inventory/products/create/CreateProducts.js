@@ -5,7 +5,7 @@
 import React, { Component } from 'react'
 
 // Import custom components
-import TableFrame from '../../../../shared/tables/TableFrame'
+import TableFrame from '../../table/TableFrame'
 
 // Semantic UI
 import { Segment, Button } from 'semantic-ui-react'
@@ -22,14 +22,26 @@ export default class CreateProducts extends Component {
                 ['Available', null],
                 ['Alert', null],
                 ['Orders', null],
+                ['Needed', null],
                 ['Description', null],
-                ['Price', null],
-                ['Value', null],
+                ['Sell Price', null],
+                ['Purchase', null],
+                ['Stock Value', null],
                 ['Category', null],
-                ['Group', null],
+                ['Variation Group', null],
                 ['UPC', null],
                 ['Condition', null],
-                ['Location', null],
+                ['Full Address', null],
+                ['Company', null],
+                ['Name', null],
+                ['Address 1', null],
+                ['Address 2', null],
+                ['City', null],
+                ['State', null],
+                ['Zip', null],
+                ['Country', null],
+                ['Email', null],
+                ['Phone', null],
                 ['Weight', null],
                 ['Height', null],
                 ['Width', null],
@@ -42,25 +54,45 @@ export default class CreateProducts extends Component {
                     image: '',
                     sku: '',
                     title: '',
-                    quantity: '',
-                    available: '',
-                    alert: '',
-                    orders: '',
+                    quantity: {
+                        quantity: '',
+                        available: '',
+                        alert: '',
+                        pendingOrders: '',
+                        needed: ''
+                    },
                     description: '',
-                    price: '',
-                    value: '',
+                    price: {
+                        sell: '',
+                        purchase: '',
+                        stockValue: ''
+                    },
                     category: '',
-                    group: '',
+                    variationGroup: '',
                     upc: '',
                     condition: '',
-                    location: '',
-                    weight: '',
-                    height: '',
-                    width: '',
-                    depth: '',
+                    location: {
+                        fullAddress: '',
+                        company: '',
+                        name: '',
+                        address1: '',
+                        address2: '',
+                        city: '',
+                        state: '',
+                        zip: '',
+                        country: '',
+                        email: '',
+                        phone: ''
+                    },
+                    detail: {
+                        weight: '',
+                        height: '',
+                        width: '',
+                        depth: ''
+                    },
                     bin: '',
                     monitor: ''
-                },
+                }
             ]
         }
     }
@@ -77,14 +109,16 @@ export default class CreateProducts extends Component {
 
     // Generate product row by returning product object
     generateRow = () => ({
-        image: '', sku: '', title: '', quantity: '', available: '', alert: '', orders: '', description: '', price: '', value: '',
-        category: '', group: '', upc: '', condition: '', location: '', weight: '', height: '', width: '', depth: '', bin: '', monitor: ''
+        image: '', sku: '', title: '', quantity: { quantity: '', available: '', alert: '', pendingOrders: '', needed: '' }, description: '',
+        price: { sell: '', purchase: '', stockValue: '' }, category: '', variationGroup: '', upc: '', condition: '',
+        location: { fullAddress: '', company: '', name: '', address1: '', address2: '', city: '', state: '', zip: '', country: '', email: '', phone: '' },
+        detail: { weight: '', height: '', width: '', depth: '' }, bin: '', monitor: ''
     })
 
     // Create the products, persisting it to the database
     createProducts = () => {
         console.log('products created, redirecting to inventory...')
-        this.props.history.push('/toolbox/inventory')
+        // this.props.history.push('/toolbox/inventory')
     }
 
     render() {

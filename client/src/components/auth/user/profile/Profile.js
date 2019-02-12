@@ -88,7 +88,7 @@ export default class Profile extends Component {
     }
 
     async componentDidMount() {
-        const res = await fetchAuth('retreiveUserData', 'post', {}, {
+        const res = await fetchAuth('retreiveUserData', 'get', {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': loadToken()

@@ -28,10 +28,10 @@ export default class RegisterForm extends Component {
         try {
             const user = this.state
             // Register the user with the form data
-            const res = await fetchAuth('register', 'post', user, {
+            const res = await fetchAuth('register', 'post', {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            })
+            }, user)
 
             if (res.success) {
                 this.props.history.push('/login')
