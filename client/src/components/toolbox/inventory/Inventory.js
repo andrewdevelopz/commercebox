@@ -114,6 +114,7 @@ export default class Inventory extends Component {
 
     render() {
         const { table, editItems, path } = this.state
+        // console.log('Inventory rendered')
 
         return (
             <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
