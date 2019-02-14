@@ -12,8 +12,8 @@ import { Link } from 'react-router-dom'
 // Import custom components
 import SearchBar from '../../shared/search/Search'
 import TableFrame from './table/TableFrame'
-// import { loadToken } from '../../auth/services/authService'
-// import { fetchInventory } from '../../shared/services/httpService'
+import { loadToken } from '../../auth/services/authService'
+import { fetchInventory } from '../../shared/services/httpService'
 
 // Semantic UI
 import { Segment, Grid, Button, Divider } from 'semantic-ui-react'
@@ -30,14 +30,26 @@ export default class Inventory extends Component {
                 ['Available', null],
                 ['Alert', null],
                 ['Orders', null],
+                ['Needed', null],
                 ['Description', null],
-                ['Price', null],
-                ['Value', null],
+                ['Sell Price', null],
+                ['Purchase', null],
+                ['Stock Value', null],
                 ['Category', null],
-                ['Group', null],
+                ['Variation Group', null],
                 ['UPC', null],
                 ['Condition', null],
-                ['Location', null],
+                ['Full Address', null],
+                ['Company', null],
+                ['Name', null],
+                ['Address 1', null],
+                ['Address 2', null],
+                ['City', null],
+                ['State', null],
+                ['Zip', null],
+                ['Country', null],
+                ['Email', null],
+                ['Phone', null],
                 ['Weight', null],
                 ['Height', null],
                 ['Width', null],
@@ -45,31 +57,7 @@ export default class Inventory extends Component {
                 ['Bin', null],
                 ['Monitor', null]
             ],
-            inventory: [
-                {
-                    image: 'https://s3.amazonaws.com/uifaces/faces/twitter/marcomano_/128.jpg',
-                    sku: 'sku1',
-                    title: 'Schaden - Turcotte',
-                    quantity: 3,
-                    available: 3,
-                    alert: 2,
-                    orders: 1,
-                    description: 'Operative hybrid matrix',
-                    price: '$47.12',
-                    value: '$13.12',
-                    category: 'Cases',
-                    group: 'Schaden',
-                    upc: 125125125,
-                    condition: 'new',
-                    location: '348 Paseo Sonrisa, Walnut CA 91789',
-                    weight: '12oz',
-                    height: '9in',
-                    width: '6in',
-                    depth: '1in',
-                    bin: 'R1-56',
-                    monitor: 'true'
-                }
-            ]
+            inventory: []
         },
         editItems: false,
         path: ''
@@ -81,28 +69,70 @@ export default class Inventory extends Component {
         this.state.path = match.path
     }
 
-    // componentDidMount = async () => {
-    //     /**
-    //      * @todo - the error is coming from the Products being saved in the back-end do not match up with front-end mapping
-    //      */
-    //     // make an api call to the database
-    //     this.token = loadToken()
-    //     const res = await fetchInventory('getInventory', 'get', {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json',
-    //         'Authorization': this.token
-    //     })
+    async componentDidMount() {
+        // make an api call to the database
+        this.token = loadToken()
 
-    //     // set table state to res from http call
-    //     this.setState(prevState => {
-    //         prevState.table.inventory = res
-    //         return {
-    //             table: prevState.table
-    //         }
-    //     })
+        const res = await fetchInventory('getInventory', 'get', {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.token
+        })
 
-    //     this.token = null
-    // }
+        const organized = this.organizeJSONResponse(res)
+
+        // set table state to res from http call
+        this.setState(prevState => {
+            prevState.table.inventory = organized
+            return {
+                table: prevState.table
+            }
+        })
+
+        this.token = null
+    }
+
+    // Organize the http JSON response to match table headers
+    organizeJSONResponse = (arr) => {
+        const mapping = arr.map(x => {
+            return {
+                image: x.image,
+                sku: x.sku,
+                title: x.title,
+                quantity: x.quantity.quantity,
+                available: x.quantity.available,
+                alert: x.quantity.alert,
+                orders: x.quantity.pendingOrders,
+                needed: x.quantity.needed,
+                description: x.description,
+                sellPrice: x.price.sell,
+                purchase: x.price.purchase,
+                stockValue: x.price.stockValue,
+                category: x.category,
+                variationGroup: x.variationGroup,
+                upc: x.upc,
+                condition: x.condition,
+                fullAddress: x.location.fullAddress,
+                company: x.location.company,
+                name: x.location.name,
+                address1: x.location.address1,
+                address2: x.location.address2,
+                city: x.location.city,
+                state: x.location.state,
+                zip: x.location.zip,
+                country: x.location.country,
+                email: x.location.email,
+                phone: x.location.phone,
+                weight: x.detail.weight,
+                height: x.detail.height,
+                width: x.detail.width,
+                depth: x.detail.depth,
+                bin: x.bin,
+                monitor: x.monitor
+            }
+        })
+        return mapping
+    }
 
     // When edit item button is pressed
     onEditItems = () => {
@@ -113,8 +143,11 @@ export default class Inventory extends Component {
     }
 
     render() {
+        // wait for componentDidMount before rendering
+        if (this.state.table.inventory.length === 0) {
+            return null
+        }
         const { table, editItems, path } = this.state
-        // console.log('Inventory rendered')
 
         return (
             <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>

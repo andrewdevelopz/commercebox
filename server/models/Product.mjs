@@ -56,7 +56,7 @@ const productSchema = new Schema({
     },
     created: Date,
     modified: Date,
-    userId: String
+    userID: String
 }, { collection: 'inventory' })
 
 const product = mongoose.model('Inventory', productSchema)

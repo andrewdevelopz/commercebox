@@ -50,15 +50,15 @@ export default class Inventory extends Route {
                 // if there is only one product to query
                 if (products.length === 1) {
                     // set user id in product object
-                    products[0]['userId'] = user._id
+                    products[0]['userID'] = user._id
 
                     const query = new Product(products[0])
                     await query.save()
                 } else {
-                    // loop through all products to set userId
+                    // loop through all products to set userID
                     for (const product of products) {
                         // set user id in product object
-                        product['userId'] = user._id
+                        product['userID'] = user._id
                     }
 
                     // Insert products into database

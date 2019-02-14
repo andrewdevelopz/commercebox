@@ -1,3 +1,7 @@
+/**
+ * @overview: This component is for the table cells of each row.
+ */
+
 import React, { Component } from 'react'
 
 // Semantic UI
@@ -99,15 +103,29 @@ export default class TableCell extends Component {
                     <React.Fragment>
                         <Table.Cell style={{ opacity: '0.5' }}>{parseInt(this.props.propKey) + 1}</Table.Cell>
                         {Object.keys(item).map((itemKey, i) => {
-                            return (
-                                itemKey === 'image'
-                                    ? <Table.Cell key={i}><Image src={item[itemKey]} centered size='mini' /></Table.Cell>
-                                    : <Table.Cell key={i}>{
-                                        typeof item[itemKey] === 'string'
-                                            ? this.truncateString(item[itemKey])
-                                            : item[itemKey].toString()
-                                    }</Table.Cell>
-                            )
+                            // nested objects of item object `item: { <nested>: ... }`
+                            const nested = item[itemKey]
+
+                            // if the item is a nested object
+                            if (typeof nested === 'object') {
+                                return Object.keys(nested).map((childProp, i) => {
+                                    return (
+                                        <Table.Cell key={i}>
+                                            {nested[childProp]}
+                                        </Table.Cell>
+                                    )
+                                })
+                            } else {
+                                return (
+                                    itemKey === 'image'
+                                        ? <Table.Cell key={i}><Image src={item[itemKey]} centered size='mini' /></Table.Cell>
+                                        : <Table.Cell key={i}>{
+                                            typeof item[itemKey] === 'string'
+                                                ? this.truncateString(item[itemKey])
+                                                : item[itemKey].toString()
+                                        }</Table.Cell>
+                                )
+                            }
                         })}
                     </React.Fragment>
                 )
