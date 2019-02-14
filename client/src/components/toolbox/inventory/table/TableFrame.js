@@ -66,7 +66,6 @@ export default class TableFrame extends Component {
 
     render() {
         const { table } = this.state
-        // console.log('TableFrame rendered')
 
         // return table to render with form wrapped or no form wrapped
         const returnTable = () => {

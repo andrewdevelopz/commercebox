@@ -123,7 +123,6 @@ export default class CreateProducts extends Component {
 
     render() {
         const { table } = this.state
-        // console.log('createProducts rendered')
 
         return (
             <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
