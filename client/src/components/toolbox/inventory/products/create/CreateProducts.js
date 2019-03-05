@@ -117,8 +117,7 @@ export default class CreateProducts extends Component {
 
     // Create the products, persisting it to the database
     createProducts = () => {
-        console.log('products created, redirecting to inventory...')
-        // this.props.history.push('/toolbox/inventory')
+        this.props.history.push('/toolbox/inventory')
     }
 
     render() {

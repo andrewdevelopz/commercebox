@@ -31,7 +31,7 @@ export default class TableFrame extends Component {
         const products = this.state.table.inventory
 
         const length = products.length
-        const batch = 200
+        const batch = 100
         for (let i = 0; i < length; i += batch) {
             const chunk = products.slice(i, i + batch)
 
@@ -43,12 +43,8 @@ export default class TableFrame extends Component {
 
             // if res.success is false handle error
             if (!res.success) {
-                // console error
                 console.error(res.error)
             } else {
-                // actions when http call is successful
-                console.warn('http call to /inventory/createProducts was successful')
-
                 // console your message
                 console.log(res)
 

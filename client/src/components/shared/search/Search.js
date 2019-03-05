@@ -34,7 +34,7 @@ export default class SearchBar extends Component {
 
         this.setState({
             isLoading: false,
-            results: _.filter(this.props.inventory, isMatch),
+            results: _.filter(this.props.inventory, isMatch)
         })
     }
 

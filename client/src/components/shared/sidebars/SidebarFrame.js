@@ -13,7 +13,7 @@ import {
 
 export default class SidebarFrame extends Component {
     state = {
-        activeItem: 'dashboard',
+        activeItem: this.props.active,
         animation: 'push',
         direction: 'left',
         visible: true

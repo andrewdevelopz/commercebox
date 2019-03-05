@@ -58,10 +58,11 @@ export default class Toolbox extends Component {
 
     render() {
         const { path } = this.state
+        const active = this.props.location.pathname.match(/toolbox\/(.*)/) && this.props.location.pathname.match(/toolbox\/(.*)/)[1]
 
         return (
             <Sidebar.Pushable basic as={Segment} style={{ minHeight: '100vh' }}>
-                <SidebarFrame name='toolbox' sidebarItems={this.state.sidebarItems} />
+                <SidebarFrame name='toolbox' sidebarItems={this.state.sidebarItems} active={active} />
                 <Sidebar.Pusher style={{ background: '#252525', minHeight: '100vh', transform: 'none', marginLeft: '7rem' }}>
                     <Switch>
                         <Route path={`${path}/dashboard`} component={Dashboard} />
