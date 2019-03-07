@@ -86,12 +86,14 @@ export default class Profile extends Component {
             }
         ]
     }
+    token
 
     async componentDidMount() {
+        this.token = loadToken()
         const res = await fetchAuth('retreiveUserData', 'get', {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': loadToken()
+            'Authorization': this.token
         })
 
         this.setState(prevState => {
@@ -104,6 +106,8 @@ export default class Profile extends Component {
                 userInfo: prevState.userInfo
             }
         })
+
+        this.token = null
     }
 
     handleChange = (e) => {
@@ -124,16 +128,45 @@ export default class Profile extends Component {
         })
     }
 
-    onSubmit = (event) => {
+    // When a form has been submitted
+    onSubmit = async (event) => {
         try {
+            this.token = loadToken()
             const dataType = event.target.parentNode.getAttribute('datatype')
+            console.log(dataType)
+
+            // Handle each type of form being submitted
             if (dataType === 'info') {
-                console.log(this.state.userInfo)
-            } else {
-                console.log(this.state.userPassword)
+                const res = await fetchAuth('updateUserData', 'post', {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': this.token
+                }, { user: this.state.userInfo })
+
+                console.log(res)
+
+            } else if (dataType === 'password') {
+                if (this.state.userPassword.newPassword === this.state.userPassword.confirmPassword) {
+                    const res = await fetchAuth('updateUserPassword', 'post', {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': this.token
+                    }, { password: this.state.userPassword })
+
+                    console.log(res)
+                    
+                } else {
+                    console.log('Confirm password does not match the new password')
+                }
             }
+
+            return
+
         } catch (e) {
             console.error(e)
+        } finally {
+            // Set token to null
+            this.token = null
         }
     }
 
@@ -164,7 +197,7 @@ export default class Profile extends Component {
                     label={item.label}
                     type={item.type}
                     name={item.name}
-                    datatype='password'
+                    // datatype='password' // Remove this if no bugs occur
                     value={this.state.userPassword[item.name]}
                     onChange={this.handleChange}
                 />
@@ -193,7 +226,7 @@ export default class Profile extends Component {
                             <Segment inverted>
                                 <Header as='h3'>Change Password</Header>
                                 <Divider />
-                                <Form className='formLabel'>
+                                <Form className='formLabel' datatype='password'>
                                     {/* Input password card content */}
                                     {passwordCard}
                                     <Button primary size='medium' onClick={this.onSubmit}>
@@ -206,7 +239,7 @@ export default class Profile extends Component {
                     <Grid.Row>
                         <Grid.Column>
                             <CardFrame header='Addresses'>
-                                <Form className='formLabel'>
+                                <Form className='formLabel' datatype='address'>
                                     <Table inverted>
                                         <Table.Header>
                                             <Table.Row>

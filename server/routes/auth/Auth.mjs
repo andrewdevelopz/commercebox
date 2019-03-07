@@ -25,11 +25,17 @@ export default class Auth extends Route {
         this.run()
     }
 
+    /**
+     * @param boolean - true = authenticated route, false = open route
+     * @note - This is also a summary of each route availale
+     */
     run() {
         this.root(true)
         this.register(false)
         this.login(false)
         this.retreiveUserData(true)
+        this.updateUserData(true)
+        this.updateUserPassword(true)
     }
 
     /**
@@ -120,6 +126,7 @@ export default class Auth extends Route {
         }, passport)
     }
 
+    // Retreive the users data
     retreiveUserData(passport) {
         this.createRoute('get', '/retreiveUserData', async (req, res) => {
             const userID = req.user._id
@@ -133,6 +140,67 @@ export default class Auth extends Route {
             }
 
             res.json(sendUser)
+        }, passport)
+    }
+
+    // Update the user data
+    updateUserData(passport) {
+        this.createRoute('post', '/updateUserData', async (req, res) => {
+            try {
+                const userID = req.user._id
+                const body = req.body.user
+
+                // construct user update object
+                const update = {
+                    firstName: body.firstName,
+                    lastName: body.lastName,
+                    username: body.username,
+                    email: body.email
+                }
+                // query to the database with userID
+                await User.findOneAndUpdate(userID, update).exec()
+
+                res.json({ success: true })
+            } catch (e) {
+                // send error results
+                res.sendStatus(500)
+            }
+        }, passport)
+    }
+
+    // Update the user password
+    updateUserPassword(passport) {
+        this.createRoute('post', '/updateUserPassword', async (req, res) => {
+            try {
+                const userID = req.user._id
+                const body = req.body.password
+
+                // find the user by userID from the database
+                const user = await User.findOne({ _id: userID })
+
+                // compare found user password with inputed current password from client
+                const isMatch = await bcrypt.compare(body.currentPassword, user.password)
+
+                if (isMatch) {
+                    // generate salt and hashed password
+                    const saltRounds = await bcrypt.genSalt(10)
+                    const hash = await bcrypt.hash(body.newPassword, saltRounds)
+
+                    // construct user password update object
+                    const update = {
+                        password: hash
+                    }
+                    // query to the database to update the user password
+                    await User.findOneAndUpdate(userID, update).exec()
+
+                    res.json({ success: true, message: 'The users password has been updated' })
+                } else {
+                    res.json({ success: false, message: 'The current password you entered does not match' })
+                }
+
+            } catch (e) {
+                res.sendStatus(500)
+            }
         }, passport)
     }
 }
