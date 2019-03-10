@@ -14,22 +14,23 @@ export default class AuthProvider extends Component {
     state = {
         isAuth: false
     }
+    token
 
     constructor() {
         super()
-        let token = loadToken()
-        token && (this.state.isAuth = true)
-        token = null
+        this.token = loadToken()
+        this.token && (this.state.isAuth = true)
+        this.token = null
     }
 
     // Method to login a user
     login = async (user) => {
         try {
             // Make a post request to api/auth/login
-            const res = await fetchAuth('login', 'post', user, {
+            const res = await fetchAuth('login', 'post', {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            })
+            }, user)
 
             if (res.success) {
                 storeUserLocalStorage(res.token)

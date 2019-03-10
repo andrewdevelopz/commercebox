@@ -5,6 +5,7 @@
     "main": "./src/index.js",
     "private": true,
     "dependencies": {
+        "lodash": "^4.17.11",
         "react": "^16.7.0",
         "react-dom": "^16.7.0",
         "react-router-dom": "^4.3.1",
@@ -12,7 +13,7 @@
         "semantic-ui-react": "^0.84.0"
     },
     "scripts": {
-        "start": "set PORT=3005 && react-scripts start",
+        "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"

@@ -6,7 +6,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 // Import custom components
-import { AuthConsumer } from '../auth/AuthContext'
+import { AuthConsumer } from '../../AuthContext'
 
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 

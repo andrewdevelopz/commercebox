@@ -22,7 +22,7 @@ class Server {
         this.db = new Database()
         this.app = express()
         // Connect to db with mongoose
-        mongoose.connect(this.db.getConnectionString().database, { useNewUrlParser: true })
+        mongoose.connect(this.db.getConnectionString().database, { useNewUrlParser: true, useFindAndModify: false })
             .then(() => console.log('Connected to MongoDB...'))
             .catch(err => console.log(err))
         // Initiate the server
