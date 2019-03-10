@@ -197,7 +197,6 @@ export default class Auth extends Route {
                 } else {
                     res.json({ success: false, message: 'The current password you entered does not match' })
                 }
-
             } catch (e) {
                 res.sendStatus(500)
             }
