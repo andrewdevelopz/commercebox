@@ -2,7 +2,7 @@
     "name": "commercebox-api",
     "version": "1.0.0",
     "description": "The API for Commerce Box. An application that helps businesses manage day to day operations.",
-    "main": "server.mjs",
+    "main": "./src/server.mjs",
     "scripts": {
         "server": "node --experimental-modules server.mjs",
         "servermon": "nodemon --experimental-modules"
