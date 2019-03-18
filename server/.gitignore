@@ -62,3 +62,6 @@ typings/
 
 # all other files
 /public
+
+# Ignore built ts files
+dist/**/*

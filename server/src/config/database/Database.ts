@@ -2,8 +2,6 @@
  * @overview: This class takes care of all the business logic for communicating with the Database
  */
 
-'use strict'
-
 import '../Env'
 
 class Database {

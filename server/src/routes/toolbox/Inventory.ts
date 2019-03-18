@@ -2,8 +2,6 @@
  * @overview: This class is the route for the inventory section of the api and takes care of all the business logic.
  */
 
-'use strict'
-
 // Dependencies
 import express from 'express'
 import Route from '../Route'
