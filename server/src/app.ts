@@ -1,5 +1,10 @@
+/**
+ * @overview: The main application file for the back-end api. 
+ * @todo write more description about this...
+ */
+
 // Dependencies
-import express, { Request, Response, Application } from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import mongoose from 'mongoose';
@@ -8,6 +13,9 @@ import passport from 'passport';
 import { jwtStrat } from './config/auth/passport';
 import './config/Env';
 
+// Import types
+import { Request, Response, Application } from 'express-serve-static-core'
+
 // Importing routes class
 import Auth from './routes/auth/Auth';
 import Inventory from './routes/toolbox/Inventory';
@@ -15,7 +23,7 @@ import Orders from './routes/toolbox/Orders';
 import Shipping from './routes/toolbox/Shipping';
 import Todos from './routes/toolbox/Todos';
 
-class App {
+export default class App {
     private db: Database;
     private app: Application;
 
@@ -77,5 +85,3 @@ class App {
         this.httpServer(app);
     }
 }
-
-export default App;

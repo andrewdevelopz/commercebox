@@ -1,5 +1,3 @@
 import App from './app';
 
-const server = new App();
-
-export default server;
+export const server: App = new App();
