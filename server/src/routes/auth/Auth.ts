@@ -12,7 +12,6 @@ import User from '../../models/User';
 
 // Import types
 import { IUser } from 'mongooseTypes';
-import mongoose from 'mongoose';
 
 const router = express.Router();
 
