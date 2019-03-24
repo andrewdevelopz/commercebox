@@ -2,8 +2,6 @@
  * @overview: This class is the route for the auth section of the api and takes care of all the business logic.
  */
 
-'use strict';
-
 // Dependencies
 import express from 'express';
 import bcrypt from 'bcryptjs';
@@ -12,10 +10,14 @@ import Route from '../Route';
 import Database from '../../config/database/Database';
 import User from '../../models/User';
 
+// Import types
+import { IUser } from 'mongooseTypes';
+import mongoose from 'mongoose';
+
 const router = express.Router();
 
 export default class Auth extends Route {
-    constructor(path, app) {
+    constructor(path: string, app: express.Application) {
         // Super takes:
         // - path which is received from when instantiating the class
         // - app which is received from when instantiating the class
@@ -29,7 +31,7 @@ export default class Auth extends Route {
      * @param boolean - true = authenticated route, false = open route
      * @note - This is also a summary of each route availale
      */
-    run() {
+    run(): void {
         this.root(true);
         this.register(false);
         this.login(false);
@@ -44,20 +46,20 @@ export default class Auth extends Route {
      */
 
     // Root for auth route, Use this format for all routes
-    root(passport) {
-        this.createRoute('get', '/', (req, res) => {
+    root(passport: boolean): void {
+        this.createRoute('get', '/', (req: express.Request, res: express.Response) => {
             res.send('Hello from <b>ROOT</b> path of auth');
         }, passport);
     }
 
     // Register a user to the database
-    register(passport) {
-        this.createRoute('post', '/register', async (req, res) => {
+    register(passport: boolean): void {
+        this.createRoute('post', '/register', async (req: express.Request, res: express.Response) => {
             try {
                 // Generate salt and hashed password
-                const saltRounds = await bcrypt.genSalt(10);
-                const hash = await bcrypt.hash(req.body.password, saltRounds);
-                const user = {
+                const saltRounds: string = await bcrypt.genSalt(10);
+                const hash: string = await bcrypt.hash(req.body.password, saltRounds);
+                const user: User = {
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     username: req.body.username,
@@ -65,7 +67,7 @@ export default class Auth extends Route {
                     password: hash
                 }
 
-                const newUser = await User(user).save();
+                const newUser: IUser = await new User(user).save();
                 res.json({
                     success: true,
                     newUser
@@ -78,11 +80,11 @@ export default class Auth extends Route {
     }
 
     // Authenticate a user
-    login(passport) {
-        this.createRoute('post', '/login', async (req, res) => {
+    login(passport: boolean): void {
+        this.createRoute('post', '/login', async (req: express.Request, res: express.Response) => {
             try {
-                const username = req.body.username;
-                const password = req.body.password;
+                const username: string = req.body.username;
+                const password: string = req.body.password;
 
                 // Find the user by username from the database
                 const user = await User.findOne({ username });
@@ -94,12 +96,12 @@ export default class Auth extends Route {
                 }
 
                 // Compare found user password with inputed password from client
-                const isMatch = await bcrypt.compare(password, user.password);
+                const isMatch: boolean = await bcrypt.compare(password, user.password);
 
                 if (isMatch) {
-                    const db = new Database();
+                    const db: Database = new Database();
                     // Create a token that expires in 1 week
-                    const token = await jwt.sign({ data: user }, db.getConnectionString().secret, {
+                    const token: string = await jwt.sign({ data: user }, db.getConnectionString().secret as string, {
                         expiresIn: 604800 // 1 week
                     });
 
@@ -109,7 +111,8 @@ export default class Auth extends Route {
                         token: 'Bearer ' + token,
                         user: {
                             id: user._id,
-                            name: user.name,
+                            firstName: user.firstName,
+                            lastName: user.lastName,
                             username: user.username,
                             email: user.email
                         }
@@ -127,35 +130,40 @@ export default class Auth extends Route {
     }
 
     // Retreive the users data
-    retreiveUserData(passport) {
-        this.createRoute('get', '/retreiveUserData', async (req, res) => {
-            const userID = req.user._id;
+    retreiveUserData(passport: boolean): void {
+        this.createRoute('get', '/retreiveUserData', async (req: express.Request, res: express.Response) => {
+            const userID: string = req.user._id;
             const user = await User.findById(userID);
 
-            const sendUser = {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                username: user.username,
-                email: user.email
+            if (user) {
+                const sendUser: User = {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    username: user.username,
+                    email: user.email
+                }
+                res.json(sendUser);
+            } else {
+                console.log('Something wen\'t wrong while looking for the user in the database');
+                res.sendStatus(500);
             }
 
-            res.json(sendUser);
         }, passport);
     }
 
     // Update the user data
-    updateUserData(passport) {
-        this.createRoute('post', '/updateUserData', async (req, res) => {
+    updateUserData(passport: boolean): void {
+        this.createRoute('post', '/updateUserData', async (req: express.Request, res: express.Response) => {
             try {
-                const userID = req.user._id;
-                const body = req.body.user;
+                const userID: string = req.user._id;
+                const user: User = req.body.user;
 
                 // construct user update object
-                const update = {
-                    firstName: body.firstName,
-                    lastName: body.lastName,
-                    username: body.username,
-                    email: body.email
+                const update: User = {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    username: user.username,
+                    email: user.email
                 }
                 // query to the database with userID
                 await User.findOneAndUpdate(userID, update).exec();
@@ -169,22 +177,22 @@ export default class Auth extends Route {
     }
 
     // Update the user password
-    updateUserPassword(passport) {
-        this.createRoute('post', '/updateUserPassword', async (req, res) => {
+    updateUserPassword(passport: boolean): void {
+        this.createRoute('post', '/updateUserPassword', async (req: express.Request, res: express.Response) => {
             try {
-                const userID = req.user._id;
-                const body = req.body.password;
+                const userID: string = req.user._id;
+                const password: { currentPassword: string, newPassword: string } = req.body.password;
 
                 // find the user by userID from the database
-                const user = await User.findOne({ _id: userID });
+                const user: any = await User.findOne({ _id: userID });
 
                 // compare found user password with inputed current password from client
-                const isMatch = await bcrypt.compare(body.currentPassword, user.password);
+                const isMatch: boolean = await bcrypt.compare(password.currentPassword, user.password);
 
                 if (isMatch) {
                     // generate salt and hashed password
-                    const saltRounds = await bcrypt.genSalt(10);
-                    const hash = await bcrypt.hash(body.newPassword, saltRounds);
+                    const saltRounds: string = await bcrypt.genSalt(10);
+                    const hash: string = await bcrypt.hash(password.newPassword, saltRounds);
 
                     // construct user password update object
                     const update = {

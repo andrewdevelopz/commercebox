@@ -5,19 +5,17 @@
  * @link https://hackernoon.com/object-oriented-routing-in-nodejs-and-express-71cb1baed9f0 - reference for Router class
  */
 
-import passport, { PassportStatic } from 'passport';
-import { Application, Router } from 'express-serve-static-core';
+import passport from 'passport';
 
-// Custom router interface for createRoute method in routes class to prevent index signature error.
-interface RouterExtended extends Router {
-    [index: string]: any;
-}
+// Import types
+import { Application, Router } from 'express';
+import { IRouterExtended } from 'expressTypes';
 
 export default class Route {
     path: string;
-    router: RouterExtended;
+    router: IRouterExtended;
     app: Application;
-    passport: PassportStatic;
+    passport: passport.PassportStatic;
 
     // Constructor takes:
     // - path which is the base path for each service exposed by the router subclass (ie. '/api/inventory')
@@ -35,7 +33,7 @@ export default class Route {
     }
 
     // Register the route path with the express router
-    registerRoute() {
+    registerRoute(): void {
         this.app.use(this.path, this.router);
     }
 
@@ -44,7 +42,7 @@ export default class Route {
     // - path which is the path the request is related to (e.g. '/<route>/login')
     // - callback which is the callback function a router receives (e.g. (req, res) => {})
     // - passport which is a boolean to include Passport authentication for the route
-    createRoute(type: string, path: string, callback: Function, passport: boolean = false) {
+    createRoute(type: string, path: string, callback: Function, passport: boolean = false): void {
         passport ? this.router[type](path, this.passport.authenticate('jwt', { session: false }), callback) : this.router[type](path, callback);
     }
 }

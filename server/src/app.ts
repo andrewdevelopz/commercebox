@@ -13,9 +13,6 @@ import passport from 'passport';
 import { jwtStrat } from './config/auth/passport';
 import './config/Env';
 
-// Import types
-import { Request, Response, Application } from 'express-serve-static-core'
-
 // Importing routes class
 import Auth from './routes/auth/Auth';
 import Inventory from './routes/toolbox/Inventory';
@@ -25,7 +22,7 @@ import Todos from './routes/toolbox/Todos';
 
 export default class App {
     private db: Database;
-    private app: Application;
+    private app: express.Application;
 
     constructor() {
         this.db = new Database();
@@ -39,7 +36,7 @@ export default class App {
     }
 
     // All server logic for the http and https server
-    private unifiedServer(app: Application): void {
+    private unifiedServer(app: express.Application): void {
         // Execute npm libraries
 
         /**
@@ -62,17 +59,17 @@ export default class App {
         new Shipping('/api/shipping', app);
         new Todos('/api/todos', app);
 
-        app.get('/', (req: Request, res: Response) => {
+        app.get('/', (req: express.Request, res: express.Response) => {
             res.send('Invalid Endpoint');
         });
 
-        app.get('/api', (req: Request, res: Response) => {
+        app.get('/api', (req: express.Request, res: express.Response) => {
             res.send('Commercebox API end point');
         });
     }
 
     // Instantate the HTTP server
-    private httpServer(app: Application): void {
+    private httpServer(app: express.Application): void {
         this.unifiedServer(app);
 
         // Listen on PORT
@@ -81,7 +78,7 @@ export default class App {
     }
 
     // Init script method
-    init(app: Application) {
+    init(app: express.Application): void {
         this.httpServer(app);
     }
 }

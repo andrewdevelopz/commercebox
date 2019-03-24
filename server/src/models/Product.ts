@@ -1,11 +1,12 @@
 'use strict'
 
 // Dependencies
-import mongoose from 'mongoose'
+import mongoose, { Schema } from 'mongoose';
 
-// Product schema
-const Schema = mongoose.Schema
-const productSchema = new Schema({
+// Import types
+import { IProduct } from 'mongooseTypes';
+
+const ProductSchema: mongoose.Schema = new Schema({
     image: String,
     sku: { type: String, required: true },
     title: { type: String, required: true },
@@ -57,8 +58,8 @@ const productSchema = new Schema({
     created: Date,
     modified: Date,
     userID: String
-}, { collection: 'inventory' })
+}, { collection: 'inventory' });
 
-const product = mongoose.model('Inventory', productSchema)
+const ProductModel: mongoose.Model<IProduct> = mongoose.model<IProduct>('Inventory', ProductSchema);
 
-export default product
+export default ProductModel;
