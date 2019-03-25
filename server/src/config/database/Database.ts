@@ -2,15 +2,15 @@
  * @overview: This class takes care of all the business logic for communicating with the Database
  */
 
-import '../Env'
+import '../Env';
 
 class Database {
-    getConnectionString() {
+    getConnectionString(): DatabaseConfig {
         return {
-            database: process.env.DB_ROUTE,
-            secret: process.env.DB_SECRET
+            database: process.env.DB_ROUTE as string,
+            secret: process.env.DB_SECRET as string
         }
     }
 }
 
-export default Database
+export default Database;

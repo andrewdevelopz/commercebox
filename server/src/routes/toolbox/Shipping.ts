@@ -3,35 +3,35 @@
  */
 
 // Dependencies
-import express from 'express'
-const router = express.Router()
-import Route from '../Route'
+import express from 'express';
+const router = express.Router();
+import Route from '../Route';
 
 export default class Shipping extends Route {
-    constructor(path, app) {
+    constructor(path: string, app: express.Application) {
         // Super takes:
         // - path which is received from when instantiating the class
         // - app which is received from when instantiating the class
         // - router which is received from the dependencies from above
-        super(path, app, router)
+        super(path, app, router);
         // Run all the methods to each path of the route
-        this.run()
+        this.run();
     }
 
-    run() {
-        this.root()
-        this.test()
+    run(): void {
+        this.root();
+        this.test();
     }
 
-    root() {
-        this.createRoute('get', '/', (req, res) => {
-            res.send('Hello from <b>ROOT</b> path of shipping')
-        })
+    root(): void {
+        this.createRoute('get', '/', (req: express.Request, res: express.Response) => {
+            res.send('Hello from <b>ROOT</b> path of shipping');
+        });
     }
 
-    test() {
-        this.createRoute('get', '/test', (req, res) => {
-            res.send('Hello from <b>TEST</b> path of shipping')
-        })
+    test(): void {
+        this.createRoute('get', '/test', (req: express.Request, res: express.Response) => {
+            res.send('Hello from <b>TEST</b> path of shipping');
+        });
     }
 }

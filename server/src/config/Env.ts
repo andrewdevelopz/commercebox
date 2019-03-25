@@ -1,10 +1,10 @@
 // Dependencies
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 
 class DotEnv {
     constructor() {
-        dotenv.config()
+        dotenv.config();
     }
 }
 
-export default new DotEnv()
+export default new DotEnv();
