@@ -6,17 +6,17 @@
  * @todo - When edit is cancelled the data still saves updated state, make it so when cancel is hit it reverts to inital state
  */
 
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 // Import custom components
-import SearchBar from '../../shared/search/Search'
-import TableFrame from './table/TableFrame'
-import { loadToken } from '../../auth/services/authService'
-import { fetchInventory } from '../../shared/services/httpService'
+import SearchBar from '../../shared/search/Search';
+import TableFrame from './table/TableFrame';
+import { loadToken } from '../../auth/services/authService';
+import { fetchInventory } from '../../shared/services/httpService';
 
 // Semantic UI
-import { Segment, Grid, Button, Divider } from 'semantic-ui-react'
+import { Segment, Grid, Button, Divider } from 'semantic-ui-react';
 
 export default class Inventory extends Component {
     state = {
@@ -62,34 +62,34 @@ export default class Inventory extends Component {
         editItems: false,
         path: ''
     }
-    token
+    token;
 
     constructor({ match }) {
-        super()
-        this.state.path = match.path
+        super();
+        this.state.path = match.path;
     }
 
     async componentDidMount() {
         // make an api call to the database
-        this.token = loadToken()
+        this.token = loadToken();
 
         const res = await fetchInventory('getInventory', 'get', {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': this.token
-        })
+        });
 
-        const organized = this.organizeJSONResponse(res)
+        const organized = this.organizeJSONResponse(res);
 
         // set table state to res from http call
         this.setState(prevState => {
-            prevState.table.inventory = organized
+            prevState.table.inventory = organized;
             return {
                 table: prevState.table
             }
-        })
+        });
 
-        this.token = null
+        this.token = null;
     }
 
     // Organize the http JSON response to match table headers
@@ -137,49 +137,92 @@ export default class Inventory extends Component {
                     depth: x.detail.depth
                 },
                 bin: x.bin,
-                monitor: x.monitor
+                monitor: x.monitor,
+                id: x._id
             }
-        })
-        return mapping
+        });
+        return mapping;
     }
 
     // When edit item button is pressed
     onEditItems = () => {
-        // update state of editItems to pass to SingleLineTable component
-        this.setState({
-            editItems: !this.state.editItems
-        })
+        // update state of `editItems` and add or remove columns respectively
+        this.setState(prevState => {
+            prevState.editItems = !prevState.editItems;
+
+            // if in edit mode add select column to the front
+            if (prevState.editItems) {
+                prevState.table.headers.unshift(['', null]);
+            } else {
+                prevState.table.headers.shift();
+            }
+
+            return {
+                editItems: prevState.editItems,
+                table: prevState.table
+            }
+        });
     }
 
+    // When the delete button is pressed, work with the table form
+    onDeleteItems = () => {
+        // grab the checkbox cell of each checkbox
+        /** @todo - add a dynamic id to the <form> element so we can grab checkboxes more specfically */
+        const checkboxes = document.querySelectorAll('.tableCheckboxCell');
+        const checked = Array.from(checkboxes).filter(chk => chk.querySelector('input').checked);
+
+        for (const x of checked) {
+            console.log(x.parentNode);
+        }
+
+        console.log(checked);
+    }
+
+    // Render the component
     render() {
         // wait for componentDidMount before rendering
         if (this.state.table.inventory.length === 0) {
-            return null
+            return null;
         }
-        const { table, editItems, path } = this.state
+        const { table, editItems, path } = this.state;
+
+        // generate buttons based on `editItems` state
+        const genBtns = () => {
+            if (!editItems) {
+                return (
+                    <React.Fragment>
+                        <Button color='green' floated='right'>Sync</Button>
+                        <Button floated='right'>Link</Button>
+                        <Button as={Link} to={`${path}/createProducts`} color='orange' floated='right'>Create</Button>
+                        <Button onClick={this.onEditItems} color='blue' floated='right'>Edit</Button>
+                    </React.Fragment>
+                );
+            } else {
+                return (
+                    <React.Fragment>
+                        <Button onClick={this.onDeleteItems} color='red' floated='right'>Delete</Button>
+                        <Button onClick={this.onEditItems} color='grey' floated='right'>Cancel</Button>
+                    </React.Fragment>
+                );
+            }
+        }
 
         return (
             <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
-                {/* Inventory header bar */}
+                {/* inventory header bar */}
                 <Grid>
                     <Grid.Row columns='equal'>
                         <Grid.Column>
                             <SearchBar inventory={table.inventory} />
                         </Grid.Column>
                         <Grid.Column>
-                            <Button color='green' floated='right'>Sync</Button>
-                            <Button floated='right'>Link</Button>
-                            <Button as={Link} to={`${path}/createProducts`} color='orange' floated='right'>Create</Button>
-                            {
-                                editItems
-                                    ? <Button onClick={this.onEditItems} color='red' floated='right'>Cancel</Button>
-                                    : <Button onClick={this.onEditItems} color='blue' floated='right'>Edit</Button>
-                            }
+                            {/* buttons */}
+                            {genBtns()}
                         </Grid.Column>
                     </Grid.Row>
                     <Divider />
                 </Grid>
-                {/* Table frame */}
+                {/* table frame */}
                 <TableFrame table={table} editItems={editItems} handleSubmit={this.onEditItems} />
             </Segment>
         )

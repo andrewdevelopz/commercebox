@@ -2,13 +2,13 @@
  * @overview: This component is for the table rows.
  */
 
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 // Import custom components
-import TableCell from './cell/TableCell'
+import TableCell from './cell/TableCell';
 
 // Semantic UI
-import { Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react';
 
 export default class TableRow extends Component {
     state = {
@@ -16,7 +16,7 @@ export default class TableRow extends Component {
     }
 
     render() {
-        const { inventory } = this.state
+        const { inventory } = this.state;
 
         // generate the table based on conditions
         const generateRows = Object.keys(inventory).map(propKey => {
@@ -26,13 +26,13 @@ export default class TableRow extends Component {
                     <Table.Row key={propKey}>
                         <TableCell editItems={this.props.editItems} item={inventory[propKey]} propKey={propKey} />
                     </Table.Row>
-                )
+                );
             } else {
                 return (
                     <Table.Row key={propKey}>
                         <TableCell editItems={this.props.editItems} item={inventory[propKey]} propKey={propKey} />
                     </Table.Row>
-                )
+                );
             }
         })
 

@@ -27,6 +27,7 @@ export default class Inventory extends Route {
         this.root(true);
         this.createProducts(true);
         this.getInventory(true);
+        this.deleteInventory(true);
     }
 
     /**
@@ -87,6 +88,15 @@ export default class Inventory extends Route {
             // get all products from database
             const products = await Product.find();
             res.json(products);
+        }, passport);
+    }
+
+    // Delete inventory
+    deleteInventory(passport: boolean): void {
+        this.createRoute('post', '/deleteInventory', async (req: express.Request, res: express.Response) => {
+            // get the products to be deleted from front-end
+            const products = await Product.find();
+            
         }, passport);
     }
 }

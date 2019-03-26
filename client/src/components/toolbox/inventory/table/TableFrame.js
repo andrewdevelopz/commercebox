@@ -5,61 +5,61 @@
  * @link - https://stackoverflow.com/questions/44707656/react-mapping-multiple-arrays (a much cleaner way to map arrays and objects to the DOM element)
  */
 
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 // Import custom components
-import TableHeader from './header/TableHeader'
-import TableRow from './row/TableRow'
-import { fetchInventory } from '../../../shared/services/httpService'
-import { loadToken } from '../../../auth/services/authService'
+import TableHeader from './header/TableHeader';
+import TableRow from './row/TableRow';
+import { fetchInventory } from '../../../shared/services/httpService';
+import { loadToken } from '../../../auth/services/authService';
 
 // Semantic UI
-import { Table, Form, Button } from 'semantic-ui-react'
+import { Table, Form, Button } from 'semantic-ui-react';
 
 export default class TableFrame extends Component {
     state = {
         table: this.props.table
     }
-    token
+    token;
 
     // Handle form submit
     handleFormSubmit = async e => {
-        e.preventDefault()
-        this.token = loadToken()
+        e.preventDefault();
+        this.token = loadToken();
 
         // make http call to /createProducts in chunks
-        const products = this.state.table.inventory
+        const products = this.state.table.inventory;
 
-        const length = products.length
-        const batch = 100
+        const length = products.length;
+        const batch = 100;
         for (let i = 0; i < length; i += batch) {
-            const chunk = products.slice(i, i + batch)
+            const chunk = products.slice(i, i + batch);
 
             const res = await fetchInventory('createProducts', 'post', {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': this.token
-            }, { products: chunk })
+            }, { products: chunk });
 
             // if res.success is false handle error
             if (!res.success) {
-                console.error(res.error)
+                console.error(res.error);
             } else {
                 // console your message
-                console.log(res)
+                console.log(res);
 
                 // redirect to inventory section
-                this.props.handleSubmit()
+                this.props.handleSubmit();
             }
         }
 
         // set token to null when done
-        this.token = null
-        return
+        this.token = null;
+        return;
     }
 
     render() {
-        const { table } = this.state
+        const { table } = this.state;
 
         // return table to render with form wrapped or no form wrapped
         const returnTable = () => {
@@ -78,7 +78,7 @@ export default class TableFrame extends Component {
                         </Table>
                         <Button type='submit' size='small' color='green' style={{ marginBottom: '1rem' }}>Submit</Button>
                     </Form>
-                )
+                );
             } else {
                 return (
                     <Table singleLine celled inverted style={{ border: '1px rgba(255, 255, 255, 0.3) solid' }}>
@@ -91,7 +91,7 @@ export default class TableFrame extends Component {
                             <TableRow inventory={table.inventory} editItems={this.props.editItems} />
                         </Table.Body>
                     </Table>
-                )
+                );
             }
         }
 
