@@ -69,3 +69,9 @@ export interface IProduct extends mongoose.Document {
     modified: Date;
     userID: string;
 }
+
+// The query response when deleting or updating document(s)
+export type QueryStatus = {
+    n?: number; // number of docs deleted
+    ok?: number; // status of 0 or 1
+}

@@ -2,18 +2,19 @@
  * @overview: This component is to create a product for the inventory.
  */
 
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 // Import custom components
-import TableFrame from '../../table/TableFrame'
+import TableFrame from '../../table/TableFrame';
 
 // Semantic UI
-import { Segment, Button } from 'semantic-ui-react'
+import { Segment, Button } from 'semantic-ui-react';
 
 export default class CreateProducts extends Component {
     state = {
         table: {
             headers: [ // [<name>, <width>]
+                ['', null],
                 ['', null],
                 ['Image', null],
                 ['SKU', null],
@@ -100,11 +101,11 @@ export default class CreateProducts extends Component {
     // Add product row to state
     addRow = () => {
         this.setState(prevState => {
-            prevState.table.inventory.push(this.generateRow())
+            prevState.table.inventory.push(this.generateRow());
             return {
                 table: prevState.table
             }
-        })
+        });
     }
 
     // Generate product row by returning product object
@@ -113,20 +114,20 @@ export default class CreateProducts extends Component {
         price: { sell: '', purchase: '', stockValue: '' }, category: '', variationGroup: '', upc: '', condition: '',
         location: { fullAddress: '', company: '', name: '', address1: '', address2: '', city: '', state: '', zip: '', country: '', email: '', phone: '' },
         detail: { weight: '', height: '', width: '', depth: '' }, bin: '', monitor: ''
-    })
+    });
 
     // Create the products, persisting it to the database
     createProducts = () => {
-        this.props.history.push('/toolbox/inventory')
+        this.props.history.push('/toolbox/inventory');
     }
 
     render() {
-        const { table } = this.state
+        const { table } = this.state;
 
         return (
             <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
                 <Button type='button' color='orange' onClick={this.addRow} style={{ marginBottom: '1rem' }}>Add</Button>
-                <TableFrame table={table} editItems={true} handleSubmit={this.createProducts} />
+                <TableFrame id='createProducts' table={table} editItems={true} handleSubmit={this.createProducts} />
             </Segment>
         )
     }

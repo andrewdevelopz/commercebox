@@ -16,7 +16,7 @@ import { loadToken } from '../../auth/services/authService';
 import { fetchInventory } from '../../shared/services/httpService';
 
 // Semantic UI
-import { Segment, Grid, Button, Divider } from 'semantic-ui-react';
+import { Segment, Grid, Button, Divider, Icon } from 'semantic-ui-react';
 
 export default class Inventory extends Component {
     state = {
@@ -144,18 +144,35 @@ export default class Inventory extends Component {
         return mapping;
     }
 
+    // Add and remove checkbox column when editItem changes
+    // - we pass a copy of the prevState reference to munge the state object
+    addRemoveHeaderCol = (prevState) => {
+        // if in edit mode, add select column to the front
+        if (prevState.editItems) {
+            prevState.table.headers.unshift([<Icon onClick={this.selectAll} link name='bullseye' />, null]);
+        } else {
+            prevState.table.headers.shift();
+        }
+    }
+
+    // Select all the checkboxes inside table
+    selectAll = () => {
+        const checkboxes = document.querySelector('#inventory').querySelectorAll('.tableCheckboxCell');
+        // loop through each checkbox cell and grab it's input
+        for (const checkbox of checkboxes) {
+            const checked = checkbox.querySelector('input').checked;
+
+            /** @todo when a checkbox is already checked it unchecks throwing off the select all */
+            checkbox.querySelector('input').checked = !checked;
+        }
+    }
+
     // When edit item button is pressed
     onEditItems = () => {
         // update state of `editItems` and add or remove columns respectively
         this.setState(prevState => {
             prevState.editItems = !prevState.editItems;
-
-            // if in edit mode add select column to the front
-            if (prevState.editItems) {
-                prevState.table.headers.unshift(['', null]);
-            } else {
-                prevState.table.headers.shift();
-            }
+            this.addRemoveHeaderCol(prevState);
 
             return {
                 editItems: prevState.editItems,
@@ -165,17 +182,48 @@ export default class Inventory extends Component {
     }
 
     // When the delete button is pressed, work with the table form
-    onDeleteItems = () => {
+    onDeleteItems = async () => {
+        this.token = loadToken();
+
         // grab the checkbox cell of each checkbox
-        /** @todo - add a dynamic id to the <form> element so we can grab checkboxes more specfically */
-        const checkboxes = document.querySelectorAll('.tableCheckboxCell');
+        const checkboxes = document.querySelector('#inventory').querySelectorAll('.tableCheckboxCell');
         const checked = Array.from(checkboxes).filter(chk => chk.querySelector('input').checked);
 
+        // loop through each `checked` item to get it's id
+        const items = [];
         for (const x of checked) {
-            console.log(x.parentNode);
+            items.push({ _id: x.parentNode.querySelector('#itemID').value });
         }
 
-        console.log(checked);
+        // make the http call to delete document(s)
+        const deleted = await fetchInventory('deleteInventory', 'put', {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.token
+        }, { items });
+
+        if (deleted.success) {
+            this.setState(prevState => {
+                // loop through items[] to find objects index to be removed from states inventory
+                for (const item of items) {
+                    const rmvFrmTbl = prevState.table.inventory.findIndex(inv => inv.id === item._id);
+                    prevState.table.inventory.splice(rmvFrmTbl, 1);
+                }
+                prevState.editItems = !prevState.editItems;
+                this.addRemoveHeaderCol(prevState);
+
+                return {
+                    editItems: prevState.editItems,
+                    table: prevState.table
+                }
+            });
+
+            console.info(deleted.message);
+        } else {
+            console.error('Something went wrong with deleting the products');
+        }
+
+        this.token = null;
     }
 
     // Render the component
@@ -223,7 +271,7 @@ export default class Inventory extends Component {
                     <Divider />
                 </Grid>
                 {/* table frame */}
-                <TableFrame table={table} editItems={editItems} handleSubmit={this.onEditItems} />
+                <TableFrame id='inventory' table={table} editItems={editItems} handleSubmit={this.onEditItems} />
             </Segment>
         )
     }

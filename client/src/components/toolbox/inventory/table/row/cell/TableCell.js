@@ -87,6 +87,7 @@ export default class TableCell extends Component {
                                     return (
                                         <Table.Cell key={i} style={{ display: 'none' }}>
                                             <Input
+                                                id='itemID' // ID for mongo item in collections
                                                 value={item[itemKey].toString()}
                                                 name={itemKey}
                                                 placeholder={itemKey}
@@ -132,15 +133,30 @@ export default class TableCell extends Component {
                                     );
                                 })
                             } else {
-                                return (
-                                    itemKey === 'image'
-                                        ? <Table.Cell key={i}><Image src={item[itemKey]} centered size='mini' /></Table.Cell>
-                                        : <Table.Cell key={i}>{
-                                            typeof item[itemKey] === 'string'
-                                                ? this.truncateString(item[itemKey])
-                                                : item[itemKey].toString()
-                                        }</Table.Cell>
-                                );
+                                if (itemKey === 'id') {
+                                    return (
+                                        <Table.Cell key={i} style={{ display: 'none' }}>
+                                            <Input
+                                                id='itemID' // ID for mongo item in collections
+                                                value={item[itemKey].toString()}
+                                                name={itemKey}
+                                                placeholder={itemKey}
+                                                onChange={this.handleChange}
+                                                type='hidden'
+                                            />
+                                        </Table.Cell>
+                                    );
+                                } else {
+                                    return (
+                                        itemKey === 'image'
+                                            ? <Table.Cell key={i}><Image src={item[itemKey]} centered size='mini' /></Table.Cell>
+                                            : <Table.Cell key={i}>{
+                                                typeof item[itemKey] === 'string'
+                                                    ? this.truncateString(item[itemKey])
+                                                    : item[itemKey].toString()
+                                            }</Table.Cell>
+                                    );
+                                }
                             }
                         })}
                     </React.Fragment>

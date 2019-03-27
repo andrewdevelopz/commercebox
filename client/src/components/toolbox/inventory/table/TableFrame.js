@@ -65,7 +65,7 @@ export default class TableFrame extends Component {
         const returnTable = () => {
             if (this.props.editItems) {
                 return (
-                    <Form onSubmit={this.handleFormSubmit}>
+                    <Form id={this.props.id} onSubmit={this.handleFormSubmit}>
                         <Table singleLine celled inverted style={{ border: '1px rgba(255, 255, 255, 0.3) solid' }}>
                             <Table.Header>
                                 <Table.Row>
@@ -81,7 +81,7 @@ export default class TableFrame extends Component {
                 );
             } else {
                 return (
-                    <Table singleLine celled inverted style={{ border: '1px rgba(255, 255, 255, 0.3) solid' }}>
+                    <Table id={this.props.id} singleLine celled inverted style={{ border: '1px rgba(255, 255, 255, 0.3) solid' }}>
                         <Table.Header>
                             <Table.Row>
                                 <TableHeader headers={table.headers} />

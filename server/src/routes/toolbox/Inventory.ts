@@ -8,7 +8,7 @@ import Route from '../Route';
 import Product from '../../models/Product';
 
 // Import types
-import { IProduct } from 'mongooseTypes';
+import { IProduct, QueryStatus } from 'mongooseTypes';
 
 const router = express.Router();
 
@@ -93,10 +93,18 @@ export default class Inventory extends Route {
 
     // Delete inventory
     deleteInventory(passport: boolean): void {
-        this.createRoute('post', '/deleteInventory', async (req: express.Request, res: express.Response) => {
-            // get the products to be deleted from front-end
-            const products = await Product.find();
-            
+        this.createRoute('put', '/deleteInventory', async (req: express.Request, res: express.Response) => {
+            try {
+                const items: Product[] = req.body.items;
+    
+                // delete all the products in `items`
+                const deleted: QueryStatus = await Product.deleteMany({ _id: { $in: items } });
+    
+                res.json({ success: true, message: `${deleted.n} document(s) deleted successfully` });
+            } catch (e) {
+                console.log(e);
+                res.sendStatus(500);
+            }
         }, passport);
     }
 }
