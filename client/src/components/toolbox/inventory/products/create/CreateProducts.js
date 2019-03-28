@@ -6,6 +6,8 @@ import React, { Component } from 'react';
 
 // Import custom components
 import TableFrame from '../../table/TableFrame';
+import { fetchInventory } from '../../../../shared/services/httpService';
+import { loadToken } from '../../../../auth/services/authService';
 
 // Semantic UI
 import { Segment, Button } from 'semantic-ui-react';
@@ -117,8 +119,38 @@ export default class CreateProducts extends Component {
     });
 
     // Create the products, persisting it to the database
-    createProducts = () => {
-        this.props.history.push('/toolbox/inventory');
+    createProducts = async () => {
+        this.token = loadToken();
+
+        // make http call to /createProducts in chunks
+        const products = this.state.table.inventory;
+
+        const length = products.length;
+        const batch = 100;
+        for (let i = 0; i < length; i += batch) {
+            const chunk = products.slice(i, i + batch);
+
+            const res = await fetchInventory('createProducts', 'post', {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': this.token
+            }, { products: chunk });
+
+            // if res.success is false handle error
+            if (!res.success) {
+                console.error(res.error);
+            } else {
+                // console your message
+                console.log(res);
+
+                // redirect to /inventory
+                this.props.history.push('/toolbox/inventory');
+            }
+        }
+
+        // set token to null when done
+        this.token = null;
+        return;
     }
 
     render() {
@@ -127,7 +159,7 @@ export default class CreateProducts extends Component {
         return (
             <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
                 <Button type='button' color='orange' onClick={this.addRow} style={{ marginBottom: '1rem' }}>Add</Button>
-                <TableFrame id='createProducts' table={table} editItems={true} handleSubmit={this.createProducts} />
+                <TableFrame id='createProducts' table={table} editItems={true} submitBtnName='Submit' handleSubmit={this.createProducts} />
             </Segment>
         )
     }

@@ -10,8 +10,6 @@ import React, { Component } from 'react';
 // Import custom components
 import TableHeader from './header/TableHeader';
 import TableRow from './row/TableRow';
-import { fetchInventory } from '../../../shared/services/httpService';
-import { loadToken } from '../../../auth/services/authService';
 
 // Semantic UI
 import { Table, Form, Button } from 'semantic-ui-react';
@@ -23,39 +21,9 @@ export default class TableFrame extends Component {
     token;
 
     // Handle form submit
-    handleFormSubmit = async e => {
+    handleFormSubmit = e => {
         e.preventDefault();
-        this.token = loadToken();
-
-        // make http call to /createProducts in chunks
-        const products = this.state.table.inventory;
-
-        const length = products.length;
-        const batch = 100;
-        for (let i = 0; i < length; i += batch) {
-            const chunk = products.slice(i, i + batch);
-
-            const res = await fetchInventory('createProducts', 'post', {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': this.token
-            }, { products: chunk });
-
-            // if res.success is false handle error
-            if (!res.success) {
-                console.error(res.error);
-            } else {
-                // console your message
-                console.log(res);
-
-                // redirect to inventory section
-                this.props.handleSubmit();
-            }
-        }
-
-        // set token to null when done
-        this.token = null;
-        return;
+        this.props.handleSubmit();
     }
 
     render() {
@@ -76,7 +44,7 @@ export default class TableFrame extends Component {
                                 <TableRow inventory={table.inventory} editItems={this.props.editItems} />
                             </Table.Body>
                         </Table>
-                        <Button type='submit' size='small' color='green' style={{ marginBottom: '1rem' }}>Submit</Button>
+                        <Button type='submit' size='small' color='green' style={{ marginBottom: '1rem' }}>{this.props.submitBtnName}</Button>
                     </Form>
                 );
             } else {

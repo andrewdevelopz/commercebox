@@ -16,7 +16,7 @@ import { loadToken } from '../../auth/services/authService';
 import { fetchInventory } from '../../shared/services/httpService';
 
 // Semantic UI
-import { Segment, Grid, Button, Divider, Icon } from 'semantic-ui-react';
+import { Segment, Grid, Button, Divider, Checkbox } from 'semantic-ui-react';
 
 export default class Inventory extends Component {
     state = {
@@ -149,7 +149,7 @@ export default class Inventory extends Component {
     addRemoveHeaderCol = (prevState) => {
         // if in edit mode, add select column to the front
         if (prevState.editItems) {
-            prevState.table.headers.unshift([<Icon onClick={this.selectAll} link name='bullseye' />, null]);
+            prevState.table.headers.unshift([<Checkbox id='checkAll' onClick={this.selectAll} />, null]);
         } else {
             prevState.table.headers.shift();
         }
@@ -158,12 +158,15 @@ export default class Inventory extends Component {
     // Select all the checkboxes inside table
     selectAll = () => {
         const checkboxes = document.querySelector('#inventory').querySelectorAll('.tableCheckboxCell');
+        const checkAll = document.querySelector('#checkAll');
+
         // loop through each checkbox cell and grab it's input
         for (const checkbox of checkboxes) {
-            const checked = checkbox.querySelector('input').checked;
-
-            /** @todo when a checkbox is already checked it unchecks throwing off the select all */
-            checkbox.querySelector('input').checked = !checked;
+            if (checkAll.checked) {
+                checkbox.querySelector('input').checked = true;
+            } else {
+                checkbox.querySelector('input').checked = false;
+            }
         }
     }
 
@@ -271,7 +274,7 @@ export default class Inventory extends Component {
                     <Divider />
                 </Grid>
                 {/* table frame */}
-                <TableFrame id='inventory' table={table} editItems={editItems} handleSubmit={this.onEditItems} />
+                <TableFrame id='inventory' table={table} editItems={editItems} submitBtnName='Update' handleSubmit={this.onEditItems} />
             </Segment>
         )
     }
