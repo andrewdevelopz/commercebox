@@ -34,6 +34,7 @@ export default class TableCell extends Component {
         } else {
             this.setState(prevState => {
                 prevState.item[name] = value;
+                prevState.item['changed'] = true;
                 return {
                     item: prevState.item
                 }
@@ -83,7 +84,7 @@ export default class TableCell extends Component {
                                 })
                             } else {
                                 // if it is a hidden cell and input
-                                if (itemKey === 'id') {
+                                if (itemKey === '_id') {
                                     return (
                                         <Table.Cell key={i} style={{ display: 'none' }}>
                                             <Input
@@ -96,6 +97,10 @@ export default class TableCell extends Component {
                                             />
                                         </Table.Cell>
                                     );
+                                } else if (itemKey === 'changed') {
+                                    // if `changed` property, do nothing. 
+                                    // this property is only used to track which items have been changed
+                                    return null;
                                 } else {
                                     return (
                                         <Table.Cell key={i}>
@@ -133,7 +138,7 @@ export default class TableCell extends Component {
                                     );
                                 })
                             } else {
-                                if (itemKey === 'id') {
+                                if (itemKey === '_id') {
                                     return (
                                         <Table.Cell key={i} style={{ display: 'none' }}>
                                             <Input
@@ -146,6 +151,10 @@ export default class TableCell extends Component {
                                             />
                                         </Table.Cell>
                                     );
+                                } else if (itemKey === 'changed') {
+                                    // if `changed` property, do nothing. 
+                                    // this property is only used to track which items have been changed
+                                    return null;
                                 } else {
                                     return (
                                         itemKey === 'image'

@@ -67,6 +67,7 @@ type Product = {
     created: Date;
     modified: Date;
     userID?: string; // not included when creating product
+    changed?: boolean;
 }
 
 // For JWT Strategy options

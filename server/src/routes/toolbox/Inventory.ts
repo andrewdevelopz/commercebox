@@ -25,8 +25,9 @@ export default class Inventory extends Route {
 
     run(): void {
         this.root(true);
-        this.createProducts(true);
         this.getInventory(true);
+        // this.createProducts(true);
+        this.updateInventory(true);
         this.deleteInventory(true);
     }
 
@@ -41,9 +42,18 @@ export default class Inventory extends Route {
         }, passport);
     }
 
+    // Get inventory
+    getInventory(passport: boolean): void {
+        this.createRoute('get', '/getInventory', async (req: express.Request, res: express.Response) => {
+            // get all products from database
+            const products = await Product.find();
+            res.json(products);
+        }, passport);
+    }
+
     // Create products
-    createProducts(passport: boolean): void {
-        this.createRoute('post', '/createProducts', async (req: express.Request, res: express.Response) => {
+    createInventory(passport: boolean): void {
+        this.createRoute('post', '/createInventory', async (req: express.Request, res: express.Response) => {
             try {
                 // set products && user from req
                 const products: Product[] = req.body.products;
@@ -82,12 +92,25 @@ export default class Inventory extends Route {
         }, passport);
     }
 
-    // Get inventory
-    getInventory(passport: boolean): void {
-        this.createRoute('get', '/getInventory', async (req: express.Request, res: express.Response) => {
-            // get all products from database
-            const products = await Product.find();
-            res.json(products);
+    // Update inventory
+    updateInventory(passport: boolean): void {
+        this.createRoute('put', '/updateInventory', async (req: express.Request, res: express.Response) => {
+            try {
+                const items: Product[] = req.body.items;
+                // delete `changed` property before updating database
+                for (let i = 0, n = items.length; i < n; i++) {
+                    delete items[i].changed;
+                }
+                console.log(items);
+
+                // update all the products in `items`
+                const update: QueryStatus = await Product.updateMany({ _id: { $in: items } }, { $set: items });
+
+                res.json({ success: true, message: `${update.n} document(s) updated successfully` });
+            } catch (e) {
+                console.log(e);
+                res.sendStatus(500);
+            }
         }, passport);
     }
 
@@ -96,10 +119,10 @@ export default class Inventory extends Route {
         this.createRoute('put', '/deleteInventory', async (req: express.Request, res: express.Response) => {
             try {
                 const items: Product[] = req.body.items;
-    
+
                 // delete all the products in `items`
                 const deleted: QueryStatus = await Product.deleteMany({ _id: { $in: items } });
-    
+
                 res.json({ success: true, message: `${deleted.n} document(s) deleted successfully` });
             } catch (e) {
                 console.log(e);

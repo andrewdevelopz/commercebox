@@ -92,6 +92,8 @@ export default class Inventory extends Component {
         this.token = null;
     }
 
+    /*** Helper Methods ***/
+
     // Organize the http JSON response to match table headers
     organizeJSONResponse = (arr) => {
         const mapping = arr.map(x => {
@@ -138,7 +140,8 @@ export default class Inventory extends Component {
                 },
                 bin: x.bin,
                 monitor: x.monitor,
-                id: x._id
+                _id: x._id,
+                changed: false
             }
         });
         return mapping;
@@ -170,6 +173,8 @@ export default class Inventory extends Component {
         }
     }
 
+    /*** End Helper Methods ***/
+
     // When edit item button is pressed
     onEditItems = () => {
         // update state of `editItems` and add or remove columns respectively
@@ -182,6 +187,70 @@ export default class Inventory extends Component {
                 table: prevState.table
             }
         });
+    }
+
+    // When update button is pressed for table form, update the items
+    onUpdateItems = async () => {
+        // only send the products that have been changed
+        let products = [];
+        await this.setState(prevState => {
+            for (const item of prevState.table.inventory) {
+                // if `changed` property is true, we send the item to the back-end and update the database
+                if (item.changed) {
+                    products.push(item);
+                } else continue;
+            }
+
+            return {
+                table: prevState.table
+            }
+        });
+
+        // make http call to /updateInventory in chunks
+        const length = products.length;
+        const batch = 100;
+        this.token = loadToken(); // load the token
+        for (let i = 0; i < length; i += batch) {
+            const chunk = products.slice(i, i + batch);
+
+            const res = await fetchInventory('updateInventory', 'put', {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': this.token
+            }, { items: chunk });
+
+            // if res.success is false handle error
+            if (!res.success) {
+                console.error(res.error);
+            } else {
+                // empty `products[]`
+                products = [];
+                // console your message
+                console.log(res);
+
+                // set editItem state back to false
+                this.setState(prevState => {
+                    prevState.editItems = !prevState.editItems;
+                    this.addRemoveHeaderCol(prevState);
+
+                    // set changed property back to false
+                    for (const item of prevState.table.inventory) {
+                        // if `changed` property is true, we send the item to the back-end and update the database
+                        if (item.changed) {
+                            item.changed = false;
+                        } else continue;
+                    }
+
+                    return {
+                        editItems: prevState.editItems,
+                        table: prevState.table
+                    }
+                });
+            }
+        }
+
+        this.token = null;
+        return;
     }
 
     // When the delete button is pressed, work with the table form
@@ -274,7 +343,7 @@ export default class Inventory extends Component {
                     <Divider />
                 </Grid>
                 {/* table frame */}
-                <TableFrame id='inventory' table={table} editItems={editItems} submitBtnName='Update' handleSubmit={this.onEditItems} />
+                <TableFrame id='inventory' table={table} editItems={editItems} submitBtnName='Update' handleSubmit={this.onUpdateItems} />
             </Segment>
         )
     }

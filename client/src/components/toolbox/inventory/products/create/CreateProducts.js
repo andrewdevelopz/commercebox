@@ -119,10 +119,10 @@ export default class CreateProducts extends Component {
     });
 
     // Create the products, persisting it to the database
-    createProducts = async () => {
+    createInventory = async () => {
         this.token = loadToken();
 
-        // make http call to /createProducts in chunks
+        // make http call to /createInventory in chunks
         const products = this.state.table.inventory;
 
         const length = products.length;
@@ -130,7 +130,7 @@ export default class CreateProducts extends Component {
         for (let i = 0; i < length; i += batch) {
             const chunk = products.slice(i, i + batch);
 
-            const res = await fetchInventory('createProducts', 'post', {
+            const res = await fetchInventory('createInventory', 'post', {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': this.token
@@ -159,7 +159,7 @@ export default class CreateProducts extends Component {
         return (
             <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
                 <Button type='button' color='orange' onClick={this.addRow} style={{ marginBottom: '1rem' }}>Add</Button>
-                <TableFrame id='createProducts' table={table} editItems={true} submitBtnName='Submit' handleSubmit={this.createProducts} />
+                <TableFrame id='createInventory' table={table} editItems={true} submitBtnName='Submit' handleSubmit={this.createInventory} />
             </Segment>
         )
     }
