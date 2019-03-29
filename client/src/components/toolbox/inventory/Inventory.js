@@ -200,17 +200,13 @@ export default class Inventory extends Component {
                     products.push(item);
                 } else continue;
             }
-
-            return {
-                table: prevState.table
-            }
+            return;
         });
 
-        // make http call to /updateInventory in chunks
-        const length = products.length;
-        const batch = 100;
         this.token = loadToken(); // load the token
-        for (let i = 0; i < length; i += batch) {
+        // make http call to /updateInventory in chunks
+        const batch = 100;
+        for (let i = 0, n = products.length; i < n; i += batch) {
             const chunk = products.slice(i, i + batch);
 
             const res = await fetchInventory('updateInventory', 'put', {
@@ -222,33 +218,107 @@ export default class Inventory extends Component {
             // if res.success is false handle error
             if (!res.success) {
                 console.error(res.error);
+                this.token = null;
+                return;
             } else {
-                // empty `products[]`
-                products = [];
                 // console your message
                 console.log(res);
+            }
+        }
+        // empty `products[]` when chunk loop is finished
+        products = [];
 
-                // set editItem state back to false
-                this.setState(prevState => {
-                    prevState.editItems = !prevState.editItems;
-                    this.addRemoveHeaderCol(prevState);
+        // set editItem state back to false
+        this.setState(prevState => {
+            prevState.editItems = !prevState.editItems;
+            this.addRemoveHeaderCol(prevState);
 
-                    // set changed property back to false
-                    for (const item of prevState.table.inventory) {
-                        // if `changed` property is true, we send the item to the back-end and update the database
-                        if (item.changed) {
-                            item.changed = false;
-                        } else continue;
-                    }
+            // set changed property back to false
+            for (const item of prevState.table.inventory) {
+                // if `changed` property is true, we send the item to the back-end and update the database
+                if (item.changed) {
+                    item.changed = false;
+                } else continue;
+            }
 
-                    return {
-                        editItems: prevState.editItems,
-                        table: prevState.table
-                    }
-                });
+            return {
+                editItems: prevState.editItems,
+                table: prevState.table
+            }
+        });
+
+        this.token = null;
+        return;
+    }
+
+    // Duplicate selected items
+    onDuplicateItems = async () => {
+        this.token = loadToken();
+
+        // grab the checkbox cell of each checkbox
+        const checkboxes = document.querySelector('#inventory').querySelectorAll('.tableCheckboxCell');
+        const checked = Array.from(checkboxes).filter(chk => chk.querySelector('input').checked);
+        
+        // exit function if there are no items selected
+        if (checked.length === 0) {
+            console.error('Please select products to duplicate');
+            this.token = null;
+            return;
+        }
+
+        // loop through each `checked` item and find the item in `state` by comparing checked id
+        const products = [];
+        for (const item of checked) {
+            const id = item.parentNode.querySelector('#itemID').value;
+            const found = this.state.table.inventory.find(prod => prod._id === id);
+
+            delete found._id; // delete _id property to be able to create a new document
+            products.push(found);
+        }
+
+        // make http call to /createInventory in chunks
+        const batch = 100;
+        for (let i = 0, n = products.length; i < n; i += batch) {
+            const chunk = products.slice(i, i + batch);
+
+            const res = await fetchInventory('createInventory', 'post', {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': this.token
+            }, { products: chunk });
+
+            // if res.success is false handle error
+            if (!res.success) {
+                console.error(res.error);
+                this.token = null;
+                return;
+            } else {
+                // console response message
+                console.log(res.message);
             }
         }
 
+        // make http call to /getInventory again to update state
+        const items = await fetchInventory('getInventory', 'get', {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.token
+        });
+        const organized = this.organizeJSONResponse(items);
+
+        // Set `editItems` back to false
+        this.setState(prevState => {
+            prevState.table.inventory = organized;
+            prevState.editItems = !prevState.editItems;
+            this.addRemoveHeaderCol(prevState);
+
+            return {
+                editItems: prevState.editItems,
+                table: prevState.table
+            }
+        });
+
+        // set token to null when done
         this.token = null;
         return;
     }
@@ -268,7 +338,7 @@ export default class Inventory extends Component {
         }
 
         // make the http call to delete document(s)
-        const deleted = await fetchInventory('deleteInventory', 'put', {
+        const deleted = await fetchInventory('deleteInventory', 'delete', {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': this.token
@@ -321,6 +391,7 @@ export default class Inventory extends Component {
                 return (
                     <React.Fragment>
                         <Button onClick={this.onDeleteItems} color='red' floated='right'>Delete</Button>
+                        <Button onClick={this.onDuplicateItems} color='orange' floated='right'>Duplicate</Button>
                         <Button onClick={this.onEditItems} color='grey' floated='right'>Cancel</Button>
                     </React.Fragment>
                 );

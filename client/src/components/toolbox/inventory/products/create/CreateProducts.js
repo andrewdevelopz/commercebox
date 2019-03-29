@@ -125,9 +125,8 @@ export default class CreateProducts extends Component {
         // make http call to /createInventory in chunks
         const products = this.state.table.inventory;
 
-        const length = products.length;
         const batch = 100;
-        for (let i = 0; i < length; i += batch) {
+        for (let i = 0, n = products.length; i < n; i += batch) {
             const chunk = products.slice(i, i + batch);
 
             const res = await fetchInventory('createInventory', 'post', {
@@ -139,18 +138,33 @@ export default class CreateProducts extends Component {
             // if res.success is false handle error
             if (!res.success) {
                 console.error(res.error);
+                this.token = null;
+                return;
             } else {
-                // console your message
+                // console response message
                 console.log(res);
-
-                // redirect to /inventory
-                this.props.history.push('/toolbox/inventory');
             }
         }
+        // redirect to /inventory when chunk loops is finished
+        this.props.history.push('/toolbox/inventory');
 
         // set token to null when done
         this.token = null;
         return;
+    }
+
+    // Delete the row(s)
+    deleteRow = () => {
+        // grab select inputs
+        const checkboxes = document.querySelector('#createInventory').querySelectorAll('.tableCheckboxCell');
+        for (const checkbox of checkboxes) {
+            const row = checkbox.parentNode;
+
+            if (checkbox.querySelector('input').checked) {
+                row.remove();
+            }
+            console.log(row);
+        }
     }
 
     render() {
@@ -159,6 +173,7 @@ export default class CreateProducts extends Component {
         return (
             <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
                 <Button type='button' color='orange' onClick={this.addRow} style={{ marginBottom: '1rem' }}>Add</Button>
+                <Button floated='right' type='button' color='red' onClick={this.deleteRow}>Delete</Button>
                 <TableFrame id='createInventory' table={table} editItems={true} submitBtnName='Submit' handleSubmit={this.createInventory} />
             </Segment>
         )

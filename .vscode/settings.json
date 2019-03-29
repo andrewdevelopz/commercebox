@@ -6,13 +6,5 @@
         "server/**/dist": true,
         "server/**/coverge": true
     },
-    "typescript.referencesCodeLens.enabled": true,
-    // "tslint.ignoreDefinitionFiles": false,
-    // "tslint.autoFixOnSave": true,
-    // "tslint.exclude": "**/node_modules/**/*",
-    // "cSpell.words": [
-    //     "csrf",
-    //     "definitelytyped",
-    //     "promisified"
-    // ]
+    "typescript.referencesCodeLens.enabled": true
 }

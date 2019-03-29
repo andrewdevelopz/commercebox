@@ -15,7 +15,7 @@ type User = {
 }
 
 type Product = {
-    id?: string;
+    _id?: string;
     image: string;
     sku: string;
     title: string;

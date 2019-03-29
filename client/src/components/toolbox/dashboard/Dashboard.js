@@ -3,10 +3,10 @@
  * for the dashboard ends here.
  */
 
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 // Semantic UI
-import { Segment } from 'semantic-ui-react'
+import { Segment } from 'semantic-ui-react';
 
 export default class Dashboard extends Component {
     state = {}

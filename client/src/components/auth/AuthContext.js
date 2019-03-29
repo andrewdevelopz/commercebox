@@ -2,25 +2,25 @@
  * @overview: This componenet defines the authentication context of the application. It determines if a user is logged in or not.
  */
 
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 // Import custom components
-import { fetchAuth } from '../shared/services/httpService'
-import { loadToken, storeUserLocalStorage, clearUserLocalStorage } from '../auth/services/authService'
+import { fetchAuth } from '../shared/services/httpService';
+import { loadToken, storeUserLocalStorage, clearUserLocalStorage } from '../auth/services/authService';
 
-const AuthContext = React.createContext()
+const AuthContext = React.createContext();
 
 export default class AuthProvider extends Component {
     state = {
         isAuth: false
     }
-    token
+    token;
 
     constructor() {
-        super()
-        this.token = loadToken()
-        this.token && (this.state.isAuth = true)
-        this.token = null
+        super();
+        this.token = loadToken();
+        this.token && (this.state.isAuth = true);
+        this.token = null;
     }
 
     // Method to login a user
@@ -30,28 +30,38 @@ export default class AuthProvider extends Component {
             const res = await fetchAuth('login', 'post', {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }, user)
+            }, user);
 
             if (res.success) {
-                storeUserLocalStorage(res.token)
-                this.setState({ isAuth: true })
+                storeUserLocalStorage(res.token);
+                this.setState({ isAuth: true });
             }
 
             // Return the http response for the login form
-            return res
+            return res;
         } catch (e) {
-            return e
+            return e;
         }
     }
 
     // Method to logout a user
     logout = () => {
-        clearUserLocalStorage()
-        this.setState({ isAuth: false })
+        this.token = loadToken();
+
+        // Make delete request to /logout
+        fetchAuth('logout', 'post', {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.token
+        });
+
+        this.token = null;
+        clearUserLocalStorage();
+        this.setState({ isAuth: false });
     }
 
     render() {
-        const { isAuth } = this.state
+        const { isAuth } = this.state;
 
         return (
             <AuthContext.Provider
@@ -67,6 +77,6 @@ export default class AuthProvider extends Component {
     }
 }
 
-const AuthConsumer = AuthContext.Consumer
+const AuthConsumer = AuthContext.Consumer;
 
 export { AuthProvider, AuthConsumer }

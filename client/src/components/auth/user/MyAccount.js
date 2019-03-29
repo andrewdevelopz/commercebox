@@ -2,17 +2,17 @@
  * @overview: This componenet is for the login section of the application.
  */
 
-import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import React, { Component } from 'react';
+import { Switch, Route } from 'react-router-dom';
 
 // Import custom components
-import SidebarFrame from '../../shared/sidebars/SidebarFrame'
-import Profile from './profile/Profile'
+import SidebarFrame from '../../shared/sidebars/SidebarFrame';
+import Profile from './profile/Profile';
 
 import {
     Sidebar,
     Segment
-} from 'semantic-ui-react'
+} from 'semantic-ui-react';
 
 export default class MyAccount extends Component {
     state = {

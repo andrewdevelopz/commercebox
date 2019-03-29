@@ -34,6 +34,7 @@ export default class Auth extends Route {
         this.root(true);
         this.register(false);
         this.login(false);
+        this.logout(true);
         this.retreiveUserData(true);
         this.updateUserData(true);
         this.updateUserPassword(true);
@@ -128,6 +129,17 @@ export default class Auth extends Route {
         }, passport);
     }
 
+    logout(passport: boolean): void {
+        this.createRoute('post', '/logout', async (req: express.Request, res: express.Response) => {
+            /** @todo */
+            // Create a blacklist of tokens so when a user logs out, that users token can't be used
+            // Make sure to auto delete this blacklist in the db after 1 day of expiration of said token
+            // reference https://stackoverflow.com/questions/21978658/invalidating-json-web-tokens
+
+            console.log(req.user);
+        }, passport);
+    }
+
     // Retreive the users data
     retreiveUserData(passport: boolean): void {
         this.createRoute('get', '/retreiveUserData', async (req: express.Request, res: express.Response) => {
@@ -146,13 +158,12 @@ export default class Auth extends Route {
                 console.log('Something wen\'t wrong while looking for the user in the database');
                 res.sendStatus(500);
             }
-
         }, passport);
     }
 
     // Update the user data
     updateUserData(passport: boolean): void {
-        this.createRoute('post', '/updateUserData', async (req: express.Request, res: express.Response) => {
+        this.createRoute('put', '/updateUserData', async (req: express.Request, res: express.Response) => {
             try {
                 const userID: string = req.user._id;
                 const user: User = req.body.user;
@@ -177,7 +188,7 @@ export default class Auth extends Route {
 
     // Update the user password
     updateUserPassword(passport: boolean): void {
-        this.createRoute('post', '/updateUserPassword', async (req: express.Request, res: express.Response) => {
+        this.createRoute('put', '/updateUserPassword', async (req: express.Request, res: express.Response) => {
             try {
                 const userID: string = req.user._id;
                 const password: { currentPassword: string, newPassword: string } = req.body.password;
