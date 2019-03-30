@@ -253,104 +253,63 @@ export default class Inventory extends Component {
 
     // Duplicate selected items
     onDuplicateItems = async () => {
-        this.token = loadToken();
+        if (window.confirm('Are you sure you want to duplicate these items?')) {
+            this.token = loadToken();
 
-        // grab the checkbox cell of each checkbox
-        const checkboxes = document.querySelector('#inventory').querySelectorAll('.tableCheckboxCell');
-        const checked = Array.from(checkboxes).filter(chk => chk.querySelector('input').checked);
-        
-        // exit function if there are no items selected
-        if (checked.length === 0) {
-            console.error('Please select products to duplicate');
-            this.token = null;
-            return;
-        }
+            // grab the checkbox cell of each checkbox
+            const checkboxes = document.querySelector('#inventory').querySelectorAll('.tableCheckboxCell');
+            const checked = Array.from(checkboxes).filter(chk => chk.querySelector('input').checked);
 
-        // loop through each `checked` item and find the item in `state` by comparing checked id
-        const products = [];
-        for (const item of checked) {
-            const id = item.parentNode.querySelector('#itemID').value;
-            const found = this.state.table.inventory.find(prod => prod._id === id);
+            // exit function if there are no items selected
+            if (checked.length === 0) {
+                console.error('Please select products to duplicate');
+                this.token = null;
+                return;
+            }
 
-            delete found._id; // delete _id property to be able to create a new document
-            products.push(found);
-        }
+            // loop through each `checked` item and find the item in `state` by comparing checked id
+            const products = [];
+            for (const item of checked) {
+                const id = item.parentNode.querySelector('#itemID').value;
+                const found = this.state.table.inventory.find(prod => prod._id === id);
 
-        // make http call to /createInventory in chunks
-        const batch = 100;
-        for (let i = 0, n = products.length; i < n; i += batch) {
-            const chunk = products.slice(i, i + batch);
+                delete found._id; // delete _id property to be able to create a new document
+                products.push(found);
+            }
 
-            const res = await fetchInventory('createInventory', 'post', {
+            // make http call to /createInventory in chunks
+            const batch = 100;
+            for (let i = 0, n = products.length; i < n; i += batch) {
+                const chunk = products.slice(i, i + batch);
+
+                const res = await fetchInventory('createInventory', 'post', {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': this.token
+                }, { products: chunk });
+
+                // if res.success is false handle error
+                if (!res.success) {
+                    console.error(res.error);
+                    this.token = null;
+                    return;
+                } else {
+                    // console response message
+                    console.log(res.message);
+                }
+            }
+
+            // make http call to /getInventory again to update state
+            const items = await fetchInventory('getInventory', 'get', {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': this.token
-            }, { products: chunk });
+            });
+            const organized = this.organizeJSONResponse(items);
 
-            // if res.success is false handle error
-            if (!res.success) {
-                console.error(res.error);
-                this.token = null;
-                return;
-            } else {
-                // console response message
-                console.log(res.message);
-            }
-        }
-
-        // make http call to /getInventory again to update state
-        const items = await fetchInventory('getInventory', 'get', {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': this.token
-        });
-        const organized = this.organizeJSONResponse(items);
-
-        // Set `editItems` back to false
-        this.setState(prevState => {
-            prevState.table.inventory = organized;
-            prevState.editItems = !prevState.editItems;
-            this.addRemoveHeaderCol(prevState);
-
-            return {
-                editItems: prevState.editItems,
-                table: prevState.table
-            }
-        });
-
-        // set token to null when done
-        this.token = null;
-        return;
-    }
-
-    // When the delete button is pressed, work with the table form
-    onDeleteItems = async () => {
-        this.token = loadToken();
-
-        // grab the checkbox cell of each checkbox
-        const checkboxes = document.querySelector('#inventory').querySelectorAll('.tableCheckboxCell');
-        const checked = Array.from(checkboxes).filter(chk => chk.querySelector('input').checked);
-
-        // loop through each `checked` item to get it's id
-        const items = [];
-        for (const x of checked) {
-            items.push({ _id: x.parentNode.querySelector('#itemID').value });
-        }
-
-        // make the http call to delete document(s)
-        const deleted = await fetchInventory('deleteInventory', 'delete', {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': this.token
-        }, { items });
-
-        if (deleted.success) {
+            // Set `editItems` back to false
             this.setState(prevState => {
-                // loop through items[] to find objects index to be removed from states inventory
-                for (const item of items) {
-                    const rmvFrmTbl = prevState.table.inventory.findIndex(inv => inv.id === item._id);
-                    prevState.table.inventory.splice(rmvFrmTbl, 1);
-                }
+                prevState.table.inventory = organized;
                 prevState.editItems = !prevState.editItems;
                 this.addRemoveHeaderCol(prevState);
 
@@ -360,12 +319,58 @@ export default class Inventory extends Component {
                 }
             });
 
-            console.info(deleted.message);
-        } else {
-            console.error('Something went wrong with deleting the products');
-        }
+            // set token to null when done
+            this.token = null;
+            return;
+        } else return;
+    }
 
-        this.token = null;
+    // When the delete button is pressed, work with the table form
+    onDeleteItems = async () => {
+        if (window.confirm('Are you sure you want to delete these items?')) {
+            this.token = loadToken();
+
+            // grab the checkbox cell of each checkbox
+            const checkboxes = document.querySelector('#inventory').querySelectorAll('.tableCheckboxCell');
+            const checked = Array.from(checkboxes).filter(chk => chk.querySelector('input').checked);
+
+            // loop through each `checked` item to get it's id
+            const items = [];
+            for (const x of checked) {
+                items.push({ _id: x.parentNode.querySelector('#itemID').value });
+            }
+
+            // make the http call to delete document(s)
+            const deleted = await fetchInventory('deleteInventory', 'delete', {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': this.token
+            }, { items });
+
+            if (deleted.success) {
+                this.setState(prevState => {
+                    const rmvItms = [];
+                    // loop through items[] to find objects index to be removed from states inventory
+                    for (const item of items) rmvItms.push(prevState.table.inventory.findIndex(inv => inv._id === item._id));
+                    // splice based on `rmvItms[]` from back to front by popping the items while looping
+                    while (rmvItms.length) prevState.table.inventory.splice(rmvItms.pop(), 1);
+
+                    prevState.editItems = !prevState.editItems;
+                    this.addRemoveHeaderCol(prevState);
+
+                    return {
+                        editItems: prevState.editItems,
+                        table: prevState.table
+                    }
+                });
+
+                console.info(deleted.message);
+            } else {
+                console.error('Something went wrong with deleting the products');
+            }
+
+            this.token = null;
+        } else return;
     }
 
     // Render the component

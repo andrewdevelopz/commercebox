@@ -57,7 +57,7 @@ export default class TableCell extends Component {
                 return (
                     <React.Fragment>
                         <Table.Cell className='tableCheckboxCell' textAlign='center'><Checkbox /></Table.Cell>
-                        <Table.Cell style={{ opacity: '0.5' }}>{parseInt(this.props.propKey) + 1}</Table.Cell>
+                        <Table.Cell className='index' style={{ opacity: '0.5' }}>{parseInt(this.props.propKey) + 1}</Table.Cell>
                         {Object.keys(item).map((itemKey, i) => {
                             // nested objects of item object `item: { <nested>: ... }`
                             const nested = item[itemKey];
@@ -68,6 +68,7 @@ export default class TableCell extends Component {
                                     return (
                                         <Table.Cell key={i}>
                                             <Form.Field>
+                                                {/* using standard html since semanticUI <Input /> does not accept data-key attr */}
                                                 <div className='ui mini input'>
                                                     <input
                                                         type='text'

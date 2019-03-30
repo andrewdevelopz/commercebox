@@ -157,14 +157,22 @@ export default class CreateProducts extends Component {
     deleteRow = () => {
         // grab select inputs
         const checkboxes = document.querySelector('#createInventory').querySelectorAll('.tableCheckboxCell');
-        for (const checkbox of checkboxes) {
-            const row = checkbox.parentNode;
 
+        const rmvFromTbl = [];
+        for (const checkbox of checkboxes) {
             if (checkbox.querySelector('input').checked) {
-                row.remove();
+                const row = checkbox.parentNode;
+                // push the index received from index column of table
+                rmvFromTbl.push(parseFloat(row.querySelector('.index').innerText) - 1);
             }
-            console.log(row);
         }
+
+        // remove the object representing the row in `state.table`
+        this.setState(prevState => {
+            // splice objects in state by popping `rmvFromTbl[]`
+            while (rmvFromTbl.length) prevState.table.inventory.splice(rmvFromTbl.pop(), 1);
+            return { table: prevState.table }
+        });
     }
 
     render() {
