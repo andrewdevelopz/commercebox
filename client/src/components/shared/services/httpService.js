@@ -37,5 +37,5 @@ export const fetchInventory = async (path, method, headers, data = null) => {
             headers: headers
         });
     }
-    return res.json();
+    return res;
 }

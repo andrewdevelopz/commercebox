@@ -79,7 +79,7 @@ export default class Inventory extends Component {
             'Authorization': this.token
         });
 
-        const organized = this.organizeJSONResponse(res);
+        const organized = this.organizeJSONResponse(await res.json());
 
         // set table state to res from http call
         this.setState(prevState => {
@@ -214,15 +214,16 @@ export default class Inventory extends Component {
                 'Content-Type': 'application/json',
                 'Authorization': this.token
             }, { items: chunk });
+            const resJSON = await res.json();
 
-            // if res.success is false handle error
-            if (!res.success) {
-                console.error(res.error);
+            // check http status
+            if (res.status === 200) {
+                // console your message
+                console.log(resJSON);
+            } else {
+                console.error(resJSON);
                 this.token = null;
                 return;
-            } else {
-                // console your message
-                console.log(res);
             }
         }
         // empty `products[]` when chunk loop is finished
@@ -287,15 +288,16 @@ export default class Inventory extends Component {
                     'Content-Type': 'application/json',
                     'Authorization': this.token
                 }, { products: chunk });
+                const resJSON = await res.json();
 
-                // if res.success is false handle error
-                if (!res.success) {
-                    console.error(res.error);
+                // check status code
+                if (res.status === 201) {
+                    // console response message
+                    console.log(resJSON);
+                } else {
+                    console.error(resJSON);
                     this.token = null;
                     return;
-                } else {
-                    // console response message
-                    console.log(res.message);
                 }
             }
 
@@ -305,7 +307,7 @@ export default class Inventory extends Component {
                 'Content-Type': 'application/json',
                 'Authorization': this.token
             });
-            const organized = this.organizeJSONResponse(items);
+            const organized = this.organizeJSONResponse(await items.json());
 
             // Set `editItems` back to false
             this.setState(prevState => {
@@ -346,8 +348,9 @@ export default class Inventory extends Component {
                 'Content-Type': 'application/json',
                 'Authorization': this.token
             }, { items });
+            const deletedJSON = await deleted.json();
 
-            if (deleted.success) {
+            if (deleted.status === 202) {
                 this.setState(prevState => {
                     const rmvItms = [];
                     // loop through items[] to find objects index to be removed from states inventory
@@ -364,9 +367,9 @@ export default class Inventory extends Component {
                     }
                 });
 
-                console.info(deleted.message);
+                console.info(deletedJSON);
             } else {
-                console.error('Something went wrong with deleting the products');
+                console.error(deletedJSON);
             }
 
             this.token = null;
