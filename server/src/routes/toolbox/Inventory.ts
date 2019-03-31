@@ -46,7 +46,7 @@ export default class Inventory extends Route {
     getInventory(passport: boolean): void {
         this.createRoute('get', '/getInventory', async (req: express.Request, res: express.Response) => {
             // get all products from database
-            const products = await Product.find();
+            const products = await Product.find({ userID: req.user._id });
             res.status(200).json(products);
         }, passport);
     }

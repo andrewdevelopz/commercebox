@@ -134,15 +134,16 @@ export default class CreateProducts extends Component {
                 'Content-Type': 'application/json',
                 'Authorization': this.token
             }, { products: chunk });
+            const resJSON = await res.json();
 
             // if res.success is false handle error
-            if (!res.success) {
-                console.error(res.error);
+            if (res.status === 201) {
+                // console response message
+                console.log(resJSON);
+            } else {
+                console.error(resJSON);
                 this.token = null;
                 return;
-            } else {
-                // console response message
-                console.log(res);
             }
         }
         // redirect to /inventory when chunk loops is finished

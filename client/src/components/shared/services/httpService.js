@@ -19,7 +19,7 @@ export const fetchAuth = async (path, method, headers, data = {}) => {
             headers: headers
         });
     }
-    return res.json();
+    return res;
 }
 
 // All http calls to the inventory route

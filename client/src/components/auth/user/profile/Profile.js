@@ -95,12 +95,13 @@ export default class Profile extends Component {
             'Content-Type': 'application/json',
             'Authorization': this.token
         });
+        const resJSON = await res.json();
 
         this.setState(prevState => {
-            prevState.userInfo.firstName = res.firstName
-            prevState.userInfo.lastName = res.lastName
-            prevState.userInfo.username = res.username
-            prevState.userInfo.email = res.email
+            prevState.userInfo.firstName = resJSON.firstName
+            prevState.userInfo.lastName = resJSON.lastName
+            prevState.userInfo.username = resJSON.username
+            prevState.userInfo.email = resJSON.email
 
             return {
                 userInfo: prevState.userInfo
@@ -142,8 +143,7 @@ export default class Profile extends Component {
                     'Authorization': this.token
                 }, { user: this.state.userInfo });
 
-                console.log(res);
-
+                console.log(await res.json());
             } else if (dataType === 'password') {
                 if (this.state.userPassword.newPassword === this.state.userPassword.confirmPassword) {
                     const res = await fetchAuth('updateUserPassword', 'put', {
@@ -152,15 +152,13 @@ export default class Profile extends Component {
                         'Authorization': this.token
                     }, { password: this.state.userPassword });
 
-                    console.log(res);
-                    
+                    console.log(await res.json());
                 } else {
                     console.log('Confirm password does not match the new password');
                 }
             }
 
             return;
-
         } catch (e) {
             console.error(e);
         } finally {
