@@ -12,25 +12,25 @@ import { Table } from 'semantic-ui-react';
 
 export default class TableRow extends Component {
     state = {
-        inventory: this.props.inventory
+        orders: this.props.orders
     }
 
     render() {
-        const { inventory } = this.state;
+        const { orders } = this.state;
 
         // generate the table based on conditions
-        const generateRows = Object.keys(inventory).map(propKey => {
+        const generateRows = Object.keys(orders).map(propKey => {
             // if editable form table
             if (this.props.editItems) {
                 return (
                     <Table.Row key={propKey}>
-                        <TableCell editItems={this.props.editItems} item={inventory[propKey]} propKey={propKey} />
+                        <TableCell editItems={this.props.editItems} item={orders[propKey]} propKey={propKey} />
                     </Table.Row>
                 );
             } else {
                 return (
                     <Table.Row key={propKey}>
-                        <TableCell editItems={this.props.editItems} item={inventory[propKey]} propKey={propKey} />
+                        <TableCell editItems={this.props.editItems} item={orders[propKey]} propKey={propKey} />
                     </Table.Row>
                 );
             }

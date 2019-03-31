@@ -1,11 +1,10 @@
-'use strict'
-
 // Dependencies
-import mongoose from 'mongoose'
+import mongoose, { Schema } from 'mongoose';
 
-// Users schema
-const Schema = mongoose.Schema
-const userSchema = new Schema({
+// Import types
+import { IUser } from 'mongooseTypes';
+
+const UserSchema: mongoose.Schema = new Schema({
     firstName: {
         type: String,
         required: true
@@ -26,8 +25,8 @@ const userSchema = new Schema({
         type: String,
         required: true
     }
-})
+});
 
-const users = mongoose.model('Users', userSchema)
+const UserModel: mongoose.Model<IUser> = mongoose.model<IUser>('Users', UserSchema);
 
-export default users
+export default UserModel;

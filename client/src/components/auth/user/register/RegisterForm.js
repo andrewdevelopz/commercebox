@@ -2,11 +2,11 @@
  * @overview: This componenet is for the register section of the application.
  */
 
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { fetchAuth } from '../../../shared/services/httpService'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { fetchAuth } from '../../../shared/services/httpService';
 
-import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 
 export default class RegisterForm extends Component {
     state = {
@@ -19,32 +19,32 @@ export default class RegisterForm extends Component {
 
     // Update the state on form changes
     handleChange = (e) => {
-        const { name, value } = e.target
-        this.setState({ [name]: value })
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
     }
 
     // On form submit
     onSubmit = async () => {
         try {
-            const user = this.state
+            const user = this.state;
             // Register the user with the form data
             const res = await fetchAuth('register', 'post', {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }, user)
+            }, user);
 
-            if (res.success) {
-                this.props.history.push('/login')
+            if (res.status === 201) {
+                this.props.history.push('/login');
             } else {
-                throw new Error('Something went wrong with registering the user')
+                throw new Error('Something went wrong with registering the user');
             }
         } catch (e) {
-            console.error(e)
+            console.error(e);
         }
     }
 
     render() {
-        const { firstName, lastName, username, email, password } = this.state
+        const { firstName, lastName, username, email, password } = this.state;
 
         return (
             <Segment inverted>

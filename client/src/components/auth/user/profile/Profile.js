@@ -2,12 +2,12 @@
  * @overview: This componenet is for the profile section of the myaccount area.
  */
 
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 // Import custom components
-import CardFrame from '../../../shared/cards/CardFrame'
-import { fetchAuth } from '../../../shared/services/httpService'
-import { loadToken } from '../../services/authService'
+import CardFrame from '../../../shared/cards/CardFrame';
+import { fetchAuth } from '../../../shared/services/httpService';
+import { loadToken } from '../../services/authService';
 
 import {
     Button,
@@ -17,7 +17,7 @@ import {
     Form,
     Grid,
     Table
-} from 'semantic-ui-react'
+} from 'semantic-ui-react';
 
 export default class Profile extends Component {
     state = {
@@ -86,87 +86,84 @@ export default class Profile extends Component {
             }
         ]
     }
-    token
+    token;
 
     async componentDidMount() {
-        this.token = loadToken()
+        this.token = loadToken();
         const res = await fetchAuth('retreiveUserData', 'get', {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': this.token
-        })
+        });
+        const resJSON = await res.json();
 
         this.setState(prevState => {
-            prevState.userInfo.firstName = res.firstName
-            prevState.userInfo.lastName = res.lastName
-            prevState.userInfo.username = res.username
-            prevState.userInfo.email = res.email
+            prevState.userInfo.firstName = resJSON.firstName
+            prevState.userInfo.lastName = resJSON.lastName
+            prevState.userInfo.username = resJSON.username
+            prevState.userInfo.email = resJSON.email
 
             return {
                 userInfo: prevState.userInfo
             }
-        })
+        });
 
-        this.token = null
+        this.token = null;
     }
 
     handleChange = (e) => {
-        const { name, value } = e.target
-        const dataType = e.target.parentNode.parentNode.parentNode.getAttribute('datatype')
+        const { name, value } = e.target;
+        const dataType = e.target.parentNode.parentNode.parentNode.getAttribute('datatype');
         this.setState(prevState => {
             if (dataType === 'info') {
-                prevState.userInfo[name] = value
+                prevState.userInfo[name] = value;
                 return {
                     userInfo: prevState.userInfo
                 }
             } else {
-                prevState.userPassword[name] = value
+                prevState.userPassword[name] = value;
                 return {
                     userPassword: prevState.userPassword
                 }
             }
-        })
+        });
     }
 
     // When a form has been submitted
     onSubmit = async (event) => {
         try {
-            this.token = loadToken()
-            const dataType = event.target.parentNode.getAttribute('datatype')
-            console.log(dataType)
+            this.token = loadToken();
+            const dataType = event.target.parentNode.getAttribute('datatype');
 
             // Handle each type of form being submitted
             if (dataType === 'info') {
-                const res = await fetchAuth('updateUserData', 'post', {
+                const res = await fetchAuth('updateUserData', 'put', {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': this.token
-                }, { user: this.state.userInfo })
+                }, { user: this.state.userInfo });
 
-                console.log(res)
-
+                console.log(await res.json());
             } else if (dataType === 'password') {
                 if (this.state.userPassword.newPassword === this.state.userPassword.confirmPassword) {
-                    const res = await fetchAuth('updateUserPassword', 'post', {
+                    const res = await fetchAuth('updateUserPassword', 'put', {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                         'Authorization': this.token
-                    }, { password: this.state.userPassword })
+                    }, { password: this.state.userPassword });
 
-                    console.log(res)
-                    
+                    console.log(await res.json());
                 } else {
-                    console.log('Confirm password does not match the new password')
+                    console.log('Confirm password does not match the new password');
                 }
             }
 
-            return
-
+            return;
         } catch (e) {
-            console.error(e)
+            console.error(e);
         } finally {
             // Set token to null
-            this.token = null
+            this.token = null;
         }
     }
 
@@ -185,7 +182,7 @@ export default class Profile extends Component {
                     onChange={this.handleChange}
                 />
             )
-        })
+        });
 
         const passwordCard = this.state.passwordCard.map((item, index) => {
             return (
@@ -202,7 +199,7 @@ export default class Profile extends Component {
                     onChange={this.handleChange}
                 />
             )
-        })
+        });
 
         return (
             <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>

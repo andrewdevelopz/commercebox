@@ -2,13 +2,13 @@
  * @overview: This componenet is for the login section of the application.
  */
 
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 // Import custom components
-import { AuthConsumer } from '../../AuthContext'
+import { AuthConsumer } from '../../AuthContext';
 
-import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 
 export default class LoginForm extends Component {
     state = {
@@ -18,22 +18,22 @@ export default class LoginForm extends Component {
 
     // Update the state on form changes
     handleChange = (e) => {
-        const { name, value } = e.target
-        this.setState({ [name]: value })
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
     }
 
     // On form submit
     onSubmit = (res) => {
         if (res.success) {
-            this.props.history.push('/toolbox/dashboard')
+            this.props.history.push('/toolbox/dashboard');
         } else {
-            console.error(res)
+            console.error(res);
         }
     }
 
     render() {
-        const { username, password } = this.state
-        const user = this.state
+        const { username, password } = this.state;
+        const user = this.state;
 
         return (
             <Segment inverted>

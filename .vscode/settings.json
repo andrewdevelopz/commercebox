@@ -1,0 +1,10 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "search.exclude": {
+        "server/**/node_modules": true,
+        "server/**/bower_components": true,
+        "server/**/dist": true,
+        "server/**/coverge": true
+    },
+    "typescript.referencesCodeLens.enabled": true
+}

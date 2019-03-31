@@ -1,6 +1,5 @@
 /**
- * @overview: This component is a shared table frame for the application. It can be placed in any other component that needs
- * a table. It is able to display a basic table or a table with a from wrapped around it for submission.
+ * @overview: This component is the table frame for orders.
  * 
  * @link - https://stackoverflow.com/questions/44707656/react-mapping-multiple-arrays (a much cleaner way to map arrays and objects to the DOM element)
  */
@@ -41,7 +40,7 @@ export default class TableFrame extends Component {
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
-                                <TableRow inventory={table.inventory} editItems={this.props.editItems} />
+                                <TableRow orders={table.orders} editItems={this.props.editItems} />
                             </Table.Body>
                         </Table>
                         <Button type='submit' size='small' color='green' style={{ marginBottom: '1rem' }}>{this.props.submitBtnName}</Button>
@@ -56,7 +55,7 @@ export default class TableFrame extends Component {
                             </Table.Row>
                         </Table.Header>
                         <Table.Body>
-                            <TableRow inventory={table.inventory} editItems={this.props.editItems} />
+                            <TableRow orders={table.orders} editItems={this.props.editItems} />
                         </Table.Body>
                     </Table>
                 );
