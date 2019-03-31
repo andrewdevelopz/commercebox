@@ -176,14 +176,16 @@ export default class Inventory extends Component {
     /*** End Helper Methods ***/
 
     // Generate dummy data
-    onGenerateDummyData = () => {
+    onGenerateDummyData = async () => {
         this.token = loadToken();
 
-        fetchInventory('generateDummyData', 'get', {
+        const gen = await fetchInventory('generateDummyData', 'get', {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': this.token
         });
+
+        console.log(await gen.json());
 
         this.token = null;
     }

@@ -49,9 +49,17 @@ export default class Inventory extends Route {
     // Generate dummy data
     generateDummyData(passport: boolean): void {
         this.createRoute('get', '/generateDummyData', async (req: express.Request, res: express.Response) => {
-            console.log(dummy);
+            const products: any = dummy;
+            const user: User = req.user;
+
+            for (const product of products) {
+                product['userID'] = user._id;
+            }
+
+            await Product.insertMany(products);
+
             res.status(200).json({
-                message: 'Dummy data has been generated'
+                message: `${products.length} Dummy data has been generated`
             });
         }, passport);
     }
