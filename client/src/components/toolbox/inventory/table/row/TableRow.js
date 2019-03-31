@@ -34,7 +34,7 @@ export default class TableRow extends Component {
                     </Table.Row>
                 );
             }
-        })
+        });
 
         return (
             <React.Fragment>

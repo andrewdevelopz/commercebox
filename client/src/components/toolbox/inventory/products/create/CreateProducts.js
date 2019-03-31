@@ -159,19 +159,25 @@ export default class CreateProducts extends Component {
         // grab select inputs
         const checkboxes = document.querySelector('#createInventory').querySelectorAll('.tableCheckboxCell');
 
-        const rmvFromTbl = [];
+        /** 
+         * @todo Not able to get rows to delete properly. The end state is correct but the view does not match the state 
+         *       - This has to do with the tables and how the state is being passed. I beleive if we use redux we will be fine
+         *       - If we choose not to use redux than figure out a way to remove each row with the form inputs matching up with
+         *         the states data
+         */
+        const removeFromTable = [];
         for (const checkbox of checkboxes) {
             if (checkbox.querySelector('input').checked) {
                 const row = checkbox.parentNode;
                 // push the index received from index column of table
-                rmvFromTbl.push(parseFloat(row.querySelector('.index').innerText) - 1);
+                removeFromTable.push(parseFloat(row.querySelector('.index').innerText) - 1);
             }
         }
 
         // remove the object representing the row in `state.table`
         this.setState(prevState => {
-            // splice objects in state by popping `rmvFromTbl[]`
-            while (rmvFromTbl.length) prevState.table.inventory.splice(rmvFromTbl.pop(), 1);
+            // splice objects in state by popping `removeFromTable[]`
+            while (removeFromTable.length) prevState.table.inventory.splice(removeFromTable.pop(), 1);
             return { table: prevState.table }
         });
     }

@@ -352,11 +352,11 @@ export default class Inventory extends Component {
 
             if (deleted.status === 202) {
                 this.setState(prevState => {
-                    const rmvItms = [];
+                    const removeFromTable = [];
                     // loop through items[] to find objects index to be removed from states inventory
-                    for (const item of items) rmvItms.push(prevState.table.inventory.findIndex(inv => inv._id === item._id));
-                    // splice based on `rmvItms[]` from back to front by popping the items while looping
-                    while (rmvItms.length) prevState.table.inventory.splice(rmvItms.pop(), 1);
+                    for (const item of items) removeFromTable.push(prevState.table.inventory.findIndex(inv => inv._id === item._id));
+                    // splice based on `removeFromTable[]` from back to front by popping the items while looping
+                    while (removeFromTable.length) prevState.table.inventory.splice(removeFromTable.pop(), 1);
 
                     prevState.editItems = !prevState.editItems;
                     this.addRemoveHeaderCol(prevState);
