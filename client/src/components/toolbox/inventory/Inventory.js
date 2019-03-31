@@ -79,7 +79,7 @@ export default class Inventory extends Component {
             'Authorization': this.token
         });
 
-        const organized = this.organizeJSONResponse(res);
+        const organized = this.organizeJSONResponse(await res.json());
 
         // set table state to res from http call
         this.setState(prevState => {
@@ -175,6 +175,23 @@ export default class Inventory extends Component {
 
     /*** End Helper Methods ***/
 
+    // Generate dummy data
+    onGenerateDummyData = async () => {
+        this.token = loadToken();
+
+        const gen = await fetchInventory('generateDummyData', 'get', {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.token
+        });
+
+        console.log(await gen.json());
+
+        this.token = null;
+    }
+
+    /*** End Helper Methods ***/
+
     // When edit item button is pressed
     onEditItems = () => {
         // update state of `editItems` and add or remove columns respectively
@@ -214,15 +231,16 @@ export default class Inventory extends Component {
                 'Content-Type': 'application/json',
                 'Authorization': this.token
             }, { items: chunk });
+            const resJSON = await res.json();
 
-            // if res.success is false handle error
-            if (!res.success) {
-                console.error(res.error);
+            // check http status
+            if (res.status === 200) {
+                // console your message
+                console.log(resJSON);
+            } else {
+                console.error(resJSON);
                 this.token = null;
                 return;
-            } else {
-                // console your message
-                console.log(res);
             }
         }
         // empty `products[]` when chunk loop is finished
@@ -287,15 +305,16 @@ export default class Inventory extends Component {
                     'Content-Type': 'application/json',
                     'Authorization': this.token
                 }, { products: chunk });
+                const resJSON = await res.json();
 
-                // if res.success is false handle error
-                if (!res.success) {
-                    console.error(res.error);
+                // check status code
+                if (res.status === 201) {
+                    // console response message
+                    console.log(resJSON);
+                } else {
+                    console.error(resJSON);
                     this.token = null;
                     return;
-                } else {
-                    // console response message
-                    console.log(res.message);
                 }
             }
 
@@ -305,7 +324,7 @@ export default class Inventory extends Component {
                 'Content-Type': 'application/json',
                 'Authorization': this.token
             });
-            const organized = this.organizeJSONResponse(items);
+            const organized = this.organizeJSONResponse(await items.json());
 
             // Set `editItems` back to false
             this.setState(prevState => {
@@ -346,14 +365,15 @@ export default class Inventory extends Component {
                 'Content-Type': 'application/json',
                 'Authorization': this.token
             }, { items });
+            const deletedJSON = await deleted.json();
 
-            if (deleted.success) {
+            if (deleted.status === 202) {
                 this.setState(prevState => {
-                    const rmvItms = [];
+                    const removeFromTable = [];
                     // loop through items[] to find objects index to be removed from states inventory
-                    for (const item of items) rmvItms.push(prevState.table.inventory.findIndex(inv => inv._id === item._id));
-                    // splice based on `rmvItms[]` from back to front by popping the items while looping
-                    while (rmvItms.length) prevState.table.inventory.splice(rmvItms.pop(), 1);
+                    for (const item of items) removeFromTable.push(prevState.table.inventory.findIndex(inv => inv._id === item._id));
+                    // splice based on `removeFromTable[]` from back to front by popping the items while looping
+                    while (removeFromTable.length) prevState.table.inventory.splice(removeFromTable.pop(), 1);
 
                     prevState.editItems = !prevState.editItems;
                     this.addRemoveHeaderCol(prevState);
@@ -364,9 +384,9 @@ export default class Inventory extends Component {
                     }
                 });
 
-                console.info(deleted.message);
+                console.info(deletedJSON);
             } else {
-                console.error('Something went wrong with deleting the products');
+                console.error(deletedJSON);
             }
 
             this.token = null;
@@ -390,6 +410,7 @@ export default class Inventory extends Component {
                         <Button floated='right'>Link</Button>
                         <Button as={Link} to={`${path}/createProducts`} color='orange' floated='right'>Create</Button>
                         <Button onClick={this.onEditItems} color='blue' floated='right'>Edit</Button>
+                        <Button onClick={this.onGenerateDummyData} color='green'>Dummy Data</Button>
                     </React.Fragment>
                 );
             } else {

@@ -3,18 +3,64 @@
  * for the orders ends here.
  */
 
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import TableFrame from './table/TableFrame';
+// import SearchBar from '../../shared/search/Search';
 
 // Semantic UI
-import { Segment } from 'semantic-ui-react'
+import { Button, Divider, Segment, Grid, Search } from 'semantic-ui-react';
 
 export default class Orders extends Component {
-    state = {}
+    state = {
+        table: {
+            headers: [
+                ['', 1],
+                ['Image', 10],
+                ['SKU', 10],
+                ['Title', 10]
+            ],
+            orders: [
+                {
+                    image: '',
+                    sku: 'sku',
+                    title: 'title'
+                }
+            ]
+        }
+    }
 
     render() {
+        const { table } = this.state;
+        // generate buttons based on `editItems` state
+        const genBtns = () => {
+            return (
+                <React.Fragment>
+                    <Button color='red' floated='right'>Placeholder</Button>
+                    <Button color='orange' floated='right'>Placeholder</Button>
+                    <Button color='grey' floated='right'>Placeholder</Button>
+                </React.Fragment>
+            )
+        }
+
         return (
-            <Segment inverted style={{ background: '#252525', minHeight: '100vh', width: '106rem' }}>
-                Welcome to the orders
+            <Segment inverted style={{ background: '#252525', minHeight: '100vh' }}>
+                {/* orders header bar */}
+                <Grid>
+                    <Grid.Row columns='equal'>
+                        <Grid.Column>
+                            {/* Fix search bar to be dynamic app wide */}
+                            {/* <SearchBar inventory={} /> */}
+                            <Search />
+                        </Grid.Column>
+                        <Grid.Column>
+                            {/* buttons */}
+                            {genBtns()}
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Divider />
+                </Grid>
+                {/* table frame */}
+                <TableFrame id='orders' table={table} submitBtnName='Update' handleSubmit={this.onUpdateItems} />
             </Segment>
         )
     }

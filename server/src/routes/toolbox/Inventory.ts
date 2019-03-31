@@ -7,6 +7,9 @@ import express from 'express';
 import Route from '../Route';
 import Product from '../../models/Product';
 
+// Import custom
+import dummy from '../../.data/dummy/products';
+
 // Import types
 import { IProduct, QueryStatus } from 'mongooseTypes';
 
@@ -25,6 +28,7 @@ export default class Inventory extends Route {
 
     run(): void {
         this.root(true);
+        this.generateDummyData(true);
         this.getInventory(true);
         this.createInventory(true);
         this.updateInventory(true);
@@ -42,12 +46,30 @@ export default class Inventory extends Route {
         }, passport);
     }
 
+    // Generate dummy data
+    generateDummyData(passport: boolean): void {
+        this.createRoute('get', '/generateDummyData', async (req: express.Request, res: express.Response) => {
+            const products: any = dummy;
+            const user: User = req.user;
+
+            for (const product of products) {
+                product['userID'] = user._id;
+            }
+
+            await Product.insertMany(products);
+
+            res.status(200).json({
+                message: `${products.length} Dummy data has been generated`
+            });
+        }, passport);
+    }
+
     // Get inventory
     getInventory(passport: boolean): void {
         this.createRoute('get', '/getInventory', async (req: express.Request, res: express.Response) => {
             // get all products from database
-            const products = await Product.find();
-            res.json(products);
+            const products = await Product.find({ userID: req.user._id });
+            res.status(200).json(products);
         }, passport);
     }
 
@@ -81,15 +103,13 @@ export default class Inventory extends Route {
                 }
 
                 // send back results
-                res.json({
-                    success: true,
+                res.status(201).json({
                     message: `${updated} product(s) have been created`
                 });
             } catch (e) {
                 // send error results
-                res.json({
-                    success: false,
-                    error: e
+                res.status(500).json({
+                    error: e.message
                 });
             }
         }, passport);
@@ -114,12 +134,12 @@ export default class Inventory extends Route {
                 }
 
                 /** @todo trying to update all documents with a one liner */
-                // const update: QueryStatus = await Product.updateMany({ _id: { $in: items } }, items);
+                // const updated: QueryStatus = await Product.updateMany({ _id: { $in: items } }, items);
 
-                res.json({ success: true, message: `${updated} document(s) updated successfully` });
+                res.status(200).json({ message: `${updated} document(s) updated successfully` });
             } catch (e) {
                 console.log(e);
-                res.sendStatus(500);
+                res.status(500).json({ error: e.message });
             }
         }, passport);
     }
@@ -133,10 +153,12 @@ export default class Inventory extends Route {
                 // delete all the products in `items`
                 const deleted: QueryStatus = await Product.deleteMany({ _id: { $in: items } });
 
-                res.json({ success: true, message: `${deleted.n} document(s) deleted successfully` });
+                res.status(202).json({ message: `${deleted.n} document(s) deleted successfully` });
             } catch (e) {
                 console.log(e);
-                res.sendStatus(500);
+                res.status(500).json({
+                    error: e.message
+                });
             }
         }, passport);
     }

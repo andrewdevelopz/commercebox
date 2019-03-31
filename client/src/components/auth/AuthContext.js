@@ -31,14 +31,15 @@ export default class AuthProvider extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }, user);
+            const resJSON = await res.json();
 
-            if (res.success) {
-                storeUserLocalStorage(res.token);
+            if (res.status === 200) {
+                storeUserLocalStorage(resJSON.token);
                 this.setState({ isAuth: true });
             }
 
             // Return the http response for the login form
-            return res;
+            return resJSON;
         } catch (e) {
             return e;
         }

@@ -68,8 +68,7 @@ export default class Auth extends Route {
                 }
 
                 const newUser: IUser = await new User(user).save();
-                res.json({
-                    success: true,
+                res.status(201).json({
                     newUser
                 });
             } catch (e) {
@@ -91,7 +90,7 @@ export default class Auth extends Route {
 
                 if (!user) {
                     // Send wrong username error
-                    res.json({ error: 'The username you have entered does not exist' });
+                    res.status(401).json({ error: 'The username you have entered does not exist' });
                     return;
                 }
 
@@ -106,7 +105,7 @@ export default class Auth extends Route {
                     });
 
                     // Send the token when user data to the client
-                    res.json({
+                    res.status(200).json({
                         success: true,
                         token: 'Bearer ' + token,
                         user: {
@@ -119,12 +118,14 @@ export default class Auth extends Route {
                     });
                 } else {
                     // Send wrong password error
-                    res.json({ error: 'The password you have entered does not match' });
+                    res.status(401).json({ error: 'The password you have entered does not match' });
                     return;
                 }
             } catch (e) {
-                res.sendStatus(500);
                 console.log(e);
+                res.status(500).json({
+                    error: e.message
+                });
             }
         }, passport);
     }
@@ -153,7 +154,7 @@ export default class Auth extends Route {
                     username: user.username,
                     email: user.email
                 }
-                res.json(sendUser);
+                res.status(200).json(sendUser);
             } else {
                 console.log('Something wen\'t wrong while looking for the user in the database');
                 res.sendStatus(500);
@@ -178,7 +179,7 @@ export default class Auth extends Route {
                 // query to the database with userID
                 await User.findOneAndUpdate(userID, update).exec();
 
-                res.json({ success: true });
+                res.status(200).json({ message: 'The user has been updated' });
             } catch (e) {
                 // send error results
                 res.sendStatus(500);
@@ -211,9 +212,9 @@ export default class Auth extends Route {
                     // query to the database to update the user password
                     await User.findOneAndUpdate(userID, update).exec();
 
-                    res.json({ success: true, message: 'The users password has been updated' });
+                    res.status(200).json({ success: true, message: 'The users password has been updated' });
                 } else {
-                    res.json({ success: false, message: 'The current password you entered does not match' });
+                    res.status(200).json({ success: false, message: 'The current password you entered does not match' });
                 }
             } catch (e) {
                 res.sendStatus(500);
