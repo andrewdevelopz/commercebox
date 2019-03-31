@@ -175,6 +175,19 @@ export default class Inventory extends Component {
 
     /*** End Helper Methods ***/
 
+    // Generate dummy data
+    onGenerateDummyData = () => {
+        this.token = loadToken();
+
+        fetchInventory('generateDummyData', 'get', {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.token
+        });
+
+        this.token = null;
+    }
+
     // When edit item button is pressed
     onEditItems = () => {
         // update state of `editItems` and add or remove columns respectively
@@ -393,6 +406,7 @@ export default class Inventory extends Component {
                         <Button floated='right'>Link</Button>
                         <Button as={Link} to={`${path}/createProducts`} color='orange' floated='right'>Create</Button>
                         <Button onClick={this.onEditItems} color='blue' floated='right'>Edit</Button>
+                        <Button onClick={this.onGenerateDummyData} color='green'>Dummy Data</Button>
                     </React.Fragment>
                 );
             } else {

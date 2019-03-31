@@ -7,6 +7,9 @@ import express from 'express';
 import Route from '../Route';
 import Product from '../../models/Product';
 
+// Import custom
+import dummy from '../../.data/dummy/products';
+
 // Import types
 import { IProduct, QueryStatus } from 'mongooseTypes';
 
@@ -25,6 +28,7 @@ export default class Inventory extends Route {
 
     run(): void {
         this.root(true);
+        this.generateDummyData(true);
         this.getInventory(true);
         this.createInventory(true);
         this.updateInventory(true);
@@ -39,6 +43,16 @@ export default class Inventory extends Route {
     root(passport: boolean): void {
         this.createRoute('get', '/', (req: express.Request, res: express.Response) => {
             res.send('Hello from <b>ROOT</b> path of inventory');
+        }, passport);
+    }
+
+    // Generate dummy data
+    generateDummyData(passport: boolean): void {
+        this.createRoute('get', '/generateDummyData', async (req: express.Request, res: express.Response) => {
+            console.log(dummy);
+            res.status(200).json({
+                message: 'Dummy data has been generated'
+            });
         }, passport);
     }
 
