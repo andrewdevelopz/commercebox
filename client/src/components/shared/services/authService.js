@@ -1,5 +1,5 @@
 /**
- * @overview: This is a service for all authentication/user actions that will be needed for the application.
+ * @overview: Thes functions for all authentication/user actions that will be needed for the application.
  */
 
 export const loadToken = () => {

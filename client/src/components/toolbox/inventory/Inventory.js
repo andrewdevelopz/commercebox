@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 // Import custom components
 import SearchBar from '../../shared/search/Search';
 import TableFrame from './table/TableFrame';
-import { loadToken } from '../../auth/services/authService';
+import { loadToken } from '../../shared/services/authService';
 import { fetchInventory } from '../../shared/services/httpService';
 
 // Semantic UI

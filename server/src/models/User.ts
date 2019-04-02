@@ -24,6 +24,43 @@ const UserSchema: mongoose.Schema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    addresses: [
+        {
+            company: String,
+            firstName: String,
+            lastName: String,
+            address1: {
+                type: String,
+                required: true
+            },
+            address2: String,
+            city: {
+                type: String,
+                required: true
+            },
+            state: {
+                type: String,
+                required: true
+            },
+            zip: {
+                type: String,
+                required: true
+            },
+            country: String,
+            primary: Boolean
+        }
+    ],
+    tokens: {
+        ebay: {
+            authToken: String,
+            refToken: String
+        },
+        pitneyBowesAuthToken: String,
+        woocommerce: {
+            key: String,
+            secret: String
+        }
     }
 });
 

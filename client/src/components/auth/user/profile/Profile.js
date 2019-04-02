@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 // Import custom components
 import CardFrame from '../../../shared/cards/CardFrame';
 import { fetchAuth } from '../../../shared/services/httpService';
-import { loadToken } from '../../services/authService';
+import { loadToken } from '../../../shared/services/authService';
 
 import {
     Button,
