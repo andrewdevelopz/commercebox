@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 
 // Import custom components
 import CardFrame from '../../../shared/cards/CardFrame';
-import TableFrame from '../../../shared/tables/main/TableFrame';
+import AddressCard from './address/AddressCard';
 import { fetchAuth } from '../../../shared/services/httpService';
 import { loadToken } from '../../../shared/services/authService';
 
@@ -16,8 +16,7 @@ import {
     Segment,
     Divider,
     Form,
-    Grid,
-    Checkbox
+    Grid
 } from 'semantic-ui-react';
 
 export default class Profile extends Component {
@@ -130,45 +129,6 @@ export default class Profile extends Component {
         });
 
         this.token = null;
-    }
-
-    /**
-     * method to set the table to edit mode.
-     * 
-     * @param prevState: state - the previous state passed in when setting `this.setState`
-     */
-    onEditItems = () => {
-        this.setState(prevState => {
-            prevState.editItems = !prevState.editItems;
-            this.addRemoveHeaderCol(prevState);
-
-            return {
-                editItems: prevState.editItems,
-                table: prevState.table
-            }
-        });
-    }
-
-    /**
-     *  Add and remove checkbox column when editItem changes
-     *      - we pass a copy of the prevState reference to munge the state object
-     *  
-     *  @param prevState: state - the previous state passed in when setting `this.setState`
-     */
-    addRemoveHeaderCol = (prevState) => {
-        // if in edit mode, add select column to the front
-        if (prevState.editItems) {
-            prevState.table.headers.unshift([<Checkbox id='checkAll' onClick={this.selectAll} />, null]);
-        } else {
-            prevState.table.headers.shift();
-        }
-    }
-
-    /**
-     *  Add a row for adding an address
-     */
-    onAddAddressRow = () => {
-        
     }
 
     // Select all the checkboxes inside table
@@ -310,28 +270,7 @@ export default class Profile extends Component {
                     </Grid.Row>
                     <Grid.Row>
                         <Grid.Column>
-                            <CardFrame header='Addresses'>
-                                {
-                                    this.state.editItems
-                                        ? (
-                                            <React.Fragment>
-                                                <Button onClick={this.onEditItems} color='red'>Cancel</Button>
-                                                <Button onClick={this.onAddAddressRow} color='green'>Add</Button>
-                                            </React.Fragment>
-                                        )
-                                        : (
-                                            <Button onClick={this.onEditItems} color='green'>Edit</Button>
-                                        )
-                                }
-                                <Divider />
-                                <TableFrame
-                                    id='addresses'
-                                    table={this.state.table}
-                                    editItems={this.state.editItems}
-                                    submitButtonName='Submit'
-                                    handleSubmit={() => console.log('Hello')}
-                                />
-                            </CardFrame>
+                            <AddressCard />
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
