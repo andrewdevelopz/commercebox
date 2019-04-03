@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 
 // Import custom components
 import CardFrame from '../../../shared/cards/CardFrame';
+import TableFrame from '../../../shared/tables/main/TableFrame';
 import { fetchAuth } from '../../../shared/services/httpService';
 import { loadToken } from '../../../shared/services/authService';
 
@@ -16,7 +17,7 @@ import {
     Divider,
     Form,
     Grid,
-    Table
+    Checkbox
 } from 'semantic-ui-react';
 
 export default class Profile extends Component {
@@ -84,7 +85,27 @@ export default class Profile extends Component {
                 type: 'password',
                 name: 'confirmPassword'
             }
-        ]
+        ],
+        editItems: false,
+        table: {
+            headers: [
+                ['', null],
+                ['Company', null],
+                ['Name', null],
+                ['Address', null],
+                ['Country', null],
+                ['Primary', null],
+            ],
+            items: [
+                {
+                    company: 'company',
+                    name: 'john doe',
+                    address: '123 sesame street, covina CA 91789',
+                    country: 'US',
+                    primary: false
+                }
+            ]
+        }
     }
     token;
 
@@ -109,6 +130,60 @@ export default class Profile extends Component {
         });
 
         this.token = null;
+    }
+
+    /**
+     * method to set the table to edit mode.
+     * 
+     * @param prevState: state - the previous state passed in when setting `this.setState`
+     */
+    onEditItems = () => {
+        this.setState(prevState => {
+            prevState.editItems = !prevState.editItems;
+            this.addRemoveHeaderCol(prevState);
+
+            return {
+                editItems: prevState.editItems,
+                table: prevState.table
+            }
+        });
+    }
+
+    /**
+     *  Add and remove checkbox column when editItem changes
+     *      - we pass a copy of the prevState reference to munge the state object
+     *  
+     *  @param prevState: state - the previous state passed in when setting `this.setState`
+     */
+    addRemoveHeaderCol = (prevState) => {
+        // if in edit mode, add select column to the front
+        if (prevState.editItems) {
+            prevState.table.headers.unshift([<Checkbox id='checkAll' onClick={this.selectAll} />, null]);
+        } else {
+            prevState.table.headers.shift();
+        }
+    }
+
+    /**
+     *  Add a row for adding an address
+     */
+    onAddAddressRow = () => {
+        
+    }
+
+    // Select all the checkboxes inside table
+    selectAll = () => {
+        const checkboxes = document.querySelector('#addresses').querySelectorAll('.tableCheckboxCell');
+        const checkAll = document.querySelector('#checkAll');
+
+        // loop through each checkbox cell and grab it's input
+        for (const checkbox of checkboxes) {
+            if (checkAll.checked) {
+                checkbox.querySelector('input').checked = true;
+            } else {
+                checkbox.querySelector('input').checked = false;
+            }
+        }
     }
 
     handleChange = (e) => {
@@ -236,46 +311,26 @@ export default class Profile extends Component {
                     <Grid.Row>
                         <Grid.Column>
                             <CardFrame header='Addresses'>
-                                <Form className='formLabel' datatype='address'>
-                                    <Table inverted>
-                                        <Table.Header>
-                                            <Table.Row>
-                                                <Table.HeaderCell>Company</Table.HeaderCell>
-                                                <Table.HeaderCell>Name</Table.HeaderCell>
-                                                <Table.HeaderCell>Address</Table.HeaderCell>
-                                                <Table.HeaderCell>Country</Table.HeaderCell>
-                                                <Table.HeaderCell>Primary</Table.HeaderCell>
-                                            </Table.Row>
-                                        </Table.Header>
-
-                                        <Table.Body>
-                                            <Table.Row>
-                                                <Table.Cell>Company1</Table.Cell>
-                                                <Table.Cell>John Doe</Table.Cell>
-                                                <Table.Cell>348 Paseo Sonrisa, Walnut CA 91789</Table.Cell>
-                                                <Table.Cell>US</Table.Cell>
-                                                <Table.Cell>true</Table.Cell>
-                                            </Table.Row>
-                                            <Table.Row>
-                                                <Table.Cell>Company2</Table.Cell>
-                                                <Table.Cell>Jane Doe</Table.Cell>
-                                                <Table.Cell>322 Paseo Sonrisa, Walnut CA 91789</Table.Cell>
-                                                <Table.Cell>US</Table.Cell>
-                                                <Table.Cell>true</Table.Cell>
-                                            </Table.Row>
-                                            <Table.Row>
-                                                <Table.Cell>Company3</Table.Cell>
-                                                <Table.Cell>Roger Doe</Table.Cell>
-                                                <Table.Cell>256 Paseo Sonrisa, Walnut CA 91789</Table.Cell>
-                                                <Table.Cell>US</Table.Cell>
-                                                <Table.Cell>true</Table.Cell>
-                                            </Table.Row>
-                                        </Table.Body>
-                                    </Table>
-                                    <Button primary size='medium' onClick={this.onSubmit}>
-                                        Update
-                                    </Button>
-                                </Form>
+                                {
+                                    this.state.editItems
+                                        ? (
+                                            <React.Fragment>
+                                                <Button onClick={this.onEditItems} color='red'>Cancel</Button>
+                                                <Button onClick={this.onAddAddressRow} color='green'>Add</Button>
+                                            </React.Fragment>
+                                        )
+                                        : (
+                                            <Button onClick={this.onEditItems} color='green'>Edit</Button>
+                                        )
+                                }
+                                <Divider />
+                                <TableFrame
+                                    id='addresses'
+                                    table={this.state.table}
+                                    editItems={this.state.editItems}
+                                    submitButtonName='Submit'
+                                    handleSubmit={() => console.log('Hello')}
+                                />
                             </CardFrame>
                         </Grid.Column>
                     </Grid.Row>

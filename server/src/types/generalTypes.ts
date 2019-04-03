@@ -11,9 +11,9 @@ type User = {
     lastName: string;
     username: string;
     email: string;
-    password: string;
-    addresses: Array<UserAddress>
-    tokens: UserTokens
+    password?: string;
+    addresses?: Array<UserAddress>
+    tokens?: UserTokens
 }
 
 // Address format for the user
