@@ -38,6 +38,8 @@ export default class Auth extends Route {
         this.retreiveUserData(true);
         this.updateUserData(true);
         this.updateUserPassword(true);
+        this.getUserAddress(true);
+        this.addUserAddress(true);
     }
 
     /**
@@ -219,6 +221,27 @@ export default class Auth extends Route {
             } catch (e) {
                 res.sendStatus(500);
             }
+        }, passport);
+    }
+
+    // Get the user addresses
+    getUserAddress(passport: boolean): void {
+        this.createRoute('get', '/getUserAddress', async (req: express.Request, res: express.Response) => {
+            //
+        }, passport);
+    }
+
+    // Add a address(es) for the user
+    addUserAddress(passport: boolean): void {
+        this.createRoute('post', '/addUserAddress', async (req: express.Request, res: express.Response) => {
+            const addresses: UserAddress[] = req.body.addresses;
+            // loop through and delete `changed` property
+            for (const address of addresses) {
+                delete address.changed;
+            }
+
+            console.log(addresses);
+
         }, passport);
     }
 }

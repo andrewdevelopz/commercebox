@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 // Import custom components
 import TableFrame from '../../table/TableFrame';
 import { fetchInventory } from '../../../../shared/services/httpService';
-import { loadToken } from '../../../../auth/services/authService';
+import { loadToken } from '../../../../shared/services/authService';
 
 // Semantic UI
 import { Segment, Button } from 'semantic-ui-react';

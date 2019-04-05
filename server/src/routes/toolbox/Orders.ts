@@ -6,6 +6,7 @@
 import express from 'express';
 const router = express.Router();
 import Route from '../Route';
+import Order from '../../models/Order';
 
 export default class Orders extends Route {
     constructor(path: string, app: express.Application) {

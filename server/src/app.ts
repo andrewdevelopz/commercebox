@@ -73,7 +73,7 @@ export default class App {
         this.unifiedServer(app);
 
         // Listen on PORT
-        const port = process.env.PORT || 3000;
+        const port = process.env.PORT || 2995;
         app.listen(port, (err: Error) => err ? console.log(err) : console.log(`Server started on port: ${port}`));
     }
 

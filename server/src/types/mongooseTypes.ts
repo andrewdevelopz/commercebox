@@ -5,13 +5,28 @@
 import mongoose from 'mongoose';
 
 // Interface for User document.
-export interface IUser extends mongoose.Document {
+export interface IOrder extends mongoose.Document {
     id: mongoose.Types.ObjectId;
-    firstName: string;
-    lastName: string;
-    username: string;
-    email: string;
-    password: string;
+    marketplaceID: string;
+    marketplace: string;
+    address: {
+        billing: Object,
+        shipping: Object
+    }
+    orderItems: Array<Object>;
+    currency: string;
+    total: number;
+    totalTax: number;
+    shippingTotal: number;
+    refunds: any; // not sure what refunds is yet
+    paymentMethod: string;
+    paidDate: Date;
+    createdDate: Date;
+    modifiedDate: Date;
+    completedDate: Date;
+    status: string;
+    userID: string;
+
 }
 
 // Interface for Product document.
@@ -68,6 +83,16 @@ export interface IProduct extends mongoose.Document {
     created: Date;
     modified: Date;
     userID: string;
+}
+
+// Interface for User document.
+export interface IUser extends mongoose.Document {
+    id: mongoose.Types.ObjectId;
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+    password: string;
 }
 
 // The query response when deleting or updating document(s)

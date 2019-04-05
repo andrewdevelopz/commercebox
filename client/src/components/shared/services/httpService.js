@@ -2,7 +2,7 @@
  * @overview: This is a service for all http actions that will be needed for the application.
  */
 
-const root = 'http://localhost:3000/api';
+const root = 'http://localhost:2995/api';
 
 // All http calls to the auth route
 export const fetchAuth = async (path, method, headers, data = {}) => {

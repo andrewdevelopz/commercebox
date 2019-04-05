@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 // Import custom components
 import SearchBar from '../../shared/search/Search';
 import TableFrame from './table/TableFrame';
-import { loadToken } from '../../auth/services/authService';
+import { loadToken } from '../../shared/services/authService';
 import { fetchInventory } from '../../shared/services/httpService';
 
 // Semantic UI
@@ -141,7 +141,7 @@ export default class Inventory extends Component {
                 bin: x.bin,
                 monitor: x.monitor,
                 _id: x._id,
-                changed: false
+                changed: false // add changed property to prevent mass data being sent to the back-end
             }
         });
         return mapping;
@@ -189,8 +189,6 @@ export default class Inventory extends Component {
 
         this.token = null;
     }
-
-    /*** End Helper Methods ***/
 
     // When edit item button is pressed
     onEditItems = () => {
