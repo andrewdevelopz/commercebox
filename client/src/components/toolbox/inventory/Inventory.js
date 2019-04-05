@@ -150,8 +150,8 @@ export default class Inventory extends Component {
     // Add and remove checkbox column when editItem changes
     // - we pass a copy of the prevState reference to munge the state object
     addRemoveHeaderCol = (prevState) => {
-        // if in edit mode, add select column to the front
-        if (prevState.editItems) {
+        // if edit mode is false, add select column to the front
+        if (!prevState.editItems) {
             prevState.table.headers.unshift([<Checkbox id='checkAll' onClick={this.selectAll} />, null]);
         } else {
             prevState.table.headers.shift();
@@ -194,11 +194,10 @@ export default class Inventory extends Component {
     onEditItems = () => {
         // update state of `editItems` and add or remove columns respectively
         this.setState(prevState => {
-            prevState.editItems = !prevState.editItems;
             this.addRemoveHeaderCol(prevState);
 
             return {
-                editItems: prevState.editItems,
+                editItems: !prevState.editItems,
                 table: prevState.table
             }
         });
@@ -246,7 +245,6 @@ export default class Inventory extends Component {
 
         // set editItem state back to false
         this.setState(prevState => {
-            prevState.editItems = !prevState.editItems;
             this.addRemoveHeaderCol(prevState);
 
             // set changed property back to false
@@ -258,7 +256,7 @@ export default class Inventory extends Component {
             }
 
             return {
-                editItems: prevState.editItems,
+                editItems: !prevState.editItems,
                 table: prevState.table
             }
         });
@@ -327,11 +325,10 @@ export default class Inventory extends Component {
             // Set `editItems` back to false
             this.setState(prevState => {
                 prevState.table.inventory = organized;
-                prevState.editItems = !prevState.editItems;
                 this.addRemoveHeaderCol(prevState);
 
                 return {
-                    editItems: prevState.editItems,
+                    editItems: !prevState.editItems,
                     table: prevState.table
                 }
             });
@@ -373,11 +370,10 @@ export default class Inventory extends Component {
                     // splice based on `removeFromTable[]` from back to front by popping the items while looping
                     while (removeFromTable.length) prevState.table.inventory.splice(removeFromTable.pop(), 1);
 
-                    prevState.editItems = !prevState.editItems;
                     this.addRemoveHeaderCol(prevState);
 
                     return {
-                        editItems: prevState.editItems,
+                        editItems: !prevState.editItems,
                         table: prevState.table
                     }
                 });

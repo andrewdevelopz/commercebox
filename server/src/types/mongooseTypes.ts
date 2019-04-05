@@ -98,6 +98,7 @@ export interface IUser extends mongoose.Document {
 
 // The query response when deleting or updating document(s)
 export type QueryStatus = {
-    n?: number; // number of docs deleted
+    n?: number;
+    nModified?: number // number of docs modified
     ok?: number; // status of 0 or 1
 }

@@ -18,6 +18,7 @@ type User = {
 
 // Address format for the user
 type UserAddress = {
+    _id?: string;
     company: string;
     firstName: string;
     lastName: string;

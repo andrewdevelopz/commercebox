@@ -11,7 +11,7 @@ import Database from '../../config/database/Database';
 import User from '../../models/User';
 
 // Import types
-import { IUser } from 'mongooseTypes';
+import { IUser, QueryStatus } from 'mongooseTypes';
 import { UserInfo } from 'os';
 
 const router = express.Router();
@@ -40,7 +40,7 @@ export default class Auth extends Route {
         this.updateUserData(true);
         this.updateUserPassword(true);
         this.getUserAddress(true);
-        this.addUserAddress(true);
+        this.addUpdateUserAddress(true);
     }
 
     /**
@@ -228,31 +228,68 @@ export default class Auth extends Route {
     // Get the user addresses
     getUserAddress(passport: boolean): void {
         this.createRoute('get', '/getUserAddress', async (req: express.Request, res: express.Response) => {
-            //
+            const userID: string = req.user._id;
+            const addresses = await User.findById(userID).select('addresses');
+
+            res.status(200).json({ data: addresses });
         }, passport);
     }
 
-    // Add a address(es) for the user
-    addUserAddress(passport: boolean): void {
-        this.createRoute('post', '/addUserAddress', async (req: express.Request, res: express.Response) => {
-            const addresses: UserAddress[] = req.body.addresses;
+    // Add and updated addresses for the user
+    addUpdateUserAddress(passport: boolean): void {
+        this.createRoute('post', '/addUpdateUserAddress', async (req: express.Request, res: express.Response) => {
             const userID: string = req.user._id;
+            const addresses: UserAddress[] = req.body.addresses;
+            const addAddress: UserAddress[] = [];
+            const updateAddress: UserAddress[] = [];
 
             // loop through and delete `changed` property
             for (const address of addresses) {
+                // seperate address by update or add
+                address.hasOwnProperty('_id') ? updateAddress.push(address) : addAddress.push(address);
                 delete address.changed;
             }
 
-            const user = await User.findOne({ _id: userID });
-            // user!.addresses = [];
-            // user!.addresses = user!.addresses.concat(addresses);
-            // user!.save();
+            const bulkOps = (arr: UserAddress[]): void => {
+                try {
+                    const bulkUpdateOps = [];
+                    let counter = 0;
+                    for (const item of arr) {
+                        console.log(item);
+                        bulkUpdateOps.push({
+                            updateOne: {
+                                filter: item._id,
+                                update: item
+                            }
+                        });
+                        counter++;
+    
+                        if (counter % 500 === 0) console.log(User.bulkWrite(bulkUpdateOps));
+                    }
+                    if (counter % 500 !== 0 ) console.log(User.bulkWrite(bulkUpdateOps));
+                } catch (e) {
+                    console.log(e);
+                }
+            }
 
-            console.log(user);
+            // console.log(bulkOps(updateAddress));
 
-            // console.log(user!.addresses.entries());
+            // Query the database to update and add addresses
+            const updateQuery: QueryStatus = await User.updateMany({ _id: userID }, { $set: { addresses: updateAddress } });
+            const addQuery: QueryStatus = await User.updateMany({ _id: userID }, { $push: { addresses: { $each: addAddress } } });
 
-            // console.log(addresses);
+            res.status(201).json({
+                message: {
+                    updated: `${updateAddress.length} Addresses has been updated`,
+                    added: `${addAddress.length} Addresses has been added`
+                }
+            });
+        }, passport);
+    }
+
+    // Delete addresses for the user
+    deleteUserAddress(passport: boolean): void {
+        this.createRoute('delete', '/deleteUserAddress', async (req: express.Request, res: express.Response) => {
 
         }, passport);
     }

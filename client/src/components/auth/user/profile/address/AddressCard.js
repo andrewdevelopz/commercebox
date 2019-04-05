@@ -27,22 +27,35 @@ export default class AddressCard extends Component {
                 ['Country', null],
                 ['Primary', null]
             ],
-            items: [
-                // {
-                //     company: 'company',
-                //     name: 'john doe',
-                //     address: '123 sesame street, covina CA 91789',
-                //     country: 'US',
-                //     primary: false,
-                //     changed: false
-                // }
-            ]
+            items: []
         }
     }
     token;
 
     async componentDidMount() {
-        /** @todo make api calls to grab the address stored for the user */
+        // get the user addresses from the database
+        this.token = loadToken();
+        const fetched = await fetchAuth('getUserAddress', 'get', {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.token
+        });
+        const addresses = await fetched.json();
+
+        // add changed property to the address object
+        for (const address of addresses.data.addresses) {
+            address.changed = false;
+        }
+
+        this.setState(prevState => {
+            prevState.table.items = prevState.table.items.concat(addresses.data.addresses);
+
+            return {
+                table: prevState.table
+            }
+        });
+
+        this.token = null;
     }
 
     /**
@@ -50,11 +63,10 @@ export default class AddressCard extends Component {
      */
     onEditItems = () => {
         this.setState(prevState => {
-            prevState.editItems = !prevState.editItems;
             this.addRemoveHeaderCol(prevState);
 
             return {
-                editItems: prevState.editItems,
+                editItems: !prevState.editItems,
                 table: prevState.table
             }
         });
@@ -64,19 +76,40 @@ export default class AddressCard extends Component {
      *  When the user submits the address form to add or update addresses
      */
     onSubmitAddresses = async () => {
+        // only send addresses that have been changed
+        let addresses = [];
+        await this.setState(prevState => {
+            for (const item of prevState.table.items) {
+                if (item.changed) {
+                    addresses.push(item);
+                } else continue;
+            }
+            return;
+        });
         // load the token and make sure to set to null whenever returned or done
         this.token = loadToken();
-        const addresses = this.state.table.items;
 
-        console.log(addresses);
-
-        const addAddress = await fetchAuth('addUserAddress', 'post', {
+        const fetched = await fetchAuth('addUpdateUserAddress', 'post', {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': this.token
-        }, { addresses: addresses });
+        }, { addresses });
+        const updated = await fetched.json();
 
-        console.log(addAddress);
+        if (fetched.status === 201) {
+            this.setState(prevState => {
+                this.addRemoveHeaderCol(prevState);
+
+                return {
+                    editItems: !prevState.editItems,
+                    table: prevState.table
+                }
+            });
+
+            console.log(updated);
+        } else {
+            console.error(updated);
+        }
 
         this.token = null;
     }
@@ -88,8 +121,8 @@ export default class AddressCard extends Component {
      *  @param prevState: state - the previous state passed in when setting `this.setState`
      */
     addRemoveHeaderCol = (prevState) => {
-        // if in edit mode, add select column to the front
-        if (prevState.editItems) {
+        // if edit mode is false, add select column to the front
+        if (!prevState.editItems) {
             prevState.table.headers.unshift([<Checkbox id='checkAll' onClick={this.selectAll} />, null]);
         } else {
             prevState.table.headers.shift();
@@ -127,6 +160,11 @@ export default class AddressCard extends Component {
     });
 
     render() {
+        // wait for componentDidMount before rendering
+        if (this.state.table.items.length === 0) {
+            return null;
+        }
+
         return (
             <CardFrame header='Addresses'>
                 {
