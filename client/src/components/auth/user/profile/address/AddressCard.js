@@ -28,20 +28,20 @@ export default class AddressCard extends Component {
                     name: 'john doe',
                     address: '123 sesame street, covina CA 91789',
                     country: 'US',
-                    primary: false
+                    primary: false,
+                    changed: false
                 }
             ]
         }
     }
+    token;
 
     async componentDidMount() {
         /** @todo make api calls to grab the address stored for the user */
     }
 
     /**
-     * method to set the table to edit mode.
-     * 
-     * @param prevState: state - the previous state passed in when setting `this.setState`
+     *  method to set the table to edit mode.
      */
     onEditItems = () => {
         this.setState(prevState => {
@@ -53,6 +53,27 @@ export default class AddressCard extends Component {
                 table: prevState.table
             }
         });
+    }
+
+    /**
+     *  When the user submits the address form to add or update addresses
+     */
+    onSubmitAddresses = async () => {
+        // load the token and make sure to set to null whenever returned or done
+        this.token = loadToken();
+        const addresses = this.state.table.items;
+
+        console.log(addresses);
+
+        const addAddress = await fetchAuth('addUserAddress', 'post', {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': this.token
+        }, { addresses: addresses });
+
+        console.log(addAddress);
+
+        this.token = null;
     }
 
     /**
@@ -91,7 +112,8 @@ export default class AddressCard extends Component {
         name: '',
         address: '',
         country: '',
-        primary: false
+        primary: false,
+        changed: true
     });
 
     render() {
@@ -115,7 +137,7 @@ export default class AddressCard extends Component {
                     table={this.state.table}
                     editItems={this.state.editItems}
                     submitButtonName='Submit'
-                    handleSubmit={() => console.log(this.state.table)}
+                    handleSubmit={this.onSubmitAddresses}
                 />
             </CardFrame>
         )

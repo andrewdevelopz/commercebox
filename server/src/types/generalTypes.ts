@@ -28,6 +28,7 @@ type UserAddress = {
     zip: string;
     country: string;
     primary: boolean;
+    changed?: boolean;
 }
 
 // Token storage format for user

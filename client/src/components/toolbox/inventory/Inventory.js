@@ -141,7 +141,7 @@ export default class Inventory extends Component {
                 bin: x.bin,
                 monitor: x.monitor,
                 _id: x._id,
-                changed: false
+                changed: false // add changed property to prevent mass data being sent to the back-end
             }
         });
         return mapping;
