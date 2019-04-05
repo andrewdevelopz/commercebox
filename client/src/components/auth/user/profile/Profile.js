@@ -85,26 +85,7 @@ export default class Profile extends Component {
                 name: 'confirmPassword'
             }
         ],
-        editItems: false,
-        table: {
-            headers: [
-                ['', null],
-                ['Company', null],
-                ['Name', null],
-                ['Address', null],
-                ['Country', null],
-                ['Primary', null],
-            ],
-            items: [
-                {
-                    company: 'company',
-                    name: 'john doe',
-                    address: '123 sesame street, covina CA 91789',
-                    country: 'US',
-                    primary: false
-                }
-            ]
-        }
+        editItems: false
     }
     token;
 

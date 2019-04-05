@@ -17,20 +17,25 @@ export default class AddressCard extends Component {
             headers: [
                 ['', null],
                 ['Company', null],
-                ['Name', null],
-                ['Address', null],
+                ['First Name', null],
+                ['Last Name', null],
+                ['Address 1', null],
+                ['Address 2', null],
+                ['City', null],
+                ['State', null],
+                ['Zip', null],
                 ['Country', null],
-                ['Primary', null],
+                ['Primary', null]
             ],
             items: [
-                {
-                    company: 'company',
-                    name: 'john doe',
-                    address: '123 sesame street, covina CA 91789',
-                    country: 'US',
-                    primary: false,
-                    changed: false
-                }
+                // {
+                //     company: 'company',
+                //     name: 'john doe',
+                //     address: '123 sesame street, covina CA 91789',
+                //     country: 'US',
+                //     primary: false,
+                //     changed: false
+                // }
             ]
         }
     }
@@ -109,8 +114,13 @@ export default class AddressCard extends Component {
      */
     generateRow = () => ({
         company: '',
-        name: '',
-        address: '',
+        firstName: '',
+        lastName: '',
+        address1: '',
+        address2: '',
+        city: '',
+        state: '',
+        zip: '',
         country: '',
         primary: false,
         changed: true

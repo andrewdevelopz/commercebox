@@ -93,6 +93,7 @@ export interface IUser extends mongoose.Document {
     username: string;
     email: string;
     password: string;
+    addresses: Array<UserAddress>;
 }
 
 // The query response when deleting or updating document(s)

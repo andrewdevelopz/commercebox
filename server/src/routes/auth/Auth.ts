@@ -12,6 +12,7 @@ import User from '../../models/User';
 
 // Import types
 import { IUser } from 'mongooseTypes';
+import { UserInfo } from 'os';
 
 const router = express.Router();
 
@@ -235,12 +236,23 @@ export default class Auth extends Route {
     addUserAddress(passport: boolean): void {
         this.createRoute('post', '/addUserAddress', async (req: express.Request, res: express.Response) => {
             const addresses: UserAddress[] = req.body.addresses;
+            const userID: string = req.user._id;
+
             // loop through and delete `changed` property
             for (const address of addresses) {
                 delete address.changed;
             }
 
-            console.log(addresses);
+            const user = await User.findOne({ _id: userID });
+            // user!.addresses = [];
+            // user!.addresses = user!.addresses.concat(addresses);
+            // user!.save();
+
+            console.log(user);
+
+            // console.log(user!.addresses.entries());
+
+            // console.log(addresses);
 
         }, passport);
     }

@@ -33,8 +33,10 @@ export default class TableCell extends Component {
             });
         } else {
             this.setState(prevState => {
+                // if `changed` property exists
+                if (prevState.item.hasOwnProperty('changed')) prevState.item['changed'] = true;
                 prevState.item[name] = value;
-                prevState.item['changed'] = true;
+
                 return {
                     item: prevState.item
                 }
