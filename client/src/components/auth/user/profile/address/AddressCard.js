@@ -33,29 +33,33 @@ export default class AddressCard extends Component {
     token;
 
     async componentDidMount() {
-        // get the user addresses from the database
-        this.token = loadToken();
-        const fetched = await fetchAuth('getUserAddress', 'get', {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': this.token
-        });
-        const addresses = await fetched.json();
-
-        // add changed property to the address object
-        for (const address of addresses.data.addresses) {
-            address.changed = false;
+        try {
+            // get the user addresses from the database
+            this.token = loadToken();
+            const fetched = await fetchAuth('getUserAddress', 'get', {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': this.token
+            });
+            const addresses = await fetched.json();
+    
+            // // add changed property to the address object
+            // for (const address of addresses.data.addresses) {
+            //     address.changed = false;
+            // }
+    
+            this.setState(prevState => {
+                prevState.table.items = prevState.table.items.concat(addresses.data.addresses);
+    
+                return {
+                    table: prevState.table
+                }
+            });
+        } catch (e) {
+            console.error(e);
+        } finally {
+            this.token = null;
         }
-
-        this.setState(prevState => {
-            prevState.table.items = prevState.table.items.concat(addresses.data.addresses);
-
-            return {
-                table: prevState.table
-            }
-        });
-
-        this.token = null;
     }
 
     /**
@@ -76,42 +80,50 @@ export default class AddressCard extends Component {
      *  When the user submits the address form to add or update addresses
      */
     onSubmitAddresses = async () => {
-        // only send addresses that have been changed
-        let addresses = [];
-        await this.setState(prevState => {
-            for (const item of prevState.table.items) {
-                if (item.changed) {
-                    addresses.push(item);
-                } else continue;
+        try {
+            /** @note currently we do not send `changed` property to the back-end */
+            // only send addresses that have been changed
+            // let addresses = [];
+            // await this.setState(prevState => {
+            //     for (const item of prevState.table.items) {
+            //         if (item.changed) {
+            //             addresses.push(item);
+            //         } else continue;
+            //     }
+            //     return;
+            // });
+    
+            const addresses = this.state.table.items;
+            // load the token and make sure to set to null whenever returned or done
+            this.token = loadToken();
+    
+            const fetched = await fetchAuth('addUpdateUserAddress', 'post', {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': this.token
+            }, { addresses });
+            const updated = await fetched.json();
+    
+            if (fetched.status === 201) {
+                this.setState(prevState => {
+                    this.addRemoveHeaderCol(prevState);
+    
+                    return {
+                        editItems: !prevState.editItems,
+                        table: prevState.table
+                    }
+                });
+    
+                console.log(updated);
+            } else {
+                console.error(updated);
             }
-            return;
-        });
-        // load the token and make sure to set to null whenever returned or done
-        this.token = loadToken();
-
-        const fetched = await fetchAuth('addUpdateUserAddress', 'post', {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': this.token
-        }, { addresses });
-        const updated = await fetched.json();
-
-        if (fetched.status === 201) {
-            this.setState(prevState => {
-                this.addRemoveHeaderCol(prevState);
-
-                return {
-                    editItems: !prevState.editItems,
-                    table: prevState.table
-                }
-            });
-
-            console.log(updated);
-        } else {
-            console.error(updated);
+    
+        } catch (e) {
+            console.error(e);
+        } finally {
+            this.token = null;
         }
-
-        this.token = null;
     }
 
     /**
@@ -155,8 +167,7 @@ export default class AddressCard extends Component {
         state: '',
         zip: '',
         country: '',
-        primary: false,
-        changed: true
+        primary: false
     });
 
     render() {

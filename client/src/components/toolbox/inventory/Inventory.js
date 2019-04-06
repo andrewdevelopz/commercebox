@@ -70,26 +70,30 @@ export default class Inventory extends Component {
     }
 
     async componentDidMount() {
-        // make an api call to the database
-        this.token = loadToken();
+        try {
+            // make an api call to the database
+            this.token = loadToken();
 
-        const res = await fetchInventory('getInventory', 'get', {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': this.token
-        });
+            const res = await fetchInventory('getInventory', 'get', {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': this.token
+            });
 
-        const organized = this.organizeJSONResponse(await res.json());
+            const organized = this.organizeJSONResponse(await res.json());
 
-        // set table state to res from http call
-        this.setState(prevState => {
-            prevState.table.inventory = organized;
-            return {
-                table: prevState.table
-            }
-        });
-
-        this.token = null;
+            // set table state to res from http call
+            this.setState(prevState => {
+                prevState.table.inventory = organized;
+                return {
+                    table: prevState.table
+                }
+            });
+        } catch (e) {
+            console.error(e);
+        } finally {
+            this.token = null;
+        }
     }
 
     /*** Helper Methods ***/
@@ -177,17 +181,21 @@ export default class Inventory extends Component {
 
     // Generate dummy data
     onGenerateDummyData = async () => {
-        this.token = loadToken();
+        try {
+            this.token = loadToken();
 
-        const gen = await fetchInventory('generateDummyData', 'get', {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': this.token
-        });
+            const gen = await fetchInventory('generateDummyData', 'get', {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': this.token
+            });
 
-        console.log(await gen.json());
-
-        this.token = null;
+            console.log(await gen.json());
+        } catch (e) {
+            console.error(e);
+        } finally {
+            this.token = null;
+        }
     }
 
     // When edit item button is pressed
@@ -205,107 +213,35 @@ export default class Inventory extends Component {
 
     // When update button is pressed for table form, update the items
     onUpdateItems = async () => {
-        // only send the products that have been changed
-        let products = [];
-        await this.setState(prevState => {
-            for (const item of prevState.table.inventory) {
-                // if `changed` property is true, we send the item to the back-end and update the database
-                if (item.changed) {
-                    products.push(item);
-                } else continue;
-            }
-            return;
-        });
-
-        this.token = loadToken(); // load the token
-        // make http call to /updateInventory in chunks
-        const batch = 100;
-        for (let i = 0, n = products.length; i < n; i += batch) {
-            const chunk = products.slice(i, i + batch);
-
-            const res = await fetchInventory('updateInventory', 'put', {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': this.token
-            }, { items: chunk });
-            const resJSON = await res.json();
-
-            // check http status
-            if (res.status === 200) {
-                // console your message
-                console.log(resJSON);
-            } else {
-                console.error(resJSON);
-                this.token = null;
+        try {
+            // only send the products that have been changed
+            let products = [];
+            await this.setState(prevState => {
+                for (const item of prevState.table.inventory) {
+                    // if `changed` property is true, we send the item to the back-end and update the database
+                    if (item.changed) {
+                        products.push(item);
+                    } else continue;
+                }
                 return;
-            }
-        }
-        // empty `products[]` when chunk loop is finished
-        products = [];
+            });
 
-        // set editItem state back to false
-        this.setState(prevState => {
-            this.addRemoveHeaderCol(prevState);
-
-            // set changed property back to false
-            for (const item of prevState.table.inventory) {
-                // if `changed` property is true, we send the item to the back-end and update the database
-                if (item.changed) {
-                    item.changed = false;
-                } else continue;
-            }
-
-            return {
-                editItems: !prevState.editItems,
-                table: prevState.table
-            }
-        });
-
-        this.token = null;
-        return;
-    }
-
-    // Duplicate selected items
-    onDuplicateItems = async () => {
-        if (window.confirm('Are you sure you want to duplicate these items?')) {
-            this.token = loadToken();
-
-            // grab the checkbox cell of each checkbox
-            const checkboxes = document.querySelector('#inventory').querySelectorAll('.tableCheckboxCell');
-            const checked = Array.from(checkboxes).filter(chk => chk.querySelector('input').checked);
-
-            // exit function if there are no items selected
-            if (checked.length === 0) {
-                console.error('Please select products to duplicate');
-                this.token = null;
-                return;
-            }
-
-            // loop through each `checked` item and find the item in `state` by comparing checked id
-            const products = [];
-            for (const item of checked) {
-                const id = item.parentNode.querySelector('#itemID').value;
-                const found = this.state.table.inventory.find(prod => prod._id === id);
-
-                delete found._id; // delete _id property to be able to create a new document
-                products.push(found);
-            }
-
-            // make http call to /createInventory in chunks
+            this.token = loadToken(); // load the token
+            // make http call to /updateInventory in chunks
             const batch = 100;
             for (let i = 0, n = products.length; i < n; i += batch) {
                 const chunk = products.slice(i, i + batch);
 
-                const res = await fetchInventory('createInventory', 'post', {
+                const res = await fetchInventory('updateInventory', 'put', {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': this.token
-                }, { products: chunk });
+                }, { items: chunk });
                 const resJSON = await res.json();
 
-                // check status code
-                if (res.status === 201) {
-                    // console response message
+                // check http status
+                if (res.status === 200) {
+                    // console your message
                     console.log(resJSON);
                 } else {
                     console.error(resJSON);
@@ -313,63 +249,94 @@ export default class Inventory extends Component {
                     return;
                 }
             }
+            // empty `products[]` when chunk loop is finished
+            products = [];
 
-            // make http call to /getInventory again to update state
-            const items = await fetchInventory('getInventory', 'get', {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': this.token
-            });
-            const organized = this.organizeJSONResponse(await items.json());
-
-            // Set `editItems` back to false
+            // set editItem state back to false
             this.setState(prevState => {
-                prevState.table.inventory = organized;
                 this.addRemoveHeaderCol(prevState);
+
+                // set changed property back to false
+                for (const item of prevState.table.inventory) {
+                    // if `changed` property is true, we send the item to the back-end and update the database
+                    if (item.changed) {
+                        item.changed = false;
+                    } else continue;
+                }
 
                 return {
                     editItems: !prevState.editItems,
                     table: prevState.table
                 }
             });
-
-            // set token to null when done
+        } catch (e) {
+            console.error(e);
+        } finally {
             this.token = null;
-            return;
-        } else return;
+        }
     }
 
-    // When the delete button is pressed, work with the table form
-    onDeleteItems = async () => {
-        if (window.confirm('Are you sure you want to delete these items?')) {
-            this.token = loadToken();
+    // Duplicate selected items
+    onDuplicateItems = async () => {
+        try {
+            if (window.confirm('Are you sure you want to duplicate these items?')) {
+                this.token = loadToken();
 
-            // grab the checkbox cell of each checkbox
-            const checkboxes = document.querySelector('#inventory').querySelectorAll('.tableCheckboxCell');
-            const checked = Array.from(checkboxes).filter(chk => chk.querySelector('input').checked);
+                // grab the checkbox cell of each checkbox
+                const checkboxes = document.querySelector('#inventory').querySelectorAll('.tableCheckboxCell');
+                const checked = Array.from(checkboxes).filter(chk => chk.querySelector('input').checked);
 
-            // loop through each `checked` item to get it's id
-            const items = [];
-            for (const x of checked) {
-                items.push({ _id: x.parentNode.querySelector('#itemID').value });
-            }
+                // exit function if there are no items selected
+                if (checked.length === 0) {
+                    console.error('Please select products to duplicate');
+                    this.token = null;
+                    return;
+                }
 
-            // make the http call to delete document(s)
-            const deleted = await fetchInventory('deleteInventory', 'delete', {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': this.token
-            }, { items });
-            const deletedJSON = await deleted.json();
+                // loop through each `checked` item and find the item in `state` by comparing checked id
+                const products = [];
+                for (const item of checked) {
+                    const id = item.parentNode.querySelector('#itemID').value;
+                    const found = this.state.table.inventory.find(prod => prod._id === id);
 
-            if (deleted.status === 202) {
+                    delete found._id; // delete _id property to be able to create a new document
+                    products.push(found);
+                }
+
+                // make http call to /createInventory in chunks
+                const batch = 100;
+                for (let i = 0, n = products.length; i < n; i += batch) {
+                    const chunk = products.slice(i, i + batch);
+
+                    const res = await fetchInventory('createInventory', 'post', {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': this.token
+                    }, { products: chunk });
+                    const resJSON = await res.json();
+
+                    // check status code
+                    if (res.status === 201) {
+                        // console response message
+                        console.log(resJSON);
+                    } else {
+                        console.error(resJSON);
+                        this.token = null;
+                        return;
+                    }
+                }
+
+                // make http call to /getInventory again to update state
+                const items = await fetchInventory('getInventory', 'get', {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': this.token
+                });
+                const organized = this.organizeJSONResponse(await items.json());
+
+                // Set `editItems` back to false
                 this.setState(prevState => {
-                    const removeFromTable = [];
-                    // loop through items[] to find objects index to be removed from states inventory
-                    for (const item of items) removeFromTable.push(prevState.table.inventory.findIndex(inv => inv._id === item._id));
-                    // splice based on `removeFromTable[]` from back to front by popping the items while looping
-                    while (removeFromTable.length) prevState.table.inventory.splice(removeFromTable.pop(), 1);
-
+                    prevState.table.inventory = organized;
                     this.addRemoveHeaderCol(prevState);
 
                     return {
@@ -377,14 +344,65 @@ export default class Inventory extends Component {
                         table: prevState.table
                     }
                 });
-
-                console.info(deletedJSON);
-            } else {
-                console.error(deletedJSON);
-            }
-
+            } else return;
+        } catch (e) {
+            console.error(e);
+        } finally {
+            // set token to null when done
             this.token = null;
-        } else return;
+        }
+    }
+
+    // When the delete button is pressed, work with the table form
+    onDeleteItems = async () => {
+        try {
+            if (window.confirm('Are you sure you want to delete these items?')) {
+                this.token = loadToken();
+
+                // grab the checkbox cell of each checkbox
+                const checkboxes = document.querySelector('#inventory').querySelectorAll('.tableCheckboxCell');
+                const checked = Array.from(checkboxes).filter(chk => chk.querySelector('input').checked);
+
+                // loop through each `checked` item to get it's id
+                const items = [];
+                for (const x of checked) {
+                    items.push({ _id: x.parentNode.querySelector('#itemID').value });
+                }
+
+                // make the http call to delete document(s)
+                const deleted = await fetchInventory('deleteInventory', 'delete', {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': this.token
+                }, { items });
+                const deletedJSON = await deleted.json();
+
+                if (deleted.status === 202) {
+                    this.setState(prevState => {
+                        const removeFromTable = [];
+                        // loop through items[] to find objects index to be removed from states inventory
+                        for (const item of items) removeFromTable.push(prevState.table.inventory.findIndex(inv => inv._id === item._id));
+                        // splice based on `removeFromTable[]` from back to front by popping the items while looping
+                        while (removeFromTable.length) prevState.table.inventory.splice(removeFromTable.pop(), 1);
+
+                        this.addRemoveHeaderCol(prevState);
+
+                        return {
+                            editItems: !prevState.editItems,
+                            table: prevState.table
+                        }
+                    });
+
+                    console.info(deletedJSON);
+                } else {
+                    console.error(deletedJSON);
+                }
+            } else return;
+        } catch (e) {
+            console.error(e);
+        } finally {
+            this.token = null;
+        }
     }
 
     // Render the component

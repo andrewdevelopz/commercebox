@@ -243,36 +243,13 @@ export default class Auth extends Route {
             const addAddress: UserAddress[] = [];
             const updateAddress: UserAddress[] = [];
 
-            // loop through and delete `changed` property
+            // loop through and delete `changed` property and push to respective arrays
+            // @note currently we do not send a changed property from the front-end for addresses
             for (const address of addresses) {
                 // seperate address by update or add
                 address.hasOwnProperty('_id') ? updateAddress.push(address) : addAddress.push(address);
-                delete address.changed;
+                // delete address.changed;
             }
-
-            const bulkOps = (arr: UserAddress[]): void => {
-                try {
-                    const bulkUpdateOps = [];
-                    let counter = 0;
-                    for (const item of arr) {
-                        console.log(item);
-                        bulkUpdateOps.push({
-                            updateOne: {
-                                filter: item._id,
-                                update: item
-                            }
-                        });
-                        counter++;
-    
-                        if (counter % 500 === 0) console.log(User.bulkWrite(bulkUpdateOps));
-                    }
-                    if (counter % 500 !== 0 ) console.log(User.bulkWrite(bulkUpdateOps));
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-
-            // console.log(bulkOps(updateAddress));
 
             // Query the database to update and add addresses
             const updateQuery: QueryStatus = await User.updateMany({ _id: userID }, { $set: { addresses: updateAddress } });

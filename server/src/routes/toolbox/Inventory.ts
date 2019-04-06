@@ -116,6 +116,7 @@ export default class Inventory extends Route {
     }
 
     // Update inventory
+    /** @todo - use bulkWrite() to update the products */
     updateInventory(passport: boolean): void {
         this.createRoute('put', '/updateInventory', async (req: express.Request, res: express.Response) => {
             try {
