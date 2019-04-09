@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 // Import custom components
 import TableFrame from '../../table/TableFrame';
 import { fetchInventory } from '../../../../shared/services/httpService';
-import { loadToken } from '../../../../auth/services/authService';
+import { loadToken } from '../../../../shared/services/authService';
 
 // Semantic UI
 import { Segment, Button } from 'semantic-ui-react';
@@ -120,38 +120,41 @@ export default class CreateProducts extends Component {
 
     // Create the products, persisting it to the database
     createInventory = async () => {
-        this.token = loadToken();
-
-        // make http call to /createInventory in chunks
-        const products = this.state.table.inventory;
-
-        const batch = 100;
-        for (let i = 0, n = products.length; i < n; i += batch) {
-            const chunk = products.slice(i, i + batch);
-
-            const res = await fetchInventory('createInventory', 'post', {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': this.token
-            }, { products: chunk });
-            const resJSON = await res.json();
-
-            // if res.success is false handle error
-            if (res.status === 201) {
-                // console response message
-                console.log(resJSON);
-            } else {
-                console.error(resJSON);
-                this.token = null;
-                return;
+        try {
+            this.token = loadToken();
+    
+            // make http call to /createInventory in chunks
+            const products = this.state.table.inventory;
+    
+            const batch = 100;
+            for (let i = 0, n = products.length; i < n; i += batch) {
+                const chunk = products.slice(i, i + batch);
+    
+                const res = await fetchInventory('createInventory', 'post', {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': this.token
+                }, { products: chunk });
+                const resJSON = await res.json();
+    
+                // if res.success is false handle error
+                if (res.status === 201) {
+                    // console response message
+                    console.log(resJSON);
+                } else {
+                    console.error(resJSON);
+                    this.token = null;
+                    return;
+                }
             }
+            // redirect to /inventory when chunk loops is finished
+            this.props.history.push('/toolbox/inventory');
+        } catch (e) {
+            console.error(e);
+        } finally {
+            // set token to null when done
+            this.token = null;
         }
-        // redirect to /inventory when chunk loops is finished
-        this.props.history.push('/toolbox/inventory');
-
-        // set token to null when done
-        this.token = null;
-        return;
     }
 
     // Delete the row(s)

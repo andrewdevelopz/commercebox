@@ -12,6 +12,37 @@ type User = {
     username: string;
     email: string;
     password?: string;
+    addresses?: Array<UserAddress>
+    tokens?: UserTokens
+}
+
+// Address format for the user
+type UserAddress = {
+    _id?: string;
+    company: string;
+    firstName: string;
+    lastName: string;
+    address1: string;
+    address2: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+    primary: boolean;
+    changed?: boolean;
+}
+
+// Token storage format for user
+type UserTokens = {
+    ebay: {
+        auth: string,
+        ref: string
+    }
+    pitneyBowesAuthToken: string;
+    woocommerce: {
+        key: string,
+        secret: string
+    }
 }
 
 type Product = {
@@ -72,7 +103,7 @@ type Product = {
 
 // For JWT Strategy options
 type JwtStrategyOptions = {
-    jwtFromRequest: any; 
+    jwtFromRequest: any;
     secretOrKey: string;
 }
 

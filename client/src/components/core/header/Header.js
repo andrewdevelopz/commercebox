@@ -22,7 +22,7 @@ export default class Header extends Component {
             },
             {
                 name: 'toolbox',
-                path: '/toolbox'
+                path: '/toolbox/dashboard'
             },
             {
                 name: 'about',
@@ -44,7 +44,7 @@ export default class Header extends Component {
             },
             {
                 name: 'my account',
-                path: '/myaccount'
+                path: '/myaccount/profile'
             },
             {
                 name: 'logout',

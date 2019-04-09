@@ -11,7 +11,8 @@ import Database from '../../config/database/Database';
 import User from '../../models/User';
 
 // Import types
-import { IUser } from 'mongooseTypes';
+import { IUser, QueryStatus } from 'mongooseTypes';
+import { UserInfo } from 'os';
 
 const router = express.Router();
 
@@ -38,6 +39,8 @@ export default class Auth extends Route {
         this.retreiveUserData(true);
         this.updateUserData(true);
         this.updateUserPassword(true);
+        this.getUserAddress(true);
+        this.addUpdateUserAddress(true);
     }
 
     /**
@@ -219,6 +222,52 @@ export default class Auth extends Route {
             } catch (e) {
                 res.sendStatus(500);
             }
+        }, passport);
+    }
+
+    // Get the user addresses
+    getUserAddress(passport: boolean): void {
+        this.createRoute('get', '/getUserAddress', async (req: express.Request, res: express.Response) => {
+            const userID: string = req.user._id;
+            const addresses = await User.findById(userID).select('addresses');
+
+            res.status(200).json({ data: addresses });
+        }, passport);
+    }
+
+    // Add and updated addresses for the user
+    addUpdateUserAddress(passport: boolean): void {
+        this.createRoute('post', '/addUpdateUserAddress', async (req: express.Request, res: express.Response) => {
+            const userID: string = req.user._id;
+            const addresses: UserAddress[] = req.body.addresses;
+            const addAddress: UserAddress[] = [];
+            const updateAddress: UserAddress[] = [];
+
+            // loop through and delete `changed` property and push to respective arrays
+            // @note currently we do not send a changed property from the front-end for addresses
+            for (const address of addresses) {
+                // seperate address by update or add
+                address.hasOwnProperty('_id') ? updateAddress.push(address) : addAddress.push(address);
+                // delete address.changed;
+            }
+
+            // Query the database to update and add addresses
+            const updateQuery: QueryStatus = await User.updateMany({ _id: userID }, { $set: { addresses: updateAddress } });
+            const addQuery: QueryStatus = await User.updateMany({ _id: userID }, { $push: { addresses: { $each: addAddress } } });
+
+            res.status(201).json({
+                message: {
+                    updated: `${updateAddress.length} Addresses has been updated`,
+                    added: `${addAddress.length} Addresses has been added`
+                }
+            });
+        }, passport);
+    }
+
+    // Delete addresses for the user
+    deleteUserAddress(passport: boolean): void {
+        this.createRoute('delete', '/deleteUserAddress', async (req: express.Request, res: express.Response) => {
+
         }, passport);
     }
 }

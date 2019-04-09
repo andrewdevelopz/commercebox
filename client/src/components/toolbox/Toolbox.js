@@ -58,6 +58,7 @@ export default class Toolbox extends Component {
 
     render() {
         const { path } = this.state
+        // Match the path to have the sidebar highlighted properly, we check it first before returning the actual path to prevent errors
         const active = this.props.location.pathname.match(/toolbox\/(.*)/) && this.props.location.pathname.match(/toolbox\/(.*)/)[1]
 
         return (

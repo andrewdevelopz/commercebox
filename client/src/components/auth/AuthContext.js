@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 
 // Import custom components
 import { fetchAuth } from '../shared/services/httpService';
-import { loadToken, storeUserLocalStorage, clearUserLocalStorage } from '../auth/services/authService';
+import { loadToken, storeUserLocalStorage, clearUserLocalStorage } from '../shared/services/authService';
 
 const AuthContext = React.createContext();
 
