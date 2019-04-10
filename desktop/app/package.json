@@ -1,0 +1,15 @@
+{
+    "name": "commercebox",
+    "version": "0.1.0",
+    "description": "An order/inventory management system to help unite commerce businesses together all around the world.",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron . ",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "commercebox"
+    ],
+    "author": "Andrew Lee",
+    "license": "MIT"
+}

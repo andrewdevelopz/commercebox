@@ -1,5 +1,7 @@
 /**
  * @overview: This class is the route for the auth section of the api and takes care of all the business logic.
+ * 
+ * @todo: Still need to finish removing addresses
  */
 
 // Dependencies
