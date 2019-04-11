@@ -1,15 +1,19 @@
 {
-    "name": "commercebox",
-    "version": "0.1.0",
-    "description": "An order/inventory management system to help unite commerce businesses together all around the world.",
-    "main": "main.js",
-    "scripts": {
-        "start": "electron . ",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [
-        "commercebox"
-    ],
-    "author": "Andrew Lee",
-    "license": "MIT"
+  "name": "commercebox",
+  "version": "0.1.0",
+  "description": "An order/inventory management system to help unite commerce businesses together all around the world.",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "electron . ",
+    "dist": "rm -rf ./dist && mkdir dist && find ./src \\( -name \\*.html -o -name \\*.css \\) -type f -exec cp --parents {} ./dist \\; && mv ./dist/src/* ./dist && rm -r ./dist/src && tsc"
+  },
+  "keywords": [
+    "commercebox"
+  ],
+  "author": "Andrew Lee",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^4.1.4",
+    "typescript": "^3.4.3"
+  }
 }
