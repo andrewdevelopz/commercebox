@@ -35,6 +35,7 @@ export default class App {
                 ]
             }
         ];
+        // Run the app on instantiation
         this.run();
     }
 
@@ -87,7 +88,7 @@ export default class App {
 
             // Load the html file into the window
             this.mainWindow.loadURL(url.format({
-                pathname: path.join(__dirname, './renderer/components/dashboard/dashboard.html'),
+                pathname: path.join(__dirname, './renderer/components/main/main.html'),
                 protocol: 'file:',
                 slashes: true
             }));
