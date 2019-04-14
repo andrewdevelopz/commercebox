@@ -1,3 +1,10 @@
+/**
+ *  Package.json script.
+ * 
+ *  below is the old method of accomplishing the same tasks with terminal commands: (kept for referral purposes)
+ *  "dist": "rm -rf ./dist && mkdir dist && find ./src \\( -name \\*.html -o -name \\*.css \\) -type f -exec cp --parents {} ./dist \\; && mv ./dist/src/* ./dist && rm -r ./dist/src && tsc"
+ */
+
 import fs, { Stats } from 'fs';
 import path from 'path';
 

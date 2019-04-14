@@ -5,12 +5,13 @@
     <meta charset="utf-8">
     <title>Commercebox Dashboard</title>
     <link href="../../../public/css/semantic/semantic.min.css" rel="stylesheet" type="text/css">
+    <link href="../../../public/css/styles.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
     <!-- Start header for the application -->
     <header>
-        <div class="ui stackable menu inverted">
+        <div class="ui stackable menu inverted" style="background: #000;">
             <div class="item">
                 Logo
                 <!-- <img src="/images/logo.png"> -->
@@ -22,7 +23,12 @@
     </header>
 
     <!-- Load the applications main contents -->
-    <include include-html="./dashboard/dashboard.html"></include>
+    <div class="ui segment pushable">
+        <include include-html="../shared/sidebar/sidebar.html"></include>
+        <div class="pusher">
+            <include include-html="./dashboard/dashboard.html"></include>
+        </div>
+    </div>
 
     <!-- Start footer for the application -->
     <footer>

@@ -1,1 +1,14 @@
 /* The main styles file for the application */
+
+/* Clear the .segment margin and border to prevent white space between nav menu  */
+.ui.segment {
+    border: none;
+    margin: 0;
+}
+
+.pusher {
+    background: #111!important;
+    transform: none;
+    margin-left: 6rem;
+    padding: 0.5rem;
+}

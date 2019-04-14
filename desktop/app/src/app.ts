@@ -5,6 +5,7 @@
 import {
     app,
     BrowserWindow,
+    BrowserView,
     Menu,
     MenuItemConstructorOptions
 } from 'electron';
@@ -42,7 +43,7 @@ export default class App {
     /**
      *  The run method will initiate the entire app and is ran in the constructor.
      */
-    private run(): void {
+    private run = (): void => {
         this.createMainWindow();
 
         // If on mac then add empty object to menu
@@ -73,7 +74,7 @@ export default class App {
     /**
      *  Create the main window with this method.
      */
-    private createMainWindow(): void {
+    private createMainWindow = (): void => {
         app.on('ready', () => {
             // Create new window
             this.mainWindow = new BrowserWindow({
@@ -81,8 +82,7 @@ export default class App {
                     nodeIntegration: false,
                     nodeIntegrationInWorker: false,
                 },
-                width: 960,
-                height: 700
+                show: false
             });
             this.mainWindow.maximize();
 
