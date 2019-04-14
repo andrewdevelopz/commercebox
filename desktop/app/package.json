@@ -5,7 +5,7 @@
   "main": "dist/main.js",
   "scripts": {
     "start": "electron . ",
-    "dist": "rm -rf ./dist && mkdir dist && find ./src \\( -name \\*.html -o -name \\*.css \\) -type f -exec cp --parents {} ./dist \\; && mv ./dist/src/* ./dist && rm -r ./dist/src && tsc"
+    "dist": "rm -rf ./dist && tsc && node ./dist/scripts/distribute.js"
   },
   "keywords": [
     "commercebox"
