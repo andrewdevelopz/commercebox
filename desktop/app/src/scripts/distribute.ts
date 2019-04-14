@@ -27,15 +27,17 @@ const distributeToDist = (start: string, filters: string[]): void => {
             // loop through the filters and if the file matches the filter we get the result
             for (const filter of filters) {
                 if (filename.indexOf(filter) >= 0) {
+                    const fileSeperator = path.sep;
+
                     // copy the found file to it's respected directory in /dist.
                     //  - destination: the full path including the file
                     //  - destArray: the full path including the file in array form
                     //  - popped: the last item removed from destArray
                     //  - afterPopped: the directory path after filename has been removed
                     const destination: string = filename.replace('src', './dist');
-                    const destArray: string[] = destination.split('/');
+                    const destArray: string[] = destination.split(fileSeperator);
                     const popped: string | undefined = destArray.pop();
-                    const afterPopped: string = destArray.join('/');
+                    const afterPopped: string = destArray.join(fileSeperator);
 
                     // if the directory does not exists, create it
                     if (!fs.existsSync(afterPopped)) {
