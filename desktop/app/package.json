@@ -4,8 +4,9 @@
   "description": "An order/inventory management system to help unite commerce businesses together all around the world.",
   "main": "dist/main.js",
   "scripts": {
-    "start": "npm run dist && electron . ",
-    "dist": "rm -rf ./dist && tsc && node ./dist/scripts/distribute.js"
+    "start": "electron .",
+    "dist": "rm -rf ./dist && tsc && node ./dist/scripts/distribute.js",
+    "bundle": "npm run dist && npm start"
   },
   "keywords": [
     "commercebox"

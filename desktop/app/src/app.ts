@@ -5,9 +5,9 @@
 import {
     app,
     BrowserWindow,
-    BrowserView,
     Menu,
-    MenuItemConstructorOptions
+    MenuItemConstructorOptions,
+    ipcMain
 } from 'electron';
 import url from 'url';
 import path from 'path';
@@ -22,6 +22,7 @@ export default class App {
     private mainMenuTemplate: Array<MenuItemConstructorOptions>;
 
     constructor() {
+        // set menu template items and hot keys
         this.mainMenuTemplate = [
             {
                 label: 'File',
@@ -72,6 +73,16 @@ export default class App {
     }
 
     /**
+     *  This method should handle any ipc messages coming from renderer(s)
+     */
+    private handleIpcMain = (event: string, send: string): void => {
+        ipcMain.on(event, (event: any, arg: any) => {
+            console.log('ipcMainArg', arg);
+            event.sender.send(send, arg);
+        });
+    }
+
+    /**
      *  Create the main window with this method.
      */
     private createMainWindow = (): void => {
@@ -81,6 +92,8 @@ export default class App {
                 webPreferences: {
                     nodeIntegration: false,
                     nodeIntegrationInWorker: false,
+                    preload: path.join(__dirname, './utils/preload.js'),
+                    contextIsolation: false
                 },
                 show: false
             });
@@ -88,10 +101,13 @@ export default class App {
 
             // Load the html file into the window
             this.mainWindow.loadURL(url.format({
-                pathname: path.join(__dirname, './renderer/components/main/main.html'),
+                pathname: path.join(__dirname, './renderer/components/main/index.html'),
                 protocol: 'file:',
                 slashes: true
             }));
+
+            // handle ipc messages in mainWindow
+            this.handleIpcMain('ping', 'pong');
 
             // Quit entire app when closed
             this.mainWindow.on('closed', () => {

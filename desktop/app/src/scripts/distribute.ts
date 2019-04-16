@@ -17,7 +17,7 @@ import path from 'path';
  */
 
 // The arguments to be passed into distributeToDist()
-const src: string = './src', filetype: string[] = ['.html', '.css'];
+const src: string = './src', filetype: string[] = ['.html', '.css', '.eot', '.svg', '.ttf', '.woff', '.woff2', '.otf'];
 
 const distributeToDist = (start: string, filters: string[]): void => {
     const files: string[] = fs.readdirSync(start);
