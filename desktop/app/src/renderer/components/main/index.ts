@@ -2,8 +2,11 @@
  *  The main javascript file for the application. Any globals will go in here.
  */
 
+// Get needed properties and methods from window scope inside preload.js.
+const { ipcRenderer, addScript } = window.helpers;
+
 // This function allows the import of html files acting as components
-const includeHTML = async () => {
+const includeHTML = async (): Promise<void> => {
     let tags: HTMLCollection, element: HTMLElement, file: any, xhttp: Response;
     // loop through a collection of all HTML elements:
     tags = document.getElementsByTagName('include');
@@ -16,6 +19,10 @@ const includeHTML = async () => {
                 // make an HTTP request using the attribute value as the file name:
                 xhttp = await fetch(file);
                 element.innerHTML = await xhttp.text();
+                // get the loaded HTML element and set it's attribute id to filename
+                const loadedHTML: HTMLElement = element.querySelector('div') as HTMLElement;
+                const name: string = file.split('/').pop().replace('.html', '');
+                loadedHTML.setAttribute('id', name);
                 // we add script tag dynamically by replacing path file extension with .js
                 addScript(file.replace('.html', '.js'));
             } catch (e) {
@@ -33,16 +40,9 @@ const includeHTML = async () => {
 }
 includeHTML();
 
-// Add the script tag which should be included in the same directory of each render file (html file)
-const addScript = (src: string) => {
-    const s: HTMLElement = document.createElement('script');
-    s.setAttribute('src', src);
-    document.body.appendChild(s);
-}
-
 // ipcRenderer
-/* window.ipcRenderer.send('ping', { pong: 'ding' });
+/* ipcRenderer.send('ping', { pong: 'ding' });
 
-window.ipcRenderer.on('pong', (event: any, item: any) => {
+ipcRenderer.on('pong', (event: any, item: any) => {
     console.log('index', item);
 }); */

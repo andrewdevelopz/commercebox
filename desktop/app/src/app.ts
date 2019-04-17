@@ -2,6 +2,7 @@
  *  This app file contains all the logic which electron will use as it's main file. It is exported to `main.js` where it will be initiated.
  *  The development environment can be set in main.js.
  */
+
 import {
     app,
     BrowserWindow,
@@ -92,8 +93,9 @@ export default class App {
                 webPreferences: {
                     nodeIntegration: false,
                     nodeIntegrationInWorker: false,
-                    preload: path.join(__dirname, './utils/preload.js'),
-                    contextIsolation: false
+                    preload: path.join(__dirname, './scripts/preload.js'),
+                    contextIsolation: false,
+                    sandbox: false
                 },
                 show: false
             });
@@ -107,7 +109,7 @@ export default class App {
             }));
 
             // handle ipc messages in mainWindow
-            this.handleIpcMain('ping', 'pong');
+            // this.handleIpcMain('ping', 'pong');
 
             // Quit entire app when closed
             this.mainWindow.on('closed', () => {

@@ -3,29 +3,30 @@
  * 
  *  below is the old method of accomplishing the same tasks with terminal commands: (kept for referral purposes)
  *  "dist": "rm -rf ./dist && mkdir dist && find ./src \\( -name \\*.html -o -name \\*.css \\) -type f -exec cp --parents {} ./dist \\; && mv ./dist/src/* ./dist && rm -r ./dist/src && tsc"
+ * 
  */
 
-import fs, { Stats } from 'fs';
-import path from 'path';
+const fs = require('fs');
+const path = require('path');
 
 /**
- *  This script will find all files that are not .ts or .tsx files in the /src directory
- *  and copy them over to the /dist directory.
+ *  This script is ran inside the terminal with node. This script will find all files that are not .ts 
+ *  or .tsx files in the /src directory and copy them over to the /dist directory.
  * 
  *  @param start: Which directory it should start looking from
  *  @param filters: The type of files that we are looking for
  */
 
 // The arguments to be passed into distributeToDist()
-const src: string = './src', filetype: string[] = ['.html', '.css', '.eot', '.svg', '.ttf', '.woff', '.woff2', '.otf'];
+const src = './src', filetype = ['.html', '.css', '.eot', '.svg', '.ttf', '.woff', '.woff2', '.otf'];
 
-const distributeToDist = (start: string, filters: string[]): void => {
-    const files: string[] = fs.readdirSync(start);
+const distributeToDist = (start, filters) => {
+    const files = fs.readdirSync(start);
 
     // loop through all the files in directory
     for (const file of files) {
-        const filename: string = path.join(start, file);
-        const stat: Stats = fs.lstatSync(filename);
+        const filename = path.join(start, file);
+        const stat = fs.lstatSync(filename);
 
         // if the file is a directory we recurse to go in deeper
         if (stat.isDirectory()) {
@@ -41,10 +42,10 @@ const distributeToDist = (start: string, filters: string[]): void => {
                     //  - destArray: the full path including the file in array form
                     //  - popped: the last item removed from destArray
                     //  - afterPopped: the directory path after filename has been removed
-                    const destination: string = filename.replace('src', './dist');
-                    const destArray: string[] = destination.split(fileSeperator);
-                    const popped: string | undefined = destArray.pop();
-                    const afterPopped: string = destArray.join(fileSeperator);
+                    const destination = filename.replace('src', './dist');
+                    const destArray = destination.split(fileSeperator);
+                    const popped = destArray.pop();
+                    const afterPopped = destArray.join(fileSeperator);
 
                     // if the directory does not exists, create it
                     if (!fs.existsSync(afterPopped)) {

@@ -8,11 +8,15 @@ import { IpcRenderer } from 'electron';
 declare global {
     // adding onto window interface
     interface Window {
-        ipcRenderer: IpcRenderer
+        helpers: { 
+            loadComponent: Function;
+            ipcRenderer: IpcRenderer;
+            addScript: Function;
+        };
     }
-    
+
     // sidebar menu item object structure
-    type SidebarItems = {
+    type SidebarItem = {
         name: string;
         icon: string;
     }
