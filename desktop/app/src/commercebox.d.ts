@@ -3,16 +3,16 @@
  */
 
 import { IpcRenderer } from 'electron';
+import Helpers from './utils/helpers';
 
 // Declare global properties to be accessed in renderer.
 declare global {
     // adding onto window interface
     interface Window {
-        helpers: { 
-            loadComponent: Function;
+        main: { 
             ipcRenderer: IpcRenderer;
-            addScript: Function;
-            getHTML: Function;
+            Helpers: any;
+            Components: any;
         };
     }
 

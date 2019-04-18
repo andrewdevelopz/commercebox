@@ -20,7 +20,8 @@ export default class Helpers {
         try {
             // grab the container to which the html will be included to
             const currentComponent: HTMLElement = document.querySelector(element) as HTMLElement;
-            const name: string = (path.split('/').pop() as string).replace('.html', '');
+            const filename: string = (path.split('/').pop() as string);
+            const name: string = filename.replace('.html', '');
             const shouldLoad: boolean = currentComponent.firstElementChild!.getAttribute('id') !== name;
 
             // if the component is not already loaded
@@ -35,10 +36,19 @@ export default class Helpers {
                 // capture the new element and set it's id to base of filename
                 const loadedHTML: HTMLElement = currentComponent.querySelector('div') as HTMLDivElement;
                 loadedHTML.setAttribute('id', name);
+
+                // loop through all scripts in html and exit the function if it has already been loaded.
+                const scripts: NodeListOf<HTMLScriptElement> = document.querySelectorAll('script');
+                for (const script of scripts) {
+                    if (script.src.search(filename.replace('.html', '.js')) > -1) {
+                        return;
+                    }
+                }
+                
                 // load js script respectively to it's component and remove the previous loaded script
                 if (loadScript) {
-                    const script: HTMLScriptElement = addScript('../' + path.replace('.html', '.js'));
-                    script.previousElementSibling!.remove();
+                    const script: HTMLScriptElement = this.addScript('../' + path.replace('.html', '.js'));
+                    // script.previousElementSibling!.remove();
                 }
             } else {
                 return;
@@ -56,7 +66,7 @@ export default class Helpers {
     public getHTML = async (path: string): Promise<string> => {
         try {
             const html = await fetch(`../${path}`);
-            return await html.text();
+            return html.text();
         } catch (e) {
             console.error(e);
             return 'Could not fetch the html';

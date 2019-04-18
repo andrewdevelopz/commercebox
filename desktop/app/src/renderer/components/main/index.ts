@@ -1,9 +1,11 @@
 /**
- *  The main javascript file for the application. Any globals will go in here.
+ *  The main javascript file for the application. Any variables that is 
+ *  used on any other scripts in this scope will go in here.
  */
 
 // Get needed properties and methods from window scope inside preload.js.
-const { ipcRenderer, addScript } = window.helpers;
+const { Helpers, ipcRenderer, Components } = window.main;
+const helpers = new Helpers();
 
 // This function allows the import of html files acting as components
 const includeHTML = async (): Promise<void> => {
@@ -24,7 +26,7 @@ const includeHTML = async (): Promise<void> => {
                 const name: string = file.split('/').pop().replace('.html', '');
                 loadedHTML.setAttribute('id', name);
                 // we add script tag dynamically by replacing path file extension with .js
-                addScript(file.replace('.html', '.js'));
+                helpers.addScript(file.replace('.html', '.js'));
             } catch (e) {
                 console.error(e);
                 element.innerHTML = 'HTML component not found';
