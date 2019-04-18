@@ -12,6 +12,7 @@ declare global {
             loadComponent: Function;
             ipcRenderer: IpcRenderer;
             addScript: Function;
+            getHTML: Function;
         };
     }
 

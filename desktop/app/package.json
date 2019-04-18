@@ -5,7 +5,7 @@
   "main": "dist/main.js",
   "scripts": {
     "start": "electron .",
-    "dist": "rm -rf ./dist && tsc && node ./bin/distribute.js",
+    "dist": "rm -rf ./dist && tsc && node ./.bin/distribute.js",
     "bundle": "npm run dist && npm start"
   },
   "keywords": [

@@ -5,13 +5,17 @@
  */
 
 import { ipcRenderer } from 'electron';
-import { loadComponent, addScript } from '../utils/helpers';
+import Helpers from '../utils/helpers';
+
+// Instantiate classes
+const helpers: Helpers = new Helpers();
 
 // All helpers scoped into window.workers
 window.helpers = {
-    // Function to dynamically load the html components
-    loadComponent: loadComponent,
     // Set global ipcRenderer function.
     ipcRenderer: ipcRenderer,
-    addScript: addScript
+    // Function to dynamically load the html components
+    loadComponent: helpers.loadComponent,
+    addScript: helpers.addScript,
+    getHTML: helpers.getHTML
 }
