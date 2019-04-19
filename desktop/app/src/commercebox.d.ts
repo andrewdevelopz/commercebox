@@ -24,7 +24,6 @@ declare global {
 
     type Component = {
         name?: string;
-        html?: string;
-        path?: string;
+        element?: HTMLElement;
     }
 }

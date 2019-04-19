@@ -10,23 +10,18 @@ class Dashboard extends Components {
         this.render();
     }
 
-    public render = async (): Promise<string> => {
-        const { name } = this.component;
-        const dashboard: string = await this.getHTML('main/dashboard/dashboard.html');
-        const includes: HTMLElement = document.querySelector('#includes') as HTMLElement;
-
-        console.log(this.component);
-
-        includes.insertAdjacentHTML('afterbegin', dashboard);
-        const newC: HTMLElement = includes.querySelector('div') as HTMLDivElement;
-        newC.setAttribute('id', name);
-
-        return dashboard;
+    private render = async (): Promise<void> => {
+        try {
+            const { name } = this.component;
+            const generated = await this.generateComponent(name, '#includes');
+        } catch (e) {
+            console.error(e);
+        }
     }
 }
 const dashboard = new Dashboard('dashboard');
 
-console.log(dashboard);
+// console.log(dashboard);
 
 // namespace Dashboard {
 //     const { getHTML } = window.helpers;

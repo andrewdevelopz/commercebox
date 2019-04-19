@@ -10,55 +10,58 @@ export default class Components {
 
     constructor() { }
 
-    private generateComponent = async (): Promise<void> => { }
-
     /**
-     *  Function to dynamically load the html && js components.
+     *  Method to assemble the component before loading it to the dom.
      * 
-     *  @param element - the element to which the html should be loaded to.
-     *  @param path - the path to which to fetch the html and js.
-     *  @param loadScript - whether to load the script for the html.
-     *  @param replaceInnerHTML - whether to replace the innerHTML or add on to it.
+     *  @param name the name of the component
+     *  @param element the element to select for loading the component to.
      */
-    private loadComponents = async (element: string, path: string, loadScript: boolean = true, replaceInnerHTML: boolean = true): Promise<void> => {
+    private generateComponent = async (name: string, element: string): Promise<object> => {
         try {
-            // grab the container to which the html will be included to
-            const currentComponent: HTMLElement = document.querySelector(element) as HTMLElement;
-            const filename: string = (path.split('/').pop() as string);
-            const name: string = filename.replace('.html', '');
-            const shouldLoad: boolean = currentComponent.firstElementChild!.getAttribute('id') !== name;
+            // get the `html` text from file and select the `includes` area element
+            const html = await this.getHTML(`main/${name}/${name}.html`);
+            const includes: HTMLElement = document.querySelector(element) as HTMLElement;
 
-            // if the component is not already loaded
-            if (shouldLoad) {
-                const html = await fetch(`../${path}`);
-                // whether to replace or addon to the html
-                if (replaceInnerHTML) {
-                    currentComponent.innerHTML = await html.text();
-                } else {
-                    currentComponent.insertAdjacentHTML('beforeend', await html.text());
-                }
-                // capture the new element and set it's id to base of filename
-                const loadedHTML: HTMLElement = currentComponent.querySelector('div') as HTMLDivElement;
-                loadedHTML.setAttribute('id', name);
-
-                // loop through all scripts in html and exit the function if it has already been loaded.
-                const scripts: NodeListOf<HTMLScriptElement> = document.querySelectorAll('script');
-                for (const script of scripts) {
-                    if (script.src.search(filename.replace('.html', '.js')) > -1) {
-                        return;
-                    }
-                }
-
-                // load js script respectively to it's component and remove the previous loaded script
-                if (loadScript) {
-                    const script: HTMLScriptElement = this.addScript('../' + path.replace('.html', '.js'));
-                    // script.previousElementSibling!.remove();
-                }
-            } else {
-                return;
+            // create a new element to insert the html component. 
+            const container: HTMLDivElement = document.createElement('div');
+            container.setAttribute('id', name);
+            container.insertAdjacentHTML('afterbegin', html);
+            includes.insertAdjacentElement('beforeend', container);
+            this.includeHTML(container);
+            return {
+                status: true,
+                message: 'component created successfuly',
+                element: container
             }
         } catch (e) {
-            console.error(e);
+            return {
+                status: false,
+                message: e.message
+            }
+        }
+    }
+
+    /**
+     *  Method to include the html files that are specified in the main file.
+     *  e.g. `<include include-html="./path/path/path.html"></include>`.
+     * 
+     *  @param parent the parent element to which we will be including html files for.
+     */
+    private includeHTML = async (parent: HTMLElement): Promise<void> => {
+        // loop through a collection of all HTML elements with tag name `include`
+        const tags: HTMLCollection = parent.getElementsByTagName('include');
+        for (const tag of tags) {
+            // search for elements with a certain atrribute.
+            const file = tag.getAttribute('include-html') as string;
+            if (file) {
+                // make an HTTP request using the attribute value as the file path.
+                const html: string = await this.getHTML(file);
+                tag.insertAdjacentHTML('afterbegin', html);
+                // remove the attribute, and call this function once more
+                tag.removeAttribute('include-html');
+                this.includeHTML(parent);
+                return;
+            }
         }
     }
 

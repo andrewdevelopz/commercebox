@@ -4,33 +4,20 @@
  */
 
 class Inventory extends Components {
-    constructor() {
+    constructor(name: string) {
         super();
-        this.component.path = '/inventory';
+        this.component.name = name;
         this.render();
     }
 
-    generateDashboard = async (): Promise<string> => {
-        const card: string = await this.getHTML('main/inventory/inventory.html');
-
-        // return (`
-        //     <div class ="four wide column">
-        //         ${card}
-        //     </div>
-        // `);
-        return card;
-    }
-
-    public render = async (): Promise<string> => {
-        const inventory: HTMLElement = document.querySelector('#includes') as HTMLElement;
-        const html: string = await this.generateDashboard();
-        this.component.id = 'inventory';
-
-        console.log(this.component);
-
-        inventory.insertAdjacentHTML('afterbegin', html);
-        return html;
-        return '';
+    public render = async (): Promise<void> => {
+        try {
+            const { name } = this.component;
+            const generated = await this.generateComponent(name, '#includes');
+            // await this.generateComponent('card', `main/${name}/card/card`, `#${generated.element.id}`);
+        } catch (e) {
+            console.error(e);
+        }
     }
 }
-const inventory = new Inventory();
+const inventory = new Inventory('inventory');
