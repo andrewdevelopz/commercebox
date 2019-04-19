@@ -18,7 +18,7 @@ const path = require('path');
  */
 
 // The arguments to be passed into distributeToDist()
-const src = './src', filetype = ['.html', '.css', '.eot', '.svg', '.ttf', '.woff', '.woff2', '.otf'];
+const src = './src', filetype = ['.html', '.css', '.eot', '.svg', '.ttf', '.woff', '.woff2', '.otf', '.ico', '.icns', '.png'];
 
 const distributeToDist = (start, filters) => {
     const files = fs.readdirSync(start);
