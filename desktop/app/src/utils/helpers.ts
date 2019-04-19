@@ -44,10 +44,10 @@ export default class Helpers {
                         return;
                     }
                 }
-                
+
                 // load js script respectively to it's component and remove the previous loaded script
                 if (loadScript) {
-                    const script: HTMLScriptElement = this.addScript('../' + path.replace('.html', '.js'));
+                    // const script: HTMLScriptElement = this.addScript('../' + path.replace('.html', '.js'));
                     // script.previousElementSibling!.remove();
                 }
             } else {
@@ -78,7 +78,15 @@ export default class Helpers {
      * 
      *  @param src - the path to which to set the src of the script tag
      */
-    public addScript = (src: string): HTMLScriptElement => {
+    public addScript = (src: string): HTMLScriptElement | void => {
+        // loop through all scripts in html and exit the function if it has already been loaded.
+        const filename: string = src.split('/').pop() as string;
+        const scripts: NodeListOf<HTMLScriptElement> = document.querySelectorAll('script');
+        for (const script of scripts) {
+            if (script.src.search(filename) > -1) {
+                return;
+            }
+        }
         const s: HTMLScriptElement = document.createElement('script');
         s.setAttribute('src', src);
         s.setAttribute('type', 'text/javascript');

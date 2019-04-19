@@ -21,4 +21,10 @@ declare global {
         name: string;
         icon: string;
     }
+
+    type Component = {
+        name?: string;
+        html?: string;
+        path?: string;
+    }
 }

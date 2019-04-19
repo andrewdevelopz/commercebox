@@ -4,20 +4,29 @@
  */
 
 class Dashboard extends Components {
-    constructor() {
+    constructor(name: string) {
         super();
+        this.component.name = name;
         this.render();
     }
 
-    private render = (): string => {
-        document.querySelector('#test')!.addEventListener('click', () => {
-            console.log('clicked');
-        })
-        console.log('<div>Dash Render</div>');
-        return '<div>Dash Render</div>'
+    public render = async (): Promise<string> => {
+        const { name } = this.component;
+        const dashboard: string = await this.getHTML('main/dashboard/dashboard.html');
+        const includes: HTMLElement = document.querySelector('#includes') as HTMLElement;
+
+        console.log(this.component);
+
+        includes.insertAdjacentHTML('afterbegin', dashboard);
+        const newC: HTMLElement = includes.querySelector('div') as HTMLDivElement;
+        newC.setAttribute('id', name);
+
+        return dashboard;
     }
 }
-new Dashboard();
+const dashboard = new Dashboard('dashboard');
+
+console.log(dashboard);
 
 // namespace Dashboard {
 //     const { getHTML } = window.helpers;
