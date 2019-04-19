@@ -10,14 +10,9 @@ class Inventory extends Components {
         this.render();
     }
 
-    public render = async (): Promise<void> => {
-        try {
-            const { name } = this.component;
-            const generated = await this.generateComponent(name, '#includes');
-            // await this.generateComponent('card', `main/${name}/card/card`, `#${generated.element.id}`);
-        } catch (e) {
-            console.error(e);
-        }
+    private render = async (): Promise<void> => {
+        const { name } = this.component;
+        await this.generateComponent(name, '#includes');
     }
 }
 const inventory = new Inventory('inventory');

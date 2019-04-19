@@ -16,28 +16,32 @@ export default class Components {
      *  @param name the name of the component
      *  @param element the element to select for loading the component to.
      */
-    private generateComponent = async (name: string, element: string): Promise<object> => {
+    private generateComponent = async (name: string, element: string): Promise<LocalResponse> => {
         try {
-            // get the `html` text from file and select the `includes` area element
-            const html = await this.getHTML(`main/${name}/${name}.html`);
+            // select the `includes` area element
             const includes: HTMLElement = document.querySelector(element) as HTMLElement;
-
-            // create a new element to insert the html component. 
-            const container: HTMLDivElement = document.createElement('div');
-            container.setAttribute('id', name);
-            container.insertAdjacentHTML('afterbegin', html);
-            includes.insertAdjacentElement('beforeend', container);
-            this.includeHTML(container);
-            return {
-                status: true,
-                message: 'component created successfuly',
-                element: container
+            if (includes) {
+                // get the `html` text from file
+                const html: LocalResponse = await this.getHTML(`${name}/${name}.html`);
+                // create a new element to insert the html component. 
+                const container: HTMLDivElement = document.createElement('div');
+                container.setAttribute('id', name);
+                container.insertAdjacentHTML('afterbegin', html.body);
+                includes.insertAdjacentElement('beforeend', container);
+                await this.includeHTML(container);
+                return {
+                    status: true,
+                    body: `${name} component created successfuly`,
+                    element: container
+                }
+            } else {
+                throw new Error('includes element could not be found');
             }
         } catch (e) {
-            return {
+            return Promise.reject({
                 status: false,
-                message: e.message
-            }
+                body: e.message
+            });
         }
     }
 
@@ -52,17 +56,17 @@ export default class Components {
         const tags: HTMLCollection = parent.getElementsByTagName('include');
         for (const tag of tags) {
             // search for elements with a certain atrribute.
-            const file = tag.getAttribute('include-html') as string;
+            const file: string = tag.getAttribute('include-html') as string;
             if (file) {
                 // make an HTTP request using the attribute value as the file path.
-                const html: string = await this.getHTML(file);
-                tag.insertAdjacentHTML('afterbegin', html);
-                // remove the attribute, and call this function once more
+                const html: LocalResponse = await this.getHTML(file);
+                tag.insertAdjacentHTML('afterbegin', html.body);
+                // remove the attribute, and apply recursion.
                 tag.removeAttribute('include-html');
-                this.includeHTML(parent);
-                return;
+                await this.includeHTML(parent);
             }
         }
+        return;
     }
 
     /**
@@ -75,26 +79,18 @@ export default class Components {
      * 
      *  @param path - the path to which the html resides.
      */
-    private getHTML = async (path: string): Promise<string> => {
+    private getHTML = async (path: string): Promise<LocalResponse> => {
         try {
-            const html = await fetch(`../${path}`);
-            return html.text();
+            const html: Body = await fetch(`./${path}`);
+            return {
+                status: true,
+                body: await html.text()
+            }
         } catch (e) {
-            console.error(e);
-            return 'Could not fetch the html';
+            return {
+                status: false,
+                body: e.message
+            }
         }
-    }
-
-    /**
-     *  Add the script tag which should be included in the same directory of each render file (html file).
-     * 
-     *  @param src - the path to which to set the src of the script tag
-     */
-    private addScript = (src: string): HTMLScriptElement => {
-        const s: HTMLScriptElement = document.createElement('script');
-        s.setAttribute('src', src);
-        s.setAttribute('type', 'text/javascript');
-        document.body.appendChild(s);
-        return s;
     }
 }

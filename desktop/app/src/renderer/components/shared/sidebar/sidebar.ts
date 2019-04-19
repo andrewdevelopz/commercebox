@@ -26,7 +26,6 @@ const createDynamicSidebar = (menuItems: SidebarItem[], title: string, sidebar: 
         `.trim());
         // add the event listener function to the menu item that has just been added.
         sidebar.lastChild!.addEventListener('click', () => {
-            // helpers.loadComponent('#includes', `main/${name}/${name}.html`);
             helpers.addScript(`${name}/${name}.js`);
             // this is where we will handle components
         });
