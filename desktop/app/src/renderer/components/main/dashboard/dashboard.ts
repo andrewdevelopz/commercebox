@@ -3,16 +3,18 @@
  *  section of the application.
  */
 
-class Dashboard extends Components {
-    constructor(name: string) {
-        super();
-        this.component.name = name;
-        this.render();
-    }
+namespace Dashboard {
+    class Dashboard extends Components {
+        constructor(name: string) {
+            super();
+            this.component.name = name;
+            this.render();
+        }
 
-    private render = async (): Promise<void> => {
-        const { name } = this.component;
-        await this.generateComponent(name, '#includes');
+        private render = async (): Promise<void> => {
+            const { name } = this.component;
+            await this.generateComponent(name, '#includes');
+        }
     }
+    new Dashboard('dashboard');
 }
-const dashboard = new Dashboard('dashboard');

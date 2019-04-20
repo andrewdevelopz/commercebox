@@ -13,6 +13,7 @@ declare global {
             ipcRenderer: IpcRenderer;
             Helpers: any;
             Components: any;
+            State: any;
         };
     }
 
@@ -32,5 +33,9 @@ declare global {
         status?: boolean;
         body?: any;
         element?: HTMLElement
+    }
+
+    interface IState {
+        currentComponent: string;
     }
 }

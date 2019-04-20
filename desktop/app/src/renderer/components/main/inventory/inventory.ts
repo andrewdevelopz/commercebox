@@ -3,16 +3,18 @@
  *  section of the application.
  */
 
-class Inventory extends Components {
-    constructor(name: string) {
-        super();
-        this.component.name = name;
-        this.render();
+namespace Inventory {
+    class Inventory extends Components {
+        constructor(name: string) {
+            super();
+            this.component.name = name;
+            this.render();
+        }
+    
+        private render = async (): Promise<void> => {
+            const { name } = this.component;
+            await this.generateComponent(name, '#includes');
+        }
     }
-
-    private render = async (): Promise<void> => {
-        const { name } = this.component;
-        await this.generateComponent(name, '#includes');
-    }
+    new Inventory('inventory');
 }
-const inventory = new Inventory('inventory');

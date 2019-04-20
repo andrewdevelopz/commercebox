@@ -7,11 +7,13 @@
 import { ipcRenderer } from 'electron';
 import Helpers from '../utils/helpers';
 import Components from '../utils/components';
+import State from '../utils/state';
 
 // All helpers scoped into window.helpers
 window.main = {
     // Set global ipcRenderer variables.
     ipcRenderer: ipcRenderer,
     Helpers: Helpers,
-    Components: Components
+    Components: Components,
+    State: State
 }
