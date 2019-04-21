@@ -6,18 +6,16 @@
  */
 
 export default class State {
-    state: IState = {
-        currentComponent: ''
-    };
+    currentComponent = '';
+    components = {};
     constructor() { }
 
     /**
-     *  This method will assign a property to state.
+     *  This method will assign a property to components in state.
      * 
-     *  @param object the object to add to state.
+     *  @param object the object to add to components.
      */
-    assignToState = (object: object): void => {
-        Object.assign(this.state, object);
-        console.log(this.state.currentComponent);
+    assignToComponents = (object: object): void => {
+        Object.assign(this.components, object);
     }
 }

@@ -16,14 +16,14 @@ export default class Components {
      *  @param name the name of the component
      *  @param element the element to select for loading the component to.
      */
-    private generateComponent = async (name: string, element: string): Promise<LocalResponse> => {
+    private generateComponent = async (name: string, element: string, dir: string): Promise<LocalResponse> => {
         try {
             // select the `includes` area element
             const includes: HTMLElement = document.querySelector(element) as HTMLElement;
             if (includes) {
                 // get the `html` text from file
-                const html: LocalResponse = await this.getHTML(`${name}/${name}.html`);
-                // create a new element to insert the html component. 
+                const html: LocalResponse = await this.getHTML(`../${dir}/${name}/${name}.html`);
+                // create a new element to insert the html component.
                 const container: HTMLDivElement = document.createElement('div');
                 container.setAttribute('id', name);
                 container.insertAdjacentHTML('afterbegin', html.body);
@@ -72,7 +72,9 @@ export default class Components {
     /**
      *  This method will switch components based on the route clicked.
      */
-    private switchComponents = () => { }
+    private switchComponents = () => {
+        console.log(state.components);
+    }
 
     /**
      *  Method to only get the HTML text from a html file.
@@ -81,7 +83,7 @@ export default class Components {
      */
     private getHTML = async (path: string): Promise<LocalResponse> => {
         try {
-            const html: Body = await fetch(`./${path}`);
+            const html: Body = await fetch(`${path}`);
             return {
                 status: true,
                 body: await html.text()

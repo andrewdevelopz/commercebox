@@ -108,9 +108,6 @@ export default class App {
                 slashes: true
             }));
 
-            // handle ipc messages in mainWindow
-            // this.handleIpcMain('ping', 'pong');
-
             // Quit entire app when closed
             this.mainWindow.on('closed', () => {
                 app.quit();

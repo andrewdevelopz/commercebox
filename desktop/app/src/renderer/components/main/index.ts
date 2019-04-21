@@ -9,11 +9,8 @@ const helpers = new Helpers();
 const state = new State();
 
 // include all the specified components on load.
-helpers.includeHTML();
+// helpers.includeHTML();
 
-// // ipcRenderer
-// ipcRenderer.send('ping', { pong: 'ding' });
-
-// ipcRenderer.on('pong', (event: any, item: any) => {
-//     console.log('index', item);
-// });
+helpers.addScript('../shared/sidebar/sidebar.js');
+helpers.addScript('dashboard/dashboard.js');
+// helpers.addScript('inventory/inventory.js');

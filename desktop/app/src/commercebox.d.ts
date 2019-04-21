@@ -37,5 +37,6 @@ declare global {
 
     interface IState {
         currentComponent: string;
+        components: object;
     }
 }
