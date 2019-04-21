@@ -6,11 +6,17 @@
 // Get needed properties and methods from window scope inside preload.js.
 const { Helpers, ipcRenderer, Components, State } = window.main;
 const helpers = new Helpers();
-const state = new State();
+const state = State;
 
-// include all the specified components on load.
-// helpers.includeHTML();
-
+// include the default scripts onload. the scripts will generate the html for us.
 helpers.addScript('../shared/sidebar/sidebar.js');
-helpers.addScript('dashboard/dashboard.js');
-// helpers.addScript('inventory/inventory.js');
+
+// generate all the components in the `main` directory.
+const mainComponents: string[] = ['dashboard', 'inventory', 'orders', 'todos', 'analytics'];
+const generateMainComponents = (comps: string[]): void => {
+    // loop through `comps` and add the scripts accordingly.
+    for (const comp of comps) {
+        helpers.addScript(`${comp}/${comp}.js`);
+    }
+}
+generateMainComponents(mainComponents);

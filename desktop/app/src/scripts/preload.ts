@@ -15,5 +15,5 @@ window.main = {
     ipcRenderer: ipcRenderer,
     Helpers: Helpers,
     Components: Components,
-    State: State
+    State: new State() // we generate the state object at the highest possible level.
 }

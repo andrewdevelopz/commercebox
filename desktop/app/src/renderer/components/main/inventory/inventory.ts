@@ -10,10 +10,16 @@ namespace Inventory {
             this.component.name = name;
             this.render();
         }
-    
+
         private render = async (): Promise<void> => {
             const { name } = this.component;
-            await this.generateComponent(name, '#includes');
+            const component = await this.generateComponent(name, '#includes', 'main');
+            if (component) {
+                const { element } = component;
+                const assemble: any = {};
+                assemble[name] = element;
+                state.assignToComponents(assemble);
+            }
         }
     }
     new Inventory('inventory');

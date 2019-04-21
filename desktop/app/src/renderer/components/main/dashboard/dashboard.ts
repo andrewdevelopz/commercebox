@@ -14,7 +14,8 @@ namespace Dashboard {
         private render = async (): Promise<void> => {
             const { name } = this.component;
             const component = await this.generateComponent(name, '#includes', 'main');
-            if (component) {
+            if (component.status) {
+                // set/update the global state object
                 const { element } = component;
                 const assemble: any = {};
                 assemble[name] = element;

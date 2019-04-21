@@ -46,7 +46,7 @@ export default class Components {
     }
 
     /**
-     *  Method to include the html files that are specified in the main file.
+     *  Method to include the html files that are specified in the html files.
      *  e.g. `<include include-html="./path/path/path.html"></include>`.
      * 
      *  @param parent the parent element to which we will be including html files for.
@@ -60,9 +60,16 @@ export default class Components {
             if (file) {
                 // make an HTTP request using the attribute value as the file path.
                 const html: LocalResponse = await this.getHTML(file);
+                // insert `html` into the <include> tag.
                 tag.insertAdjacentHTML('afterbegin', html.body);
-                // remove the attribute, and apply recursion.
-                tag.removeAttribute('include-html');
+                // create fragment and append child elements of `tag` into fragment.
+                const fragment: DocumentFragment = document.createDocumentFragment();
+                while (tag.firstChild) {
+                    fragment.appendChild(tag.firstChild);
+                }
+                // replace the include element with the document fragment.
+                tag.parentNode!.replaceChild(fragment, tag);
+                // apply recursion.
                 await this.includeHTML(parent);
             }
         }

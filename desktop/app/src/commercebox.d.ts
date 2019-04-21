@@ -3,7 +3,6 @@
  */
 
 import { IpcRenderer } from 'electron';
-import Helpers from './utils/helpers';
 
 // Declare global properties to be accessed in renderer.
 declare global {
