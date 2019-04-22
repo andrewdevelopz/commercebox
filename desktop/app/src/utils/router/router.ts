@@ -13,9 +13,20 @@ export default class Router {
     }
 
     /**
-     *  Method to switch the route based on the location.path
+     *  All the tasks to be performed when the router is first initiated.
      */
-    private switchRoute = () => {
+    private init = () => {
+        console.log(this.routes);
+        for (const route of this.routes) {
+            console.log('inside');
+            console.log(route.defaultRoute)
+        }
+    }
+
+    /**
+     *  Method to go to the route based on the location.path
+     */
+    private goToRoute = () => {
         const path = window.location.path;
         for (const route of this.routes) {
             if (path === route.name) {

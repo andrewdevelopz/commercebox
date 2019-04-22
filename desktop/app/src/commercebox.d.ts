@@ -39,7 +39,7 @@ declare global {
     type Route = {
         name: string;
         element: HTMLElement;
-        default?: boolean; // is it the default route?
+        defaultRoute?: boolean; // is it the default route?
     }
 
     // The response object returned from functions and methods. Local meaning it is local to this app.

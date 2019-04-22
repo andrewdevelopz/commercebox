@@ -41,7 +41,7 @@ namespace Sidebar {
                     component.element.querySelector('div').lastChild!.addEventListener('click', (e: Event) => {
                         e.preventDefault();
                         window.location.path = (<HTMLElement>e.target).getAttribute('route') as string;
-                        router.switchRoute();
+                        router.goToRoute();
                     });
                 });
             }

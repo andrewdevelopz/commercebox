@@ -29,3 +29,4 @@ const generateComponents = (comps: ComponentInfo): void => {
     }
 }
 generateComponents(toolboxComponents);
+router.init();
