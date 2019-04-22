@@ -6,14 +6,16 @@
 
 import { ipcRenderer } from 'electron';
 import Helpers from '../utils/helpers';
-import Components from '../utils/components';
+import Component from '../utils/component';
 import State from '../utils/state';
+import Router from '../utils/router/router';
 
 // All helpers scoped into window.helpers
 window.main = {
     // Set global ipcRenderer variables.
     ipcRenderer: ipcRenderer,
     Helpers: Helpers,
-    Components: Components,
-    State: new State() // we generate the state object at the highest possible level.
+    Component: Component,
+    State: new State(), // we generate the state object at the highest possible level.
+    Router: new Router([])
 }

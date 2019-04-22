@@ -4,23 +4,14 @@
  */
 
 namespace ToDos {
-    class ToDos extends Components {
+    class ToDos extends Component {
         constructor(name: string) {
-            super();
-            this.component.name = name;
+            super(name);
             this.render();
         }
 
         private render = async (): Promise<void> => {
-            const { name } = this.component;
-            const component = await this.generateComponent(name, '#includes', 'main');
-            if (component.status) {
-                // set/update the global state object
-                const { element } = component;
-                const assemble: any = {};
-                assemble[name] = element;
-                state.assignToComponents(assemble);
-            }
+            const component = await this.generateComponent(this.name, '#includes', 'main', state);
         }
     }
     new ToDos('todos');

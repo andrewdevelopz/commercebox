@@ -4,19 +4,31 @@
  */
 
 // Get needed properties and methods from window scope inside preload.js.
-const { Helpers, ipcRenderer, Components, State } = window.main;
+const { Helpers, ipcRenderer, Component, State, Router } = window.main;
 const helpers = new Helpers();
-const state = State;
+const state: IState = State;
+const router = Router;
 
 // include the default scripts onload. the scripts will generate the html for us.
-helpers.addScript('../shared/sidebar/sidebar.js');
-
-// generate all the components in the `main` directory.
-const mainComponents: string[] = ['dashboard', 'inventory', 'orders', 'todos', 'analytics'];
-const generateMainComponents = (comps: string[]): void => {
+const mainComponents: ComponentInfo = [
+    {
+        dir: 'shared',
+        comps: ['sidebar']
+    },
+    {
+        dir: 'main',
+        comps: ['dashboard', 'inventory', 'orders', 'todos', 'analytics']
+    }
+];
+const generateMainComponents = (comps: ComponentInfo): void => {
     // loop through `comps` and add the scripts accordingly.
     for (const comp of comps) {
-        helpers.addScript(`${comp}/${comp}.js`);
+        for (const name of comp.comps) {
+            helpers.addScript(`../${comp.dir}/${name}/${name}.js`);
+        }
     }
 }
 generateMainComponents(mainComponents);
+
+router.routes.push({ name: '', element: '' as any })
+console.log('index.ts\n', router.routes);

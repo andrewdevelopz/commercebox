@@ -4,23 +4,21 @@
  */
 
 namespace Sidebar {
-    class Sidebar extends Components {
+    class Sidebar extends Component {
         menuItems: SidebarItem[];
         title: string;
 
         constructor(name: string, menuItems: SidebarItem[], title: string) {
-            super();
-            this.component.name = name;
+            super(name);
             this.menuItems = menuItems;
             this.title = title;
             this.render();
         }
 
         private render = async (): Promise<void> => {
-            const { name } = this.component;
             const { menuItems, title } = this;
 
-            const component = await this.generateComponent(name, '#main', 'shared');
+            const component = await this.generateComponent(this.name, '#main', 'shared', state);
             if (component.status) {
                 // dynamically generating the sidebar.
                 // insert the title of the sidebar.
@@ -33,7 +31,7 @@ namespace Sidebar {
                 menuItems.map((item: SidebarItem): void => {
                     const { name, icon } = item;
                     component.element.firstElementChild.insertAdjacentHTML('beforeend', `
-                        <a class="item">
+                        <a class="item" href="#${name}">
                             <i class="${icon} icon"></i>
                             ${name}
                         </a>
@@ -41,19 +39,16 @@ namespace Sidebar {
 
                     // add the event listener function to the menu item that has just been added.
                     component.element.querySelector('div').lastChild!.addEventListener('click', () => {
-                        helpers.addScript(`${name}/${name}.js`);
-                        console.log(state.components[name]);
+                        window.location.hash = name;
+                        // helpers.addScript(`${name}/${name}.js`);
+                        // console.log('fromSidebar', state);
+                        // console.log((<any>state.components)[name]);
+                        // (<any>state.components)[name].style.display = 'none';
+                        console.log(window.location.hash);
                     });
                 });
-
-                // set/update the global state object
-                const { element } = component;
-                const assemble: any = {};
-                assemble[name] = element;
-                state.assignToComponents(assemble);
             }
         }
-
     }
 
     // Get the body of the html and it's id to determine which section we are on.

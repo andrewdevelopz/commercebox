@@ -4,19 +4,31 @@
  *  this class.
  */
 
-export default class Components {
-    // the object that will hold all neccessary information of the component.
-    component: Component = {};
+import Route from './router/route';
 
-    constructor() { }
+export default class Component {
+    name: string;
+
+    constructor(name: string) {
+        this.name = name;
+    }
 
     /**
      *  Method to assemble the component before loading it to the dom.
      * 
      *  @param name the name of the component
-     *  @param element the element to select for loading the component to.
+     *  @param element the element to select for loading the component to
+     *  @param dir the main directory in which the component lives in
+     *  @param state the global state object initiated in the beginning of the app (preload.ts)
+     *  @param defaultRoute boolean to determine if the component should be the default route
      */
-    private generateComponent = async (name: string, element: string, dir: string): Promise<LocalResponse> => {
+    private generateComponent = async (
+            name: string,
+            element: string,
+            dir: string,
+            state: IState,
+            defaultRoute: boolean = false
+        ): Promise<LocalResponse> => {
         try {
             // select the `includes` area element
             const includes: HTMLElement = document.querySelector(element) as HTMLElement;
@@ -28,7 +40,15 @@ export default class Components {
                 container.setAttribute('id', name);
                 container.insertAdjacentHTML('afterbegin', html.body);
                 includes.insertAdjacentElement('beforeend', container);
-                await this.includeHTML(container);
+                const included = await this.includeHTML(container);
+                // add the html component to the global state object.
+                if (included.status) {
+                    const assemble: Assemble = {};
+                    assemble[name] = container;
+                    state.assignToComponents(assemble);
+                }
+                // build the route for the generated component.
+                this.buildRoute(name, container, defaultRoute);
                 return {
                     status: true,
                     body: `${name} component created successfuly`,
@@ -51,7 +71,7 @@ export default class Components {
      * 
      *  @param parent the parent element to which we will be including html files for.
      */
-    private includeHTML = async (parent: HTMLElement): Promise<void> => {
+    private includeHTML = async (parent: HTMLElement): Promise<LocalResponse> => {
         // loop through a collection of all HTML elements with tag name `include`
         const tags: HTMLCollection = parent.getElementsByTagName('include');
         for (const tag of tags) {
@@ -73,14 +93,10 @@ export default class Components {
                 await this.includeHTML(parent);
             }
         }
-        return;
-    }
-
-    /**
-     *  This method will switch components based on the route clicked.
-     */
-    private switchComponents = () => {
-        console.log(state.components);
+        return {
+            status: true,
+            body: 'HTML successfully included'
+        }
     }
 
     /**
@@ -101,5 +117,12 @@ export default class Components {
                 body: e.message
             }
         }
+    }
+
+    /**
+     *  Method to build a route for the created component
+     */
+    private buildRoute = (name: string, element: HTMLElement, defaultRoute: boolean = false) => {
+        new Route(name, element, defaultRoute);
     }
 }
