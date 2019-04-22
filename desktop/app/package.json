@@ -2,7 +2,7 @@
   "name": "commercebox",
   "version": "0.0.0",
   "description": "An order/inventory management system to help unite commerce businesses together all around the world.",
-  "main": "dist/main.js",
+  "main": "dist/app.js",
   "scripts": {
     "start": "electron .",
     "dist": "rm -rf ./dist && tsc && node ./.bin/distribute.js",

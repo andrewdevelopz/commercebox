@@ -11,7 +11,7 @@ namespace Orders {
         }
 
         private render = async (): Promise<void> => {
-            const component = await this.generateComponent(this.name, '#includes', 'main', state);
+            const component = await this.generateComponent(this.name, '#includes', 'toolbox', state, router);
         }
     }
     new Orders('orders');

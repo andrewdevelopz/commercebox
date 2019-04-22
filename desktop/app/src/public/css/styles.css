@@ -12,3 +12,8 @@
     margin-left: 6.9rem;
     padding: 0.5rem;
 }
+
+/* disable the pointer event for that element */
+.killPointerEvent {
+    pointer-events: none;
+}

@@ -1,6 +1,5 @@
 /**
- *  This app file contains all the logic which electron will use as it's main file. It is exported to `main.js` where it will be initiated.
- *  The development environment can be set in main.js.
+ *  This app file contains all the logic which electron will use as it's main file.
  */
 
 import {
@@ -14,8 +13,11 @@ import url from 'url';
 import path from 'path';
 
 /**
- *  The App class initiates the entire electron app.
+ * Set ENV: production || development
  */
+process.env.NODE_ENV = 'development';
+
+// The App class initiates the entire electron app.
 export default class App {
     // Create variables for windows in app
     private mainWindow!: BrowserWindow;
@@ -103,7 +105,7 @@ export default class App {
 
             // Load the html file into the window
             this.mainWindow.loadURL(url.format({
-                pathname: path.join(__dirname, './renderer/components/main/index.html'),
+                pathname: path.join(__dirname, './renderer/components/toolbox/toolbox.html'),
                 protocol: 'file:',
                 slashes: true
             }));
@@ -120,3 +122,4 @@ export default class App {
         });
     }
 }
+new App();

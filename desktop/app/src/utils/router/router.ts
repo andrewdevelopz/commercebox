@@ -7,8 +7,22 @@
 
 export default class Router {
     routes: Route[];
+
     constructor(routes: Route[]) {
         this.routes = routes;
-        console.log(this);
+    }
+
+    /**
+     *  Method to switch the route based on the location.path
+     */
+    private switchRoute = () => {
+        const path = window.location.path;
+        for (const route of this.routes) {
+            if (path === route.name) {
+                route.element.style.display = 'block';
+            } else {
+                route.element.style.display = 'none';
+            }
+        }
     }
 }

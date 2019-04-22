@@ -8,9 +8,15 @@ import Route from './router/route';
 
 export default class Component {
     name: string;
+    controller: boolean;
 
-    constructor(name: string) {
+    /** 
+     *  @param name the name of the component
+     *  @param controller whether the component is a controller or not
+     */
+    constructor(name: string, controller: boolean = false) {
         this.name = name;
+        this.controller = controller;
     }
 
     /**
@@ -19,7 +25,8 @@ export default class Component {
      *  @param name the name of the component
      *  @param element the element to select for loading the component to
      *  @param dir the main directory in which the component lives in
-     *  @param state the global state object initiated in the beginning of the app (preload.ts)
+     *  @param state the global state object initiated in the beginning of the app
+     *  @param router pass in the global router initiated in the beginning of the app
      *  @param defaultRoute boolean to determine if the component should be the default route
      */
     private generateComponent = async (
@@ -27,6 +34,7 @@ export default class Component {
             element: string,
             dir: string,
             state: IState,
+            router: any,
             defaultRoute: boolean = false
         ): Promise<LocalResponse> => {
         try {
@@ -48,7 +56,7 @@ export default class Component {
                     state.assignToComponents(assemble);
                 }
                 // build the route for the generated component.
-                this.buildRoute(name, container, defaultRoute);
+                this.buildRoute(name, container, router, this.controller, defaultRoute);
                 return {
                     status: true,
                     body: `${name} component created successfuly`,
@@ -121,8 +129,18 @@ export default class Component {
 
     /**
      *  Method to build a route for the created component
+     * 
+     *  @param name the name of the route
+     *  @param element the element associated with the route
+     *  @param router the global router object initiated in the beginning of the app
+     *  @param controller whether the component is a controller or not
+     *  @param defaultRoute whether the route is a default route or not
      */
-    private buildRoute = (name: string, element: HTMLElement, defaultRoute: boolean = false) => {
-        new Route(name, element, defaultRoute);
+    private buildRoute = (name: string, element: HTMLElement, router: any, controller: boolean, defaultRoute: boolean = false): void => {
+        if (!controller) {
+            router.routes.push(new Route(name, element, defaultRoute));
+        } else {
+            return;
+        }
     }
 }

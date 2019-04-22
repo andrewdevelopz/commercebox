@@ -11,7 +11,7 @@ namespace Dashboard {
         }
 
         private render = async (): Promise<void> => {
-            await this.generateComponent(this.name, '#includes', 'main', state, true);
+            await this.generateComponent(this.name, '#includes', 'toolbox', state, router, true);
         }
     }
     new Dashboard('dashboard');

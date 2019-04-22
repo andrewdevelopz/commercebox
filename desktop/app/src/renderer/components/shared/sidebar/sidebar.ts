@@ -8,8 +8,8 @@ namespace Sidebar {
         menuItems: SidebarItem[];
         title: string;
 
-        constructor(name: string, menuItems: SidebarItem[], title: string) {
-            super(name);
+        constructor(name: string, controller: boolean, menuItems: SidebarItem[], title: string) {
+            super(name, controller);
             this.menuItems = menuItems;
             this.title = title;
             this.render();
@@ -18,7 +18,7 @@ namespace Sidebar {
         private render = async (): Promise<void> => {
             const { menuItems, title } = this;
 
-            const component = await this.generateComponent(this.name, '#main', 'shared', state);
+            const component = await this.generateComponent(this.name, '#main', 'shared', state, router, false, true);
             if (component.status) {
                 // dynamically generating the sidebar.
                 // insert the title of the sidebar.
@@ -31,20 +31,17 @@ namespace Sidebar {
                 menuItems.map((item: SidebarItem): void => {
                     const { name, icon } = item;
                     component.element.firstElementChild.insertAdjacentHTML('beforeend', `
-                        <a class="item" href="#${name}">
-                            <i class="${icon} icon"></i>
+                        <a class="item" route="${name}">
+                            <i class="${icon} icon killPointerEvent"></i>
                             ${name}
                         </a>
                     `.trim());
 
                     // add the event listener function to the menu item that has just been added.
-                    component.element.querySelector('div').lastChild!.addEventListener('click', () => {
-                        window.location.hash = name;
-                        // helpers.addScript(`${name}/${name}.js`);
-                        // console.log('fromSidebar', state);
-                        // console.log((<any>state.components)[name]);
-                        // (<any>state.components)[name].style.display = 'none';
-                        console.log(window.location.hash);
+                    component.element.querySelector('div').lastChild!.addEventListener('click', (e: Event) => {
+                        e.preventDefault();
+                        window.location.path = (<HTMLElement>e.target).getAttribute('route') as string;
+                        router.switchRoute();
                     });
                 });
             }
@@ -52,11 +49,11 @@ namespace Sidebar {
     }
 
     // Get the body of the html and it's id to determine which section we are on.
-    const mainPath: string = (document.querySelector('body') as HTMLBodyElement).getAttribute('id') as string;
+    const section: string = (document.querySelector('body') as HTMLBodyElement).getAttribute('id') as string;
 
     // Load dynamic content depending on the renderer being used
-    switch (mainPath) {
-        case 'mainWindow':
+    switch (section) {
+        case 'toolbox':
             const menuItems: SidebarItem[] = [
                 {
                     name: 'dashboard',
@@ -80,7 +77,7 @@ namespace Sidebar {
                 },
             ];
             const title: string = 'toolbox';
-            new Sidebar('sidebar', menuItems, title);
+            new Sidebar('sidebar', true, menuItems, title);
             break;
         case 'someOtherWindow':
             null;

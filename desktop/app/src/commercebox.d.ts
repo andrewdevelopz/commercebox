@@ -3,8 +3,6 @@
  */
 
 import { IpcRenderer } from 'electron';
-import State from './utils/state';
-import Router from './utils/router/router';
 
 // Declare global properties to be accessed in renderer.
 declare global {
@@ -14,9 +12,14 @@ declare global {
             ipcRenderer: IpcRenderer;
             Helpers: any;
             Component: any;
-            State: State;
-            Router: Router;
+            State: any;
+            Router: any;
         };
+    }
+
+    // add path property to window.location object.
+    interface Location {
+        path: string;
     }
 
     // sidebar menu item object structure

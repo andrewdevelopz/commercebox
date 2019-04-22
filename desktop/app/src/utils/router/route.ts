@@ -11,15 +11,14 @@ export default class Route {
         this.name = name;
         this.element = element;
         this.defaultRoute = defaultRoute;
-        // console.log('\nRoute\n', this);
     }
 
     /**
      *  This method checks to see if the current component is the active route.
      * 
-     *  @param hashedPath what the hashed path should be in window.location.hash
+     *  @param path what the path should be in window.location.path
      */
-    private isActiveRoute = (hashedPath: string): boolean => {
-        return hashedPath.replace('#', '') === this.name;
+    private isActiveRoute = (path: string): boolean => {
+        return path === this.name;
     }
 }
