@@ -13,20 +13,28 @@ export default class Helpers {
      * 
      *  @param src - the path to which to set the src of the script tag
      */
-    private addScript = (src: string): HTMLScriptElement | void => {
-        // loop through all scripts in html and exit the function if it has already been loaded.
-        const filename: string = src.split('/').pop() as string;
-        const scripts: NodeListOf<HTMLScriptElement> = document.querySelectorAll('script');
-        for (const script of scripts) {
-            if (script.src.search(filename) > -1) {
-                return;
+    private addScript = (src: string): Promise<HTMLScriptElement> => {
+        return new Promise((resolve: any, reject: any) => {
+            // loop through all scripts in html and exit the function if it has already been loaded.
+            const filename: string = src.split('/').pop() as string;
+            const scripts: NodeListOf<HTMLScriptElement> = document.querySelectorAll('script');
+            for (const script of scripts) {
+                if (script.src.search(filename) > -1) {
+                    return;
+                }
             }
-        }
-        const s: HTMLScriptElement = document.createElement('script');
-        s.setAttribute('src', src);
-        s.setAttribute('type', 'text/javascript');
-        document.body.appendChild(s);
-        return s;
+            const s: HTMLScriptElement = document.createElement('script');
+            s.setAttribute('src', src);
+            s.setAttribute('type', 'text/javascript');
+            document.body.appendChild(s);
+            // resolve when load and reject when error
+            s.addEventListener('load', () => {
+                resolve(s);
+            });
+            s.addEventListener('error', (e: Event) => {
+                reject(e);
+            });
+        });
     }
 
     /**

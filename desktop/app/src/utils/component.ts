@@ -17,6 +17,7 @@ export default class Component {
     constructor(name: string, controller: boolean = false) {
         this.name = name;
         this.controller = controller;
+        // console.log(this);
     }
 
     /**
@@ -30,13 +31,13 @@ export default class Component {
      *  @param defaultRoute boolean to determine if the component should be the default route
      */
     private generateComponent = async (
-            name: string,
-            element: string,
-            dir: string,
-            state: IState,
-            router: any,
-            defaultRoute: boolean = false
-        ): Promise<LocalResponse> => {
+        name: string,
+        element: string,
+        dir: string,
+        state: IState,
+        router: any,
+        defaultRoute: boolean = false
+    ): Promise<LocalResponse> => {
         try {
             // select the `includes` area element
             const includes: HTMLElement = document.querySelector(element) as HTMLElement;
@@ -47,6 +48,8 @@ export default class Component {
                 const container: HTMLDivElement = document.createElement('div');
                 container.setAttribute('id', name);
                 container.insertAdjacentHTML('afterbegin', html.body);
+                // if defaultRoute or controller we show the element.
+                defaultRoute || this.controller ? container.style.display = 'block' : container.style.display = 'none';
                 includes.insertAdjacentElement('beforeend', container);
                 const included = await this.includeHTML(container);
                 // add the html component to the global state object.
@@ -96,7 +99,7 @@ export default class Component {
                     fragment.appendChild(tag.firstChild);
                 }
                 // replace the include element with the document fragment.
-                tag.parentNode!.replaceChild(fragment, tag);
+                tag.parentElement!.replaceChild(fragment, tag);
                 // apply recursion.
                 await this.includeHTML(parent);
             }

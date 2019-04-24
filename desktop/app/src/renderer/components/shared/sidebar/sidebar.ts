@@ -23,7 +23,7 @@ namespace Sidebar {
                 // dynamically generating the sidebar.
                 // insert the title of the sidebar.
                 component.element.firstElementChild.insertAdjacentHTML('afterbegin', `
-                    <span id="title" class="item">
+                    <span id="title" class="item" style="background: #000;">
                         ${title}
                     </span>
                 `.trim());
@@ -38,7 +38,7 @@ namespace Sidebar {
                     `.trim());
 
                     // add the event listener function to the menu item that has just been added.
-                    component.element.querySelector('div').lastChild!.addEventListener('click', (e: Event) => {
+                    component.element.firstElementChild.lastChild.addEventListener('click', (e: Event) => {
                         e.preventDefault();
                         window.location.path = (<HTMLElement>e.target).getAttribute('route') as string;
                         router.goToRoute();

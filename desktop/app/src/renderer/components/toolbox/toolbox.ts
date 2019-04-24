@@ -5,9 +5,9 @@
 
 // Get needed properties and methods from window scope inside preload.js.
 const { Helpers, ipcRenderer, Component, State, Router } = window.main;
-const helpers = new Helpers();
+const helpers: any = new Helpers();
 const state: IState = new State();
-const router = new Router([]);
+const router = new Router();
 
 // include the components script onload. the scripts will generate the html for us.
 const toolboxComponents: ComponentInfo = [
@@ -29,4 +29,8 @@ const generateComponents = (comps: ComponentInfo): void => {
     }
 }
 generateComponents(toolboxComponents);
-router.init();
+
+window.addEventListener('load', async () => {
+    // insert code when window is loaded.
+    // console.log(window.location);
+});

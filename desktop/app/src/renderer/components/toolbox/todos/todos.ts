@@ -10,8 +10,8 @@ namespace ToDos {
             this.render();
         }
 
-        private render = async (): Promise<void> => {
-            const component = await this.generateComponent(this.name, '#includes', 'toolbox', state, router);
+        private render = (): void => {
+            this.generateComponent(this.name, '#includes', 'toolbox', state, router);
         }
     }
     new ToDos('todos');

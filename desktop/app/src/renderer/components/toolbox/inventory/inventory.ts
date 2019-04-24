@@ -7,12 +7,18 @@ namespace Inventory {
     class Inventory extends Component {
         constructor(name: string) {
             super(name);
-            this.render();
+            let self = this;
+            (async function() {
+                await self.render();
+
+            }())
         }
 
         private render = async (): Promise<void> => {
-            const component = await this.generateComponent(this.name, '#includes', 'toolbox', state, router);
+            await this.generateComponent(this.name, '#includes', 'toolbox', state, router);
         }
     }
     new Inventory('inventory');
+    const edit = document.querySelector('#edit');
+    console.log(edit);
 }

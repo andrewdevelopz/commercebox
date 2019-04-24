@@ -8,19 +8,8 @@
 export default class Router {
     routes: Route[];
 
-    constructor(routes: Route[]) {
+    constructor(routes: Route[] = []) {
         this.routes = routes;
-    }
-
-    /**
-     *  All the tasks to be performed when the router is first initiated.
-     */
-    private init = () => {
-        console.log(this.routes);
-        for (const route of this.routes) {
-            console.log('inside');
-            console.log(route.defaultRoute)
-        }
     }
 
     /**

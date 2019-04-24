@@ -101,7 +101,6 @@ export default class App {
                 },
                 show: false
             });
-            this.mainWindow.maximize();
 
             // Load the html file into the window
             this.mainWindow.loadURL(url.format({
@@ -109,16 +108,17 @@ export default class App {
                 protocol: 'file:',
                 slashes: true
             }));
-
-            // Quit entire app when closed
-            this.mainWindow.on('closed', () => {
-                app.quit();
-            });
+            this.mainWindow.once('ready-to-show', () => this.mainWindow.maximize());
 
             // Build menu from template
             const mainMenu = Menu.buildFromTemplate(this.mainMenuTemplate);
             // Insert the menu
             Menu.setApplicationMenu(mainMenu);
+
+            // Quit entire app when closed
+            this.mainWindow.on('closed', () => {
+                app.quit();
+            });
         });
     }
 }
