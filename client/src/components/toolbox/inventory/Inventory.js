@@ -408,9 +408,7 @@ export default class Inventory extends Component {
     // Render the component
     render() {
         // wait for componentDidMount before rendering
-        if (this.state.table.inventory.length === 0) {
-            return null;
-        }
+        if (this.state.table.inventory.length === 0) return null;
         const { table, editItems, path } = this.state;
 
         // generate buttons based on `editItems` state
@@ -422,7 +420,8 @@ export default class Inventory extends Component {
                         <Button floated='right'>Link</Button>
                         <Button as={Link} to={`${path}/createProducts`} color='orange' floated='right'>Create</Button>
                         <Button onClick={this.onEditItems} color='blue' floated='right'>Edit</Button>
-                        <Button onClick={this.onGenerateDummyData} color='green'>Dummy Data</Button>
+                        {/* uncomment below to display dummy data generator button */}
+                        {/* <Button onClick={this.onGenerateDummyData} color='green'>Dummy Data</Button> */}
                     </React.Fragment>
                 );
             } else {

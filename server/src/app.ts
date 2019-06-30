@@ -69,12 +69,14 @@ export default class App {
     }
 
     // Instantate the HTTP server
-    private httpServer(app: express.Application): void {
+    private async httpServer(app: express.Application): Promise<void> {
         this.unifiedServer(app);
 
-        // Listen on PORT
+        // listen on PORT
         const port = process.env.PORT || 2995;
-        app.listen(port, (err: Error) => err ? console.log(err) : console.log(`Server started on port: ${port}`));
+        const serverListen = await app.listen(port);
+        // log the port the server started or the error if something goes wrong.
+        serverListen ? console.log(`Server started on port: ${port}`) : console.log(serverListen);
     }
 
     // Init script method
