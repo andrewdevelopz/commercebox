@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 // Import custom components
 import CardFrame from '../../../shared/cards/CardFrame';
 import AddressCard from './address/AddressCard';
+import WooCard from './marketPlaces/woocommerce/WooCard';
 import { fetchAuth } from '../../../shared/services/httpService';
 import { loadToken } from '../../../shared/services/authService';
 
@@ -108,7 +109,6 @@ export default class Profile extends Component {
                 userInfo: prevState.userInfo
             }
         });
-
         this.token = null;
     }
 
@@ -252,6 +252,9 @@ export default class Profile extends Component {
                     <Grid.Row>
                         <Grid.Column>
                             <AddressCard />
+                        </Grid.Column>
+                        <Grid.Column>
+                            <WooCard />
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

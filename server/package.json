@@ -17,7 +17,8 @@
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.4.2",
     "passport": "^0.4.0",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.0",
+    "woocommerce-api": "^1.4.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
