@@ -6,5 +6,5 @@
         "server/**/dist": true,
         "server/**/coverge": true
     },
-    // "typescript.referencesCodeLens.enabled": true
+    "typescript.referencesCodeLens.enabled": true
 }

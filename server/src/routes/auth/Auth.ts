@@ -14,7 +14,6 @@ import User from '../../models/User';
 
 // Import types
 import { IUser, QueryStatus } from 'mongooseTypes';
-import { UserInfo } from 'os';
 
 const router = express.Router();
 
@@ -43,6 +42,9 @@ export default class Auth extends Route {
         this.updateUserPassword(true);
         this.getUserAddress(true);
         this.addUpdateUserAddress(true);
+        this.deleteUserAddress(true);
+        this.getWooKeys(true);
+        this.updateWooKeys(true);
     }
 
     /**
@@ -63,13 +65,13 @@ export default class Auth extends Route {
             try {
                 // Generate salt and hashed password
                 const saltRounds: string = await bcrypt.genSalt(10);
-                const hash: string = await bcrypt.hash(req.body.password, saltRounds);
+                const hashed: string = await bcrypt.hash(req.body.password, saltRounds);
                 const user: User = {
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     username: req.body.username,
                     email: req.body.email,
-                    password: hash
+                    password: hashed
                 }
 
                 const newUser: IUser = await new User(user).save();
@@ -184,7 +186,7 @@ export default class Auth extends Route {
                 // query to the database with userID
                 await User.findOneAndUpdate(userID, update).exec();
 
-                res.status(200).json({ message: 'The user has been updated' });
+                res.status(200).json({ success: true, message: 'The user has been updated' });
             } catch (e) {
                 // send error results
                 res.sendStatus(500);
@@ -237,7 +239,7 @@ export default class Auth extends Route {
         }, passport);
     }
 
-    // Add and updated addresses for the user
+    // Add and update addresses for the user
     addUpdateUserAddress(passport: boolean): void {
         this.createRoute('post', '/addUpdateUserAddress', async (req: express.Request, res: express.Response) => {
             const userID: string = req.user._id;
@@ -270,6 +272,57 @@ export default class Auth extends Route {
     deleteUserAddress(passport: boolean): void {
         this.createRoute('delete', '/deleteUserAddress', async (req: express.Request, res: express.Response) => {
 
+        }, passport);
+    }
+
+    // Get woocommerce keys
+    getWooKeys(passport: boolean): void {
+        this.createRoute('get', '/getWooKeys', async (req: express.Request, res: express.Response) => {
+            // find user data and assemble the stored tokens
+            const userID: string = req.user._id;
+            const user: any = await User.findById(userID);
+            // assemble the payload based on the UserTokens type in generalTypes.ts
+            const tokens: UserTokens = {
+                woocommerce: {
+                    consumer: user.tokens.woocommerce.consumer,
+                    secret: user.tokens.woocommerce.secret
+                }
+            }
+
+            res.status(200).json({ success: true, tokens });
+        }, passport);
+    }
+
+    // Update woocommerce keys
+    updateWooKeys(passport: boolean): void {
+        this.createRoute('put', '/updateWooKeys', async (req: express.Request, res: express.Response) => {
+            try {
+                const userID: string = req.user._id;
+
+                /**
+                 * @todo - make sure we properly secure the keys. Not too sure if we are going to hash it
+                 * or require a isMatch() method to access the secret key.
+                 * 
+                 * // generate salt and hashed password
+                 * const saltRounds: string = await bcrypt.genSalt(10);
+                 * const hashed: string = await bcrypt.hash(req.body.secret, saltRounds);
+                 * */
+
+                // assemble the payload based on the UserTokens type in generalTypes.ts
+                const payload: UserTokens = {
+                    woocommerce: {
+                        consumer: req.body.consumer,
+                        secret: req.body.secret
+                    }
+                };
+
+                // update the User model with woocommerce tokens
+                await User.updateOne({ _id: userID }, { tokens: payload }).exec();
+                res.status(200).json({ success: true, message: 'The keys have been successfully updated' });
+            } catch (e) {
+                console.error(e);
+                res.sendStatus(500);
+            }
         }, passport);
     }
 }

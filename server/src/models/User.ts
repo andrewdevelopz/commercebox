@@ -58,7 +58,7 @@ const UserSchema: mongoose.Schema = new Schema({
         },
         pitneyBowesAuthToken: String,
         woocommerce: {
-            key: String,
+            consumer: String,
             secret: String
         }
     }

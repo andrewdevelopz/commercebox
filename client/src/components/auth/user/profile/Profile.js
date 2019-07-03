@@ -249,7 +249,7 @@ export default class Profile extends Component {
                             </Segment>
                         </Grid.Column>
                     </Grid.Row>
-                    <Grid.Row>
+                    <Grid.Row stretched>
                         <Grid.Column>
                             <AddressCard />
                         </Grid.Column>

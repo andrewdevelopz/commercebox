@@ -34,13 +34,13 @@ type UserAddress = {
 
 // Token storage format for user
 type UserTokens = {
-    ebay: {
+    ebay?: {
         auth: string,
         ref: string
     }
-    pitneyBowesAuthToken: string;
-    woocommerce: {
-        key: string,
+    pitneyBowesAuthToken?: string;
+    woocommerce?: {
+        consumer: string,
         secret: string
     }
 }
