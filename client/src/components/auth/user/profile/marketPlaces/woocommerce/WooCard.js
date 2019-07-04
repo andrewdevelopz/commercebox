@@ -57,8 +57,8 @@ export default class WooCard extends Component {
                 if (payload.success) {
                     // set the state of consumer/secret with the received payload
                     this.setState(prevState => {
-                        prevState.consumer = payload.tokens.woocommerce.consumer;
-                        prevState.secret = payload.tokens.woocommerce.secret;
+                        prevState.consumer = payload.tokens.consumer;
+                        prevState.secret = payload.tokens.secret;
                         return {
                             consumer: prevState.consumer,
                             secret: prevState.secret

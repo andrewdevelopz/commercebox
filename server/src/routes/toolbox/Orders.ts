@@ -4,9 +4,11 @@
 
 // Dependencies
 import express from 'express';
-const router = express.Router();
 import Route from '../Route';
 import Order from '../../models/Order';
+import { getAllOrders } from '../../utils/woocommerce/wooTools';
+
+const router = express.Router();
 
 export default class Orders extends Route {
     constructor(path: string, app: express.Application) {
@@ -21,7 +23,8 @@ export default class Orders extends Route {
 
     run(): void {
         this.root();
-        this.test();
+        this.test(true);
+        this.getAllOrders(true);
     }
 
     root(): void {
@@ -30,9 +33,20 @@ export default class Orders extends Route {
         });
     }
 
-    test(): void {
+    test(passport: boolean): void {
         this.createRoute('get', '/test', (req: express.Request, res: express.Response) => {
-            res.send('Hello from <b>TEST</b> path of orders');
-        });
+            res.json({ test: 'Hello from <b>TEST</b> path of orders' });
+        }, passport);
+    }
+
+    /**
+     * Get all orders from the woocommerce store
+     */
+    getAllOrders(passport: boolean): void {
+        this.createRoute('get', '/getAllOrders', (req: express.Request, res: express.Response) => {
+            const tokens = req.user.tokens.woocommerce;
+            console.log(tokens);
+            res.json({ test: 'testing' });
+        }, passport);
     }
 }

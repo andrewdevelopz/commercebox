@@ -6,12 +6,9 @@
 import express from 'express';
 import Route from '../Route';
 import Product from '../../models/Product';
-
-// Import custom
 import dummy from '../../.data/dummy/products';
-
-// Import types
 import { IProduct, QueryStatus } from 'mongooseTypes';
+import { getAllProducts } from '../../utils/woocommerce/wooTools';
 
 const router = express.Router();
 
@@ -33,13 +30,13 @@ export default class Inventory extends Route {
         this.createInventory(true);
         this.updateInventory(true);
         this.deleteInventory(true);
+        this.getWooProducts(true);
     }
 
     /**
      * All methods take:
      * @param passport - which is a boolean value to include passport auth or not
      */
-
     root(passport: boolean): void {
         this.createRoute('get', '/', (req: express.Request, res: express.Response) => {
             res.send('Hello from <b>ROOT</b> path of inventory');
@@ -158,6 +155,27 @@ export default class Inventory extends Route {
             } catch (e) {
                 console.log(e);
                 res.status(500).json({
+                    error: e.message
+                });
+            }
+        }, passport);
+    }
+
+    // Get woocommerce products
+    getWooProducts(passport: boolean): void {
+        this.createRoute('get', '/getWooProducts', async (req: express.Request, res: express.Response) => {
+            try {
+                // declare users woocommerce `tokens` and pass it to getAllProducts(tokens);
+                const tokens: WoocommerceTokens = req.user.tokens.woocommerce;
+                const products = await getAllProducts(tokens);
+                res.status(200).json({
+                    success: true,
+                    body: products
+                });
+            } catch (e) {
+                console.log(e);
+                res.status(500).json({
+                    success: false,
                     error: e.message
                 });
             }

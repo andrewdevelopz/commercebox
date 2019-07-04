@@ -112,3 +112,9 @@ type DatabaseConfig = {
     database: string;
     secret: string;
 }
+
+// The object structre of woocommerce tokens
+type WoocommerceTokens = {
+    consumer?: string;
+    secret?: string;
+}

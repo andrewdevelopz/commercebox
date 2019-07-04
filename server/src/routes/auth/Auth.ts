@@ -282,13 +282,10 @@ export default class Auth extends Route {
             const userID: string = req.user._id;
             const user: any = await User.findById(userID);
             // assemble the payload based on the UserTokens type in generalTypes.ts
-            const tokens: UserTokens = {
-                woocommerce: {
-                    consumer: user.tokens.woocommerce.consumer,
-                    secret: user.tokens.woocommerce.secret
-                }
+            const tokens: WoocommerceTokens = {
+                consumer: user.tokens.woocommerce.consumer,
+                secret: user.tokens.woocommerce.secret
             }
-
             res.status(200).json({ success: true, tokens });
         }, passport);
     }
@@ -314,7 +311,7 @@ export default class Auth extends Route {
                         consumer: req.body.consumer,
                         secret: req.body.secret
                     }
-                };
+                }
 
                 // update the User model with woocommerce tokens
                 await User.updateOne({ _id: userID }, { tokens: payload }).exec();
