@@ -20,19 +20,25 @@ import Orders from './routes/toolbox/Orders';
 import Shipping from './routes/toolbox/Shipping';
 import Todos from './routes/toolbox/Todos';
 
-export default class App {
+class App {
     private db: Database;
     private app: express.Application;
+    private env: string;
+    private port: string | number;
+    private serverListen: any;
 
-    constructor() {
+    constructor(env: string, port: string | number) {
         this.db = new Database();
         this.app = express();
+        this.port = port;
+        this.env = env;
+
+        // if the env is `test` we manually start and stop the server in /src/tests/globalSetup.ts and /src/tests/globalTeardown.ts
+        this.env === 'test' ? false : this.startServer(this.app);
         // Connect to db with mongoose
         mongoose.connect((<string>this.db.getConnectionString().database), { useNewUrlParser: true, useFindAndModify: false })
             .then(() => console.log('Connected to MongoDB...'))
             .catch(err => console.log(err));
-        // Initiate the server
-        this.init(this.app);
     }
 
     // All server logic for the http and https server
@@ -79,8 +85,17 @@ export default class App {
         serverListen ? console.log(`Server started on port: ${port}`) : console.log(serverListen);
     }
 
-    // Init script method
-    init(app: express.Application): void {
+    // Initialize the script to start the http server
+    public startServer = (app: express.Application): void => {
         this.httpServer(app);
     }
+
+    // Stop the server for jest and other situations that may require to stop the server.
+    public stopServer = () => {
+        this.serverListen.close();
+        this.serverListen = null;
+        console.log('Server has been stopped');
+    }
 }
+
+export { App };
