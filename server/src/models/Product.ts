@@ -4,7 +4,7 @@
 import mongoose, { Schema } from 'mongoose';
 
 // Import types
-import { IProduct } from 'mongooseTypes';
+import { IProduct } from 'definitions';
 
 const ProductSchema: mongoose.Schema = new Schema({
     image: String,

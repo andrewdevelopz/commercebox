@@ -1,3 +1,7 @@
+import {
+    WoocommerceTokens
+} from 'definitions';
+
 const woocommerce = require('woocommerce-api');
 
 /**

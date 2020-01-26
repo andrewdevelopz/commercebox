@@ -36,7 +36,10 @@ class App {
         // if the env is `test` we manually start and stop the server in /src/tests/globalSetup.ts and /src/tests/globalTeardown.ts
         this.env === 'test' ? false : this.startServer(this.app);
         // Connect to db with mongoose
-        mongoose.connect((<string>this.db.getConnectionString().database), { useNewUrlParser: true, useFindAndModify: false })
+        mongoose.connect(
+                (<string>this.db.getConnectionString().database),
+                { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true }
+            )
             .then(() => console.log('Connected to MongoDB...'))
             .catch(err => console.log(err));
     }

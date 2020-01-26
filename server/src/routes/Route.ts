@@ -6,10 +6,8 @@
  */
 
 import passport from 'passport';
-
-// Import types
 import { Application, Router } from 'express';
-import { IRouterExtended } from 'expressTypes';
+import { IRouterExtended } from 'definitions';
 
 export default class Route {
     path: string;

@@ -7,6 +7,10 @@ import express from 'express';
 import Route from '../Route';
 import Order from '../../models/Order';
 import { getAllOrders } from '../../utils/woocommerce/wooTools';
+import {
+    IRequestExtended,
+    WoocommerceTokens
+} from 'definitions';
 
 const router = express.Router();
 
@@ -28,13 +32,13 @@ export default class Orders extends Route {
     }
 
     root(): void {
-        this.createRoute('get', '/', (req: express.Request, res: express.Response) => {
+        this.createRoute('get', '/', (req: IRequestExtended, res: express.Response) => {
             res.send('Hello from <b>ROOT</b> path of orders');
         });
     }
 
     test(passport: boolean): void {
-        this.createRoute('get', '/test', (req: express.Request, res: express.Response) => {
+        this.createRoute('get', '/test', (req: IRequestExtended, res: express.Response) => {
             res.json({ test: 'Hello from <b>TEST</b> path of orders' });
         }, passport);
     }
@@ -43,10 +47,12 @@ export default class Orders extends Route {
      * Get all orders from the woocommerce store
      */
     getAllOrders(passport: boolean): void {
-        this.createRoute('get', '/getAllOrders', (req: express.Request, res: express.Response) => {
-            const tokens = req.user.tokens.woocommerce;
-            console.log(tokens);
-            res.json({ test: 'testing' });
+        this.createRoute('get', '/getAllOrders', (req: IRequestExtended, res: express.Response) => {
+            if (req.user && req.user.tokens && req.user.tokens.woocommerce) {
+                const tokens: WoocommerceTokens = req.user.tokens.woocommerce;
+                console.log(tokens);
+                res.json({ test: 'testing' });
+            }
         }, passport);
     }
 }

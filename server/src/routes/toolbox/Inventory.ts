@@ -7,8 +7,15 @@ import express from 'express';
 import Route from '../Route';
 import Product from '../../models/Product';
 import dummy from '../../.data/dummy/products';
-import { IProduct, QueryStatus } from 'mongooseTypes';
 import { getAllProducts } from '../../utils/woocommerce/wooTools';
+import {
+    IRequestExtended,
+    IProduct,
+    QueryStatus,
+    TUser,
+    TProduct,
+    WoocommerceTokens
+} from 'definitions';
 
 const router = express.Router();
 
@@ -38,45 +45,50 @@ export default class Inventory extends Route {
      * @param passport - which is a boolean value to include passport auth or not
      */
     root(passport: boolean): void {
-        this.createRoute('get', '/', (req: express.Request, res: express.Response) => {
+        this.createRoute('get', '/', (req: IRequestExtended, res: express.Response) => {
             res.send('Hello from <b>ROOT</b> path of inventory');
         }, passport);
     }
 
     // Generate dummy data
     generateDummyData(passport: boolean): void {
-        this.createRoute('get', '/generateDummyData', async (req: express.Request, res: express.Response) => {
-            const products: any = dummy;
-            const user: User = req.user;
+        this.createRoute('get', '/generateDummyData', async (req: IRequestExtended, res: express.Response) => {
+            if (req.user) {
+                const products: any = dummy;
+                const userID: TUser = req.user._id;
 
-            for (const product of products) {
-                product['userID'] = user._id;
+                for (const product of products) {
+                    product['userID'] = userID;
+                }
+
+                await Product.insertMany(products);
+
+                res.status(200).json({
+                    message: `${products.length} Dummy data has been generated`
+                });
             }
-
-            await Product.insertMany(products);
-
-            res.status(200).json({
-                message: `${products.length} Dummy data has been generated`
-            });
         }, passport);
     }
 
     // Get inventory
     getInventory(passport: boolean): void {
-        this.createRoute('get', '/getInventory', async (req: express.Request, res: express.Response) => {
-            // get all products from database
-            const products = await Product.find({ userID: req.user._id });
-            res.status(200).json(products);
+        this.createRoute('get', '/getInventory', async (req: IRequestExtended, res: express.Response) => {
+            if (req.user) {
+                // get all products from database
+                const products = await Product.find({ userID: req.user._id });
+                console.log(req.user);
+                res.status(200).json(products);
+            }
         }, passport);
     }
 
     // Create products
     createInventory(passport: boolean): void {
-        this.createRoute('post', '/createInventory', async (req: express.Request, res: express.Response) => {
+        this.createRoute('post', '/createInventory', async (req: IRequestExtended, res: express.Response) => {
             try {
                 // set products && user from req
-                const products: Product[] = req.body.products;
-                const user: User = req.user;
+                const products: TProduct[] = req.body.products;
+                const user: TUser = req.user;
 
                 let updated: number = 0;
                 // if there is only one product to query
@@ -115,9 +127,9 @@ export default class Inventory extends Route {
     // Update inventory
     /** @todo - use bulkWrite() to update the products */
     updateInventory(passport: boolean): void {
-        this.createRoute('put', '/updateInventory', async (req: express.Request, res: express.Response) => {
+        this.createRoute('put', '/updateInventory', async (req: IRequestExtended, res: express.Response) => {
             try {
-                const items: Product[] = req.body.items;
+                const items: TProduct[] = req.body.items;
                 // delete `changed` property before updating database
                 for (let i = 0, n = items.length; i < n; i++) {
                     delete items[i].changed;
@@ -144,9 +156,9 @@ export default class Inventory extends Route {
 
     // Delete inventory
     deleteInventory(passport: boolean): void {
-        this.createRoute('delete', '/deleteInventory', async (req: express.Request, res: express.Response) => {
+        this.createRoute('delete', '/deleteInventory', async (req: IRequestExtended, res: express.Response) => {
             try {
-                const items: Product[] = req.body.items;
+                const items: TProduct[] = req.body.items;
 
                 // delete all the products in `items`
                 const deleted: QueryStatus = await Product.deleteMany({ _id: { $in: items } });
@@ -163,15 +175,17 @@ export default class Inventory extends Route {
 
     // Get woocommerce products
     getWooProducts(passport: boolean): void {
-        this.createRoute('get', '/getWooProducts', async (req: express.Request, res: express.Response) => {
+        this.createRoute('get', '/getWooProducts', async (req: IRequestExtended, res: express.Response) => {
             try {
-                // declare users woocommerce `tokens` and pass it to getAllProducts(tokens);
-                const tokens: WoocommerceTokens = req.user.tokens.woocommerce;
-                const products = await getAllProducts(tokens);
-                res.status(200).json({
-                    success: true,
-                    body: products
-                });
+                if (req.user && req.user.tokens && req.user.tokens.woocommerce) {
+                    // declare users woocommerce `tokens` and pass it to getAllProducts(tokens);
+                    const tokens: WoocommerceTokens = req.user.tokens.woocommerce;
+                    const products = await getAllProducts(tokens);
+                    res.status(200).json({
+                        success: true,
+                        body: products
+                    });
+                }
             } catch (e) {
                 console.log(e);
                 res.status(500).json({

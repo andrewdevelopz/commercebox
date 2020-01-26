@@ -11,9 +11,14 @@ import jwt from 'jsonwebtoken';
 import Route from '../Route';
 import Database from '../../config/database/Database';
 import User from '../../models/User';
-
-// Import types
-import { IUser, QueryStatus } from 'mongooseTypes';
+import {
+    TUser,
+    QueryStatus,
+    IRequestExtended,
+    UserAddress,
+    WoocommerceTokens,
+    UserTokens
+} from 'definitions';
 
 const router = express.Router();
 
@@ -54,19 +59,19 @@ export default class Auth extends Route {
 
     // Root for auth route, Use this format for all routes
     root(passport: boolean): void {
-        this.createRoute('get', '/', (req: express.Request, res: express.Response) => {
+        this.createRoute('get', '/', (req: IRequestExtended, res: express.Response) => {
             res.send('Hello from <b>ROOT</b> path of auth');
         }, passport);
     }
 
     // Register a user to the database
     register(passport: boolean): void {
-        this.createRoute('post', '/register', async (req: express.Request, res: express.Response) => {
+        this.createRoute('post', '/register', async (req: IRequestExtended, res: express.Response) => {
             try {
                 // Generate salt and hashed password
                 const saltRounds: string = await bcrypt.genSalt(10);
                 const hashed: string = await bcrypt.hash(req.body.password, saltRounds);
-                const user: User = {
+                const user: TUser = {
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     username: req.body.username,
@@ -74,7 +79,7 @@ export default class Auth extends Route {
                     password: hashed
                 }
 
-                const newUser: IUser = await new User(user).save();
+                const newUser: TUser = await new User(user).save();
                 res.status(201).json({
                     newUser
                 });
@@ -87,7 +92,7 @@ export default class Auth extends Route {
 
     // Authenticate a user
     login(passport: boolean): void {
-        this.createRoute('post', '/login', async (req: express.Request, res: express.Response) => {
+        this.createRoute('post', '/login', async (req: IRequestExtended, res: express.Response) => {
             try {
                 const username: string = req.body.username;
                 const password: string = req.body.password;
@@ -138,7 +143,7 @@ export default class Auth extends Route {
     }
 
     logout(passport: boolean): void {
-        this.createRoute('post', '/logout', async (req: express.Request, res: express.Response) => {
+        this.createRoute('post', '/logout', async (req: IRequestExtended, res: express.Response) => {
             /** @todo */
             // Create a blacklist of tokens so when a user logs out, that users token can't be used
             // Make sure to auto delete this blacklist in the db after 1 day of expiration of said token
@@ -150,34 +155,36 @@ export default class Auth extends Route {
 
     // Retreive the users data
     retreiveUserData(passport: boolean): void {
-        this.createRoute('get', '/retreiveUserData', async (req: express.Request, res: express.Response) => {
-            const userID: string = req.user._id;
-            const user = await User.findById(userID);
-
-            if (user) {
-                const sendUser: User = {
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    username: user.username,
-                    email: user.email
+        this.createRoute('get', '/retreiveUserData', async (req: IRequestExtended, res: express.Response) => {
+            if (req.user) {
+                const userID: string = req.user._id;
+                const user = await User.findById(userID);
+    
+                if (user) {
+                    const sendUser: TUser = {
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        username: user.username,
+                        email: user.email
+                    }
+                    res.status(200).json(sendUser);
+                } else {
+                    console.log('Something wen\'t wrong while looking for the user in the database');
+                    res.sendStatus(500);
                 }
-                res.status(200).json(sendUser);
-            } else {
-                console.log('Something wen\'t wrong while looking for the user in the database');
-                res.sendStatus(500);
             }
         }, passport);
     }
 
     // Update the user data
     updateUserData(passport: boolean): void {
-        this.createRoute('put', '/updateUserData', async (req: express.Request, res: express.Response) => {
+        this.createRoute('put', '/updateUserData', async (req: IRequestExtended, res: express.Response) => {
             try {
-                const userID: string = req.user._id;
-                const user: User = req.body.user;
+                const userID: TUser = req.user._id;
+                const user: TUser = req.body.user;
 
                 // construct user update object
-                const update: User = {
+                const update: TUser = {
                     firstName: user.firstName,
                     lastName: user.lastName,
                     username: user.username,
@@ -196,7 +203,7 @@ export default class Auth extends Route {
 
     // Update the user password
     updateUserPassword(passport: boolean): void {
-        this.createRoute('put', '/updateUserPassword', async (req: express.Request, res: express.Response) => {
+        this.createRoute('put', '/updateUserPassword', async (req: IRequestExtended, res: express.Response) => {
             try {
                 const userID: string = req.user._id;
                 const password: { currentPassword: string, newPassword: string } = req.body.password;
@@ -231,7 +238,7 @@ export default class Auth extends Route {
 
     // Get the user addresses
     getUserAddress(passport: boolean): void {
-        this.createRoute('get', '/getUserAddress', async (req: express.Request, res: express.Response) => {
+        this.createRoute('get', '/getUserAddress', async (req: IRequestExtended, res: express.Response) => {
             const userID: string = req.user._id;
             const addresses = await User.findById(userID).select('addresses');
 
@@ -241,7 +248,7 @@ export default class Auth extends Route {
 
     // Add and update addresses for the user
     addUpdateUserAddress(passport: boolean): void {
-        this.createRoute('post', '/addUpdateUserAddress', async (req: express.Request, res: express.Response) => {
+        this.createRoute('post', '/addUpdateUserAddress', async (req: IRequestExtended, res: express.Response) => {
             const userID: string = req.user._id;
             const addresses: UserAddress[] = req.body.addresses;
             const addAddress: UserAddress[] = [];
@@ -270,14 +277,14 @@ export default class Auth extends Route {
 
     // Delete addresses for the user
     deleteUserAddress(passport: boolean): void {
-        this.createRoute('delete', '/deleteUserAddress', async (req: express.Request, res: express.Response) => {
+        this.createRoute('delete', '/deleteUserAddress', async (req: IRequestExtended, res: express.Response) => {
 
         }, passport);
     }
 
     // Get woocommerce keys
     getWooKeys(passport: boolean): void {
-        this.createRoute('get', '/getWooKeys', async (req: express.Request, res: express.Response) => {
+        this.createRoute('get', '/getWooKeys', async (req: IRequestExtended, res: express.Response) => {
             // find user data and assemble the stored tokens
             const userID: string = req.user._id;
             const user: any = await User.findById(userID);
@@ -292,7 +299,7 @@ export default class Auth extends Route {
 
     // Update woocommerce keys
     updateWooKeys(passport: boolean): void {
-        this.createRoute('put', '/updateWooKeys', async (req: express.Request, res: express.Response) => {
+        this.createRoute('put', '/updateWooKeys', async (req: IRequestExtended, res: express.Response) => {
             try {
                 const userID: string = req.user._id;
 
