@@ -200,6 +200,7 @@ export default class Inventory extends Component {
             });
 
             console.log(await gen.json());
+            window.location.reload();
         } catch (e) {
             console.error(e);
         } finally {
@@ -430,7 +431,7 @@ export default class Inventory extends Component {
                         <Button as={Link} to={`${path}/createProducts`} color='orange' floated='right'>Create</Button>
                         <Button onClick={this.onEditItems} color='blue' floated='right'>Edit</Button>
                         {/* uncomment below to display dummy data generator button */}
-                        {/* <Button onClick={this.onGenerateDummyData} color='green'>Dummy Data</Button> */}
+                        <Button onClick={this.onGenerateDummyData} color='green'>Dummy Data</Button>
                     </React.Fragment>
                 );
             } else {

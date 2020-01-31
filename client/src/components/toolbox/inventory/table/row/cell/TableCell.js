@@ -56,7 +56,9 @@ export default class TableCell extends Component {
             if (this.props.editItems) {
                 return (
                     <React.Fragment>
-                        <Table.Cell className='tableCheckboxCell' textAlign='center'><Checkbox /></Table.Cell>
+                        <Table.Cell className='tableCheckboxCell' textAlign='center'>
+                            <Checkbox className='checkboxCell' onChange={this.props.groupSelect} />
+                        </Table.Cell>
                         <Table.Cell className='index' style={{ opacity: '0.5' }}>{parseInt(this.props.propKey) + 1}</Table.Cell>
                         {Object.keys(item).map((itemKey, i) => {
                             // nested objects of item object `item: { <nested>: ... }`

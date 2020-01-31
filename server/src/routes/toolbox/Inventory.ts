@@ -76,7 +76,6 @@ export default class Inventory extends Route {
             if (req.user) {
                 // get all products from database
                 const products = await Product.find({ userID: req.user._id });
-                console.log(req.user);
                 res.status(200).json(products);
             }
         }, passport);
