@@ -463,6 +463,6 @@ export default class Inventory extends Component {
                 {/* table frame */}
                 <TableFrame id='inventory' table={table} editItems={editItems} submitBtnName='Update' handleSubmit={this.onUpdateItems} />
             </Segment>
-        )
+        );
     }
 }

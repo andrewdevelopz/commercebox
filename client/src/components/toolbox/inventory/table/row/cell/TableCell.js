@@ -172,7 +172,7 @@ export default class TableCell extends Component {
                             }
                         })}
                     </React.Fragment>
-                )
+                );
             }
         }
 
@@ -180,6 +180,6 @@ export default class TableCell extends Component {
             <React.Fragment>
                 {generateCell()}
             </React.Fragment>
-        )
+        );
     }
 }

@@ -81,6 +81,6 @@ export default class TableRow extends Component {
             <React.Fragment>
                 {generateRows}
             </React.Fragment>
-        )
+        );
     }
 }
