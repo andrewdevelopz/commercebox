@@ -1,0 +1,25 @@
+{
+  "name": "commercebox",
+  "version": "0.0.0",
+  "description": "An order/inventory management system to help unite commerce businesses together all around the world.",
+  "main": "dist/app.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "rm -rf ./dist && tsc && node ./.bin/distribute.js",
+    "bundle": "npm run dist && npm start",
+    "html": "node ./.bin/distribute.js",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=./dist/public/assets/icons/mac/icon.icns --prune=true --out=builds",
+    "package-win": "electron-packager . commercebox --overwrite --platform=win32 --arch=ia32 --icon=./dist/public/assets/icons/win/icon.ico --prune=true --out=builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Commerce Box\"",
+    "package-linux": "electron-packager . commercebox --overwrite --platform=linux --arch=x64 --icon=./dist/public/assets/icons/png/icon.png --prune=true --out=builds"
+  },
+  "keywords": [
+    "commercebox"
+  ],
+  "author": "Andrew Lee",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^4.1.4",
+    "electron-packager": "^13.1.1",
+    "typescript": "^3.4.3"
+  }
+}

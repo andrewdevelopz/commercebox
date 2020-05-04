@@ -6,6 +6,8 @@
 import React, { Component } from 'react';
 import TableFrame from './table/TableFrame';
 // import SearchBar from '../../shared/search/Search';
+import { loadToken } from '../../shared/services/authService';
+import { fetchAll } from '../../shared/services/httpService';
 
 // Semantic UI
 import { Button, Divider, Segment, Grid, Search } from 'semantic-ui-react';
@@ -26,6 +28,25 @@ export default class Orders extends Component {
                     title: 'title'
                 }
             ]
+        }
+    }
+    token;
+
+    async componentDidMount() {
+        try {
+            // make api call to the database
+            this.token = loadToken();
+            const res = await fetchAll('orders', 'getAllOrders', 'get', {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': this.token
+            });
+            console.log(await res.json());
+
+        } catch (e) {
+            console.error(e);
+        } finally {
+            this.token = null;
         }
     }
 

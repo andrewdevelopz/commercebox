@@ -7,7 +7,6 @@ import CardFrame from '../../../../shared/cards/CardFrame';
 import TableFrame from '../../../../shared/tables/main/TableFrame';
 import { fetchAuth } from '../../../../shared/services/httpService';
 import { loadToken } from '../../../../shared/services/authService';
-
 import { Button, Divider, Checkbox } from 'semantic-ui-react';
 
 export default class AddressCard extends Component {
@@ -42,15 +41,15 @@ export default class AddressCard extends Component {
                 'Authorization': this.token
             });
             const addresses = await fetched.json();
-    
+
             // // add changed property to the address object
             // for (const address of addresses.data.addresses) {
             //     address.changed = false;
             // }
-    
+
             this.setState(prevState => {
                 prevState.table.items = prevState.table.items.concat(addresses.data.addresses);
-    
+
                 return {
                     table: prevState.table
                 }
@@ -92,33 +91,33 @@ export default class AddressCard extends Component {
             //     }
             //     return;
             // });
-    
+
             const addresses = this.state.table.items;
             // load the token and make sure to set to null whenever returned or done
             this.token = loadToken();
-    
+
             const fetched = await fetchAuth('addUpdateUserAddress', 'post', {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': this.token
             }, { addresses });
             const updated = await fetched.json();
-    
+
             if (fetched.status === 201) {
                 this.setState(prevState => {
                     this.addRemoveHeaderCol(prevState);
-    
+
                     return {
                         editItems: !prevState.editItems,
                         table: prevState.table
                     }
                 });
-    
+
                 console.log(updated);
             } else {
                 console.error(updated);
             }
-    
+
         } catch (e) {
             console.error(e);
         } finally {
@@ -172,9 +171,9 @@ export default class AddressCard extends Component {
 
     render() {
         // wait for componentDidMount before rendering
-        if (this.state.table.items.length === 0) {
-            return null;
-        }
+        // if (this.state.table.items.length === 0) {
+        //     return null;
+        // }
 
         return (
             <CardFrame header='Addresses'>

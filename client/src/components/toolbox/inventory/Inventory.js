@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import SearchBar from '../../shared/search/Search';
 import TableFrame from './table/TableFrame';
 import { loadToken } from '../../shared/services/authService';
-import { fetchInventory } from '../../shared/services/httpService';
+import { fetchAll } from '../../shared/services/httpService';
 
 // Semantic UI
 import { Segment, Grid, Button, Divider, Checkbox } from 'semantic-ui-react';
@@ -71,10 +71,10 @@ export default class Inventory extends Component {
 
     async componentDidMount() {
         try {
-            // make an api call to the database
+            // Make an api call to the database
             this.token = loadToken();
 
-            const res = await fetchInventory('getInventory', 'get', {
+            const res = await fetchAll('inventory', 'getInventory', 'get', {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': this.token
@@ -82,13 +82,22 @@ export default class Inventory extends Component {
 
             const organized = this.organizeJSONResponse(await res.json());
 
-            // set table state to res from http call
+            // Set table state to res from http call
             this.setState(prevState => {
                 prevState.table.inventory = organized;
                 return {
                     table: prevState.table
                 }
             });
+
+            // Get woocommerce products data and JSON.parse the string of products
+            const woo = await fetchAll('inventory', 'getWooProducts', 'get', {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': this.token
+            });
+            const products = await woo.json();
+            console.log(JSON.parse(products.body));
         } catch (e) {
             console.error(e);
         } finally {
@@ -184,13 +193,14 @@ export default class Inventory extends Component {
         try {
             this.token = loadToken();
 
-            const gen = await fetchInventory('generateDummyData', 'get', {
+            const gen = await fetchAll('inventory', 'generateDummyData', 'get', {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': this.token
             });
 
             console.log(await gen.json());
+            window.location.reload();
         } catch (e) {
             console.error(e);
         } finally {
@@ -232,7 +242,7 @@ export default class Inventory extends Component {
             for (let i = 0, n = products.length; i < n; i += batch) {
                 const chunk = products.slice(i, i + batch);
 
-                const res = await fetchInventory('updateInventory', 'put', {
+                const res = await fetchAll('inventory', 'updateInventory', 'put', {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': this.token
@@ -308,7 +318,7 @@ export default class Inventory extends Component {
                 for (let i = 0, n = products.length; i < n; i += batch) {
                     const chunk = products.slice(i, i + batch);
 
-                    const res = await fetchInventory('createInventory', 'post', {
+                    const res = await fetchAll('inventory', 'createInventory', 'post', {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                         'Authorization': this.token
@@ -327,7 +337,7 @@ export default class Inventory extends Component {
                 }
 
                 // make http call to /getInventory again to update state
-                const items = await fetchInventory('getInventory', 'get', {
+                const items = await fetchAll('inventory', 'getInventory', 'get', {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': this.token
@@ -370,7 +380,7 @@ export default class Inventory extends Component {
                 }
 
                 // make the http call to delete document(s)
-                const deleted = await fetchInventory('deleteInventory', 'delete', {
+                const deleted = await fetchAll('inventory', 'deleteInventory', 'delete', {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': this.token
@@ -408,9 +418,7 @@ export default class Inventory extends Component {
     // Render the component
     render() {
         // wait for componentDidMount before rendering
-        if (this.state.table.inventory.length === 0) {
-            return null;
-        }
+        if (this.state.table.inventory.length === 0) return null;
         const { table, editItems, path } = this.state;
 
         // generate buttons based on `editItems` state
@@ -422,6 +430,7 @@ export default class Inventory extends Component {
                         <Button floated='right'>Link</Button>
                         <Button as={Link} to={`${path}/createProducts`} color='orange' floated='right'>Create</Button>
                         <Button onClick={this.onEditItems} color='blue' floated='right'>Edit</Button>
+                        {/* uncomment below to display dummy data generator button */}
                         <Button onClick={this.onGenerateDummyData} color='green'>Dummy Data</Button>
                     </React.Fragment>
                 );
@@ -454,6 +463,6 @@ export default class Inventory extends Component {
                 {/* table frame */}
                 <TableFrame id='inventory' table={table} editItems={editItems} submitBtnName='Update' handleSubmit={this.onUpdateItems} />
             </Segment>
-        )
+        );
     }
 }

@@ -3,6 +3,9 @@ import passportJwt from 'passport-jwt';
 import Database from '../database/Database';
 import User from '../../models/User';
 import passport = require('passport');
+import {
+    JwtStrategyOptions
+} from 'definitions';
 
 const db: Database = new Database();
 const _jwtStrat = passportJwt.Strategy;

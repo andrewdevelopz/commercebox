@@ -2,7 +2,7 @@
 import mongoose, { Schema } from 'mongoose';
 
 // Import types
-import { IOrder } from 'mongooseTypes';
+import { IOrder } from 'definitions';
 
 // Generic address schema
 const address = {

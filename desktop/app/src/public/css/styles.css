@@ -1,0 +1,19 @@
+/* The main styles file for the application */
+
+/* Clear the .segment margin and border to prevent white space between nav menu  */
+.ui.segment {
+    border: none;
+    margin: 0;
+}
+
+.pusher {
+    background: #252525!important;
+    transform: none;
+    margin-left: 6.9rem;
+    padding: 0.5rem;
+}
+
+/* disable the pointer event for that element */
+.killPointerEvent {
+    pointer-events: none;
+}

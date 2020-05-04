@@ -16,12 +16,8 @@
  */
 
 import React, { Component } from 'react';
-
-// Import custom components
 import TableHeader from './header/TableHeader';
 import TableRow from './row/TableRow';
-
-// Semantic UI
 import { Table, Form, Button } from 'semantic-ui-react';
 
 export default class TableFrame extends Component {

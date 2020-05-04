@@ -2,7 +2,7 @@
 import mongoose, { Schema } from 'mongoose';
 
 // Import types
-import { IUser } from 'mongooseTypes';
+import { IUser } from 'definitions';
 
 const AddressSchema: mongoose.Schema = new Schema({
     company: String,
@@ -58,7 +58,7 @@ const UserSchema: mongoose.Schema = new Schema({
         },
         pitneyBowesAuthToken: String,
         woocommerce: {
-            key: String,
+            consumer: String,
             secret: String
         }
     }

@@ -3,6 +3,9 @@
  */
 
 import '../Env';
+import {
+    DatabaseConfig
+} from 'definitions';
 
 class Database {
     getConnectionString(): DatabaseConfig {

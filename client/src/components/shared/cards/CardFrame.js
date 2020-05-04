@@ -2,14 +2,14 @@
  * @overview: This componenet is for the cards of the application. It is a template for general cards in the application
  */
 
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 // Semantic UI
 import {
     Header,
     Segment,
     Divider
-} from 'semantic-ui-react'
+} from 'semantic-ui-react';
 
 export default class CardFrame extends Component {
     state = {}
