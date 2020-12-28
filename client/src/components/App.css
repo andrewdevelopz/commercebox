@@ -1,0 +1,13 @@
+/* Main App CSS file */
+
+.capitalize {
+  	text-transform: capitalize;
+}
+
+.formLabel label {
+  	color: #fff!important;
+}
+
+/* .iconColor i.icon {
+	color: #8c8c8c!important;
+} NOT IN USE */

@@ -1,11 +1,30 @@
 {
-  "name": "commerceutilitybox-client",
+  "name": "commercebox-client",
   "version": "1.0.0",
-  "description": "The front end for the Commerce Utility Box. An application that helps businesses manage their day to day operations.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "The front end for Commerce Box. An application that helps businesses manage their day to day operations.",
+  "main": "./src/index.js",
+  "private": true,
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^4.0.1",
+    "semantic-ui-react": "^0.84.0"
   },
-  "author": "Andrew Lee",
-  "license": "MIT"
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
